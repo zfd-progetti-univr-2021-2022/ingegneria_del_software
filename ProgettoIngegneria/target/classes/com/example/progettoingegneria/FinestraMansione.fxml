@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.TextField?>
+
+<?import javafx.scene.control.Button?>
+<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"  prefHeight="255" prefWidth="470">
+    <GridPane layoutX="40" layoutY="40" hgap="5" vgap="7">
+        <Text text="Nome dell'Azienda" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
+        <TextField fx:id="inputNome" GridPane.columnIndex="1" GridPane.rowIndex="0"  />
+        <Text text="Ubicazione" GridPane.columnIndex="0" GridPane.rowIndex="1"  />
+        <TextField fx:id="inputUbicazione" GridPane.columnIndex="1" GridPane.rowIndex="1"  />
+        <Text text="Mansioni svolte" GridPane.columnIndex="0" GridPane.rowIndex="2"  />
+        <TextField fx:id="inputMansioni" GridPane.columnIndex="1" GridPane.rowIndex="2"  />
+        <Text text="Periodo di attività:" GridPane.columnIndex="0" GridPane.rowIndex="3"  />
+        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="4" hgap="3">
+            <Text text="da" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="giornoInizio" GridPane.columnIndex="1" GridPane.rowIndex="0"  prefWidth="45"/>
+            <Text text="/" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="meseInizio" GridPane.columnIndex="3" GridPane.rowIndex="0"  prefWidth="45"/>
+            <Text text="/" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+            <TextField fx:id="annoInizio" GridPane.columnIndex="5" GridPane.rowIndex="0"  prefWidth="45"/>
+        </GridPane>
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="4" hgap="3">
+            <Text text="a" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="giornoFine" GridPane.columnIndex="1" GridPane.rowIndex="0"  prefWidth="45"/>
+            <Text text="/" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="meseFine" GridPane.columnIndex="3" GridPane.rowIndex="0"  prefWidth="45"/>
+            <Text text="/" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+            <TextField fx:id="annoFine" GridPane.columnIndex="5" GridPane.rowIndex="0"  prefWidth="45"/>
+        </GridPane>
+        <Text text="Retribuzione" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <TextField fx:id="inputRetribuzione" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
+        <Button fx:id="AggiungiMansione" text="Aggiungi" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+    </GridPane>
+
+</Pane>
