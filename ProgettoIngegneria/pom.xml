@@ -2,75 +2,126 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Maven config version -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Group identifier, "inverse" URL format (the same as the java package name convention) -->
     <groupId>com.example</groupId>
+
+    <!-- Project identifier -->
     <artifactId>ProgettoIngegneria</artifactId>
+
+    <!-- Project version -->
     <version>1.0-SNAPSHOT</version>
+
+    <!-- Project name -->
     <name>ProgettoIngegneria</name>
 
+    <!-- Project properties: defines file encoding and variables used in this file -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.8.1</junit.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <javafx.version>18.0.1</javafx.version>
+        <javafx.maven.plugin.version>0.0.6</javafx.maven.plugin.version>
+
+        <project.mainClass.path>com.example.progettoingegneria/com.example.progettoingegneria.Main</project.mainClass.path>
+        <maven.maven-compiler-plugin.version>3.8.0</maven.maven-compiler-plugin.version>
+        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <maven-surefire.maven-surefire-plugin.version>3.0.0-M6</maven-surefire.maven-surefire-plugin.version>
+
+        <yavi.version>0.11.0</yavi.version>
+        <jackson.version>2.13.2</jackson.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <!--
+        Project dependencies
+        > All the variables used between ${} are defined in <properties></properties>
+    -->
     <dependencies>
+
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
+
+        <!-- JavaFX FXML -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- junit 5, unit tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- yavi: data validator -->
+        <dependency>
+            <groupId>am.ik.yavi</groupId>
+            <artifactId>yavi</artifactId>
+            <version>${yavi.version}</version>
+        </dependency>
+
+        <!-- jackson: json <-> object -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Maven compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven.maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
+
+            <!-- JavaFX plugin for Maven -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.example.progettoingegneria/com.example.progettoingegneria.HelloApplication
-                            </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                    <jlinkImageName>com.example.progettoingegneria</jlinkImageName>
+                    <launcher>launcher</launcher>
+                    <mainClass>${project.mainClass.path}</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Maven surefire: executes tests using junit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.maven-surefire-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
