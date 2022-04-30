@@ -1,5 +1,9 @@
 package com.example.progettoingegneria;
 
+/**
+ * Rappresenta i tipi di patenti che possono
+ * essere possedute da un lavoratore.
+ */
 public enum Patente {
     AM,
     A1,

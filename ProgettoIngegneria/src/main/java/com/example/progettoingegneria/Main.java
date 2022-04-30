@@ -1,13 +1,8 @@
 package com.example.progettoingegneria;
 
-import am.ik.yavi.core.ConstraintViolations;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 
