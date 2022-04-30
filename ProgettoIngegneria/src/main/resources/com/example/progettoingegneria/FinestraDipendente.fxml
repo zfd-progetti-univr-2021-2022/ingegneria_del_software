@@ -3,10 +3,14 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 
-<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="550" prefWidth="460" >
+<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="370" prefWidth="380" >
 
+    <GridPane layoutX="40" layoutY="40" hgap="20" vgap="5">
+
+    </GridPane>
     <GridPane layoutX="40" layoutY="40" hgap="7" vgap="10">
         <Text text="Nome" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
         <TextField fx:id="inputNome" GridPane.columnIndex="1" GridPane.rowIndex="0"  />
@@ -26,22 +30,10 @@
         </GridPane>
         <Text text="Nazionalità" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
         <TextField fx:id="inputNazionalità" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
-        <Text text="Residenza" GridPane.columnIndex="0" GridPane.rowIndex="6"  />
-        <TextField fx:id="inputResidenza" GridPane.columnIndex="1" GridPane.rowIndex="6"  />
-        <Text text="Recapito" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
-        <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
-        <Text text="Mail" GridPane.columnIndex="0" GridPane.rowIndex="8"  />
-        <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="8"  />
-        <Text text="Esperienze/Specializzazioni" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <TextField fx:id="inputEsperienze" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-        <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="10"  />
-        <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="10"  />
-        <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="11"  />
-        <TextField fx:id="inputPatente" GridPane.columnIndex="1" GridPane.rowIndex="11"  />
-        <Text text="Auto munito" GridPane.columnIndex="0" GridPane.rowIndex="12"  />
-        <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="12"  />
-        <Button fx:id="AggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="13" />
-        <Button fx:id="registraLavoratore" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+        <Text text="Nome Utente" GridPane.columnIndex="0" GridPane.rowIndex="6"  />
+        <TextField fx:id="inputUtente" GridPane.columnIndex="1" GridPane.rowIndex="6"  />
+        <Text text="Password" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
+        <PasswordField fx:id="inputPassword" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
+        <Button fx:id="registraDipendente" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="8" />
     </GridPane>
-
 </Pane>
