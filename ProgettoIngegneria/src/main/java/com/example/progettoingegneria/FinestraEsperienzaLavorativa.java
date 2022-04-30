@@ -9,17 +9,16 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-
-public class FinestraContatto extends Application{
-
+public class FinestraEsperienzaLavorativa extends Application{
     public void start(Stage stage) {
         Scene scene;
         Button aggiungi;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraContatto.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraEsperienzaLavorativa.fxml"));
+
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
 
-        aggiungi= (Button) loader.getNamespace().get("AggiungiContatto");
+        aggiungi= (Button) loader.getNamespace().get("AggiungiMansione");
         aggiungi.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
