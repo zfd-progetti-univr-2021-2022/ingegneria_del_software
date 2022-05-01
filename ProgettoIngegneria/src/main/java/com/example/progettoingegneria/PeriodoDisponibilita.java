@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Rappresenta un periodo di disponibilita' di un lavoratore.
@@ -20,14 +21,14 @@ class PeriodoDisponibilita {
 
     /** Data inizio periodo di disponibilita' del lavoratore */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDate inizioPeriodoDisponibilita;
+    private LocalDate inizioPeriodoDisponibilita;
 
     /** Data fine periodo di disponibilita' del lavoratore */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDate finePeriodoDisponibilita;
+    private LocalDate finePeriodoDisponibilita;
 
     /** Comune per cui il lavoratore e' disponibile */
-    private final String comune;
+    private String comune;
 
     /** Oggetto per validare i dati di un periodo di disponibilita' */
     @JsonIgnore
@@ -63,6 +64,12 @@ class PeriodoDisponibilita {
     }
 
     /**
+     * Costruttore usato da jackson per
+     * creare oggetti a partire da JSON
+     */
+    public PeriodoDisponibilita(){}
+
+    /**
      * Factory method che restituisce un oggetto che rappresenta un periodo di disponibilita' del lavoratore
      * @param inizioPeriodoDisponibilita Data inizio periodo di disponibilita'
      * @param finePeriodoDisponibilita Data fine periodo di disponibilita'
@@ -84,11 +91,31 @@ class PeriodoDisponibilita {
     }
 
     /**
+     * Imposta data inizio periodo disponibilita'
+     * @param inizioPeriodoDisponibilita data inizio periodo disponibilita'
+     */
+    protected void setInizioPeriodoDisponibilita(LocalDate inizioPeriodoDisponibilita){
+        if (inizioPeriodoDisponibilita == null)
+            throw new IllegalArgumentException("inizioPeriodoDisponibilita non puo' essere null");
+        this.inizioPeriodoDisponibilita = inizioPeriodoDisponibilita;
+    }
+
+    /**
      * Restituisce data di fine del periodo di disponibilita' del lavoratore.
      * @return Data di fine del periodo di disponibilita'
      */
     protected LocalDate getFinePeriodoDisponibilita(){
         return this.finePeriodoDisponibilita;
+    }
+
+    /**
+     * Imposta data fine periodo disponibilita'
+     * @param finePeriodoDisponibilita fine periodo disponibilita'
+     */
+    protected  void setFinePeriodoDisponibilita(LocalDate finePeriodoDisponibilita){
+        if (finePeriodoDisponibilita == null)
+            throw new IllegalArgumentException("finePeriodoDisponibilita non puo' essere null");
+        this.finePeriodoDisponibilita = finePeriodoDisponibilita;
     }
 
     /**
@@ -100,11 +127,43 @@ class PeriodoDisponibilita {
     }
 
     /**
+     * Imposta comune per cui il lavoratore e' disponibile
+     * @param comune Comune per cui il lavoratore e' disponibile
+     */
+    protected void setComune(String comune){
+        if (comune == null)
+            throw new IllegalArgumentException("comune non puo' essere null");
+        this.comune = comune;
+    }
+
+    /**
      * Restituisce le violazioni rilevate dal validatore del periodo di disponibilita'.
      * @return Violazioni nelle proprieta' oggetto
      */
     public ConstraintViolations validate(){
         ConstraintViolations violations = this.validator.validate(this);
         return violations;
+    }
+
+    /**
+     * Verifica se this e' uguale a o
+     * @param o Oggetto con cui confrontare this
+     * @return true se this e' uguale a o, false altrimenti
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PeriodoDisponibilita that = (PeriodoDisponibilita) o;
+        return inizioPeriodoDisponibilita.equals(that.inizioPeriodoDisponibilita) && finePeriodoDisponibilita.equals(that.finePeriodoDisponibilita) && comune.equals(that.comune);
+    }
+
+    /**
+     * Restituisce hash
+     * @return hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(inizioPeriodoDisponibilita, finePeriodoDisponibilita, comune);
     }
 }

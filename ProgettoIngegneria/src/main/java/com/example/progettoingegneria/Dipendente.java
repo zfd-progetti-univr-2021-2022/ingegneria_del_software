@@ -9,6 +9,7 @@ import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Crea oggetti che rappresentano un dipendente.
@@ -74,7 +75,10 @@ public class Dipendente extends Persona{
         this.password = password;
     }
 
-
+    /**
+     * Costruttore usato dalla libreria jackson
+     * per generare oggetti a partire da JSON.
+     */
     public Dipendente(){
         super();
     }
@@ -117,7 +121,13 @@ public class Dipendente extends Persona{
         return this.username;
     }
 
+    /**
+     * Imposta nuovo username.
+     * @param username Nuovo username
+     */
     protected void setUsername(String username){
+        if (username == null)
+            throw new IllegalArgumentException("username non puo' essere nullo");
         this.username = username;
     }
 
@@ -129,7 +139,13 @@ public class Dipendente extends Persona{
         return this.password;
     }
 
+    /**
+     * Imposta nuova password.
+     * @param password Nuova password
+     */
     protected void setPassword(String password){
+        if (password == null)
+            throw new IllegalArgumentException("password non puo' essere nullo");
         this.password = password;
     }
 
@@ -141,5 +157,28 @@ public class Dipendente extends Persona{
         ConstraintViolations violations = Dipendente.validator.validate(this);
         violations.addAll(super.validate());  // validator Persona
         return violations;
+    }
+
+    /**
+     * Verifica se this e' uguale a o
+     * @param o Oggetto con cui confrontare this
+     * @return true se this e' uguale a o, false altrimenti
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Dipendente that = (Dipendente) o;
+        return username.equals(that.username) && password.equals(that.password);
+    }
+
+    /**
+     * Restituisce hash
+     * @return hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), username, password);
     }
 }

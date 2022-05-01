@@ -58,7 +58,7 @@ public class Main {
                     85
                 )
             ),
-            List.of("italiano", "inglese"),
+            List.of(Lingua.ITALIANO, Lingua.INGLESE),
             List.of(Patente.A, Patente.B),
             true,
             List.of(PeriodoDisponibilita.of(
@@ -83,5 +83,10 @@ public class Main {
         Dipendente mcurley_d = objectMapper.readValue(mcurley_dipendente_json, Dipendente.class);
         System.out.println("Dipendente valido? " + mcurley_d.validate());
         System.out.println("Dipendente: " + mcurley_d.asJSON());
+
+        String vgoulette_l_json = "{\"nome\":\"Vincent\",\"cognome\":\"Goulette\",\"luogoNascita\":\"652 Keyser Ridge Road\",\"dataNascita\":\"1978-08-14\",\"nazionalita\":\"francese\",\"indirizzoEmail\":\"vgoulette@example.com\",\"numeroTelefono\":\"336-510-8563\",\"tipo\":\"lavoratore\",\"indirizzoResidenza\":\"4776 Bastin Drive\",\"esperienzeLavorative\":[{\"inizioPeriodoLavorativo\":\"2021-03-05\",\"finePeriodoLavorativo\":\"2021-06-05\",\"nomeAzienda\":\"Museum Company\",\"mansioniSvolte\":[\"guardia\"],\"luogoLavoro\":\"4686 Hall Valley Drive\",\"retribuzioneLordaGiornaliera\":120},{\"inizioPeriodoLavorativo\":\"2021-07-15\",\"finePeriodoLavorativo\":\"2021-09-25\",\"nomeAzienda\":\"Infinite Wealth Planners\",\"mansioniSvolte\":[\"guardia\", \"  \"],\"luogoLavoro\":\"3862 Earnhardt Drive\",\"retribuzioneLordaGiornaliera\":155}],\"lingueParlate\":[\"ITALIANO\",\"INGLESE\"],\"patenti\":[\"A\",\"B\"],\"automunito\":true,\"periodiDisponibilita\":[{\"inizioPeriodoDisponibilita\":\"2022-05-10\",\"finePeriodoDisponibilita\":\"2022-05-25\",\"comune\":\"Via MoltoProbabilmenteNonEsistente 5 Verona\"}],\"recapitiUrgenze\":[{\"nome\":\"nome\",\"cognome\":\"cognome\",\"numeroTelefono\":\"098345098\",\"indirizzoEmail\":\"nome@example.com\"}]}";
+        Lavoratore vgoulette_l = objectMapper.readValue(vgoulette_l_json, Lavoratore.class);
+        System.out.println("Lavoratore valido? " + vgoulette_l.validate());
+        System.out.println("Lavoratore: " + vgoulette_l.asJSON());
     }
 }

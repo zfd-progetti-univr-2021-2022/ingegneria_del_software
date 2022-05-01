@@ -5,6 +5,7 @@
 package com.example.progettoingegneria;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import am.ik.yavi.builder.ValidatorBuilder;
@@ -139,6 +140,10 @@ abstract class Persona implements PersonaInterface {
         this.numeroTelefono = numeroTelefono;
     }
 
+    /**
+     * Costruttore usato da jackson
+     * per creare oggetti a partire da JSON
+     */
     public Persona() {}
 
     /**
@@ -149,7 +154,13 @@ abstract class Persona implements PersonaInterface {
         return this.nome;
     }
 
+    /**
+     * Imposta nome della persona
+     * @param nome Nome della persona
+     */
     protected void setNome(String nome){
+        if (nome == null)
+            throw new IllegalArgumentException("nome non puo' essere null");
         this.nome = nome;
     }
 
@@ -161,7 +172,13 @@ abstract class Persona implements PersonaInterface {
         return this.cognome;
     }
 
+    /**
+     * Imposta cognome della persona
+     * @param cognome cognome
+     */
     protected void setCognome(String cognome){
+        if (cognome == null)
+            throw new IllegalArgumentException("cognome non puo' essere null");
         this.cognome = cognome;
     }
 
@@ -173,7 +190,13 @@ abstract class Persona implements PersonaInterface {
         return this.luogoNascita;
     }
 
+    /**
+     * Imposta luogo di nascita
+     * @param luogoNascita Luogo di nascita
+     */
     protected void setLuogoNascita(String luogoNascita){
+        if (luogoNascita == null)
+            throw new IllegalArgumentException("luogoNascita non puo' essere null");
         this.luogoNascita = luogoNascita;
     }
 
@@ -185,7 +208,13 @@ abstract class Persona implements PersonaInterface {
         return this.dataNascita;
     }
 
+    /**
+     * Imposta data di nascita
+     * @param dataNascita data di nascita
+     */
     protected void setDataNascita(LocalDate dataNascita){
+        if (dataNascita == null)
+            throw new IllegalArgumentException("dataNascita non puo' essere null");
         this.dataNascita = dataNascita;
     }
 
@@ -197,7 +226,13 @@ abstract class Persona implements PersonaInterface {
         return this.nazionalita;
     }
 
+    /**
+     * Imposta nazionalita'
+     * @param nazionalita Nazionalita'
+     */
     protected void setNazionalita(String nazionalita){
+        if (nazionalita == null)
+            throw new IllegalArgumentException("nazionalita non puo' essere null");
         this.nazionalita = nazionalita;
     }
 
@@ -209,7 +244,13 @@ abstract class Persona implements PersonaInterface {
         return this.indirizzoEmail;
     }
 
+    /**
+     * Imposta indirizzo email
+     * @param indirizzoEmail Indirizzo email
+     */
     protected void setIndirizzoEmail(String indirizzoEmail){
+        if (indirizzoEmail == null)
+            throw new IllegalArgumentException("indirizzoEmail non puo' essere null");
         this.indirizzoEmail = indirizzoEmail;
     }
 
@@ -221,7 +262,13 @@ abstract class Persona implements PersonaInterface {
         return this.numeroTelefono;
     }
 
+    /**
+     * Imposta numero di telefono
+     * @param numeroTelefono numero di telefono
+     */
     protected void setNumeroTelefono(String numeroTelefono){
+        if (numeroTelefono == null)
+            throw new IllegalArgumentException("numeroTelefono non puo' essere null");
         this.numeroTelefono = numeroTelefono;
     }
 
@@ -246,5 +293,27 @@ abstract class Persona implements PersonaInterface {
     public ConstraintViolations validate(){
         ConstraintViolations violations = Persona.validator.validate(this);
         return violations;
+    }
+
+    /**
+     * Verifica se this e' uguale a o
+     * @param o Oggetto con cui confrontare this
+     * @return true se this e' uguale a o, false altrimenti
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Persona persona = (Persona) o;
+        return nome.equals(persona.nome) && cognome.equals(persona.cognome) && luogoNascita.equals(persona.luogoNascita) && dataNascita.equals(persona.dataNascita) && nazionalita.equals(persona.nazionalita) && indirizzoEmail.equals(persona.indirizzoEmail) && numeroTelefono.equals(persona.numeroTelefono);
+    }
+
+    /**
+     * Restituisce hash
+     * @return hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
     }
 }

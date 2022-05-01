@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Rappresenta una esperienza lavorativa.
@@ -22,20 +23,20 @@ class EsperienzaLavorativa {
 
     /** Inizio periodo lavorativo */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDate inizioPeriodoLavorativo;
+    private LocalDate inizioPeriodoLavorativo;
 
     /** Fine periodo lavorativo */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private final LocalDate finePeriodoLavorativo;
+    private LocalDate finePeriodoLavorativo;
 
     /** Nome azienda */
-    private final String nomeAzienda;
+    private String nomeAzienda;
     /** Mansioni svolte */
-    private final Collection<String> mansioniSvolte;
+    private Collection<String> mansioniSvolte;
     /** Luogo di lavoro */
-    private final String luogoLavoro;
+    private String luogoLavoro;
     /** Retribuzione lorda giornaliera */
-    private final int retribuzioneLordaGiornaliera;
+    private int retribuzioneLordaGiornaliera;
 
     /** Validatore per l'esperienza lavorativa */
     @JsonIgnore
@@ -98,6 +99,12 @@ class EsperienzaLavorativa {
     }
 
     /**
+     * Costruttore usato da jackson
+     * per creare oggetti a partire da JSON.
+     */
+    public EsperienzaLavorativa(){}
+
+    /**
      * Factory method che restituisce una esperienza lavorativa.
      *
      * @param inizioPeriodoLavorativo Inizio periodo lavorativo
@@ -122,19 +129,39 @@ class EsperienzaLavorativa {
     }
 
     /**
-     * Restituisce inizio periodo lavorativo
-     * @return Inizio periodo lavorativo
+     * Restituisce data inizio periodo lavorativo
+     * @return Data Inizio periodo lavorativo
      */
     protected LocalDate getInizioPeriodoLavorativo(){
         return this.inizioPeriodoLavorativo;
     }
 
     /**
-     * Restituisce fine periodo lavorativo
-     * @return Fine periodo lavorativo
+     * Imposta una data di inizio periodo lavorativo.
+     * @param inizioPeriodoLavorativo Data di inizio periodo lavorativo
+     */
+    protected void setInizioPeriodoLavorativo(LocalDate inizioPeriodoLavorativo){
+        if (inizioPeriodoLavorativo == null)
+            throw new IllegalArgumentException("inizioPeriodoLavorativo non puo' essere null");
+        this.inizioPeriodoLavorativo = inizioPeriodoLavorativo;
+    }
+
+    /**
+     * Restituisce data fine periodo lavorativo
+     * @return data Fine periodo lavorativo
      */
     protected LocalDate getFinePeriodoLavorativo(){
         return this.finePeriodoLavorativo;
+    }
+
+    /**
+     * Imposta una data di fine periodo lavorativo.
+     * @param finePeriodoLavorativo Data di fine periodo lavorativo.
+     */
+    protected void setFinePeriodoLavorativo(LocalDate finePeriodoLavorativo){
+        if (finePeriodoLavorativo == null)
+            throw new IllegalArgumentException("finePeriodoLavorativo non puo' essere null");
+        this.finePeriodoLavorativo = finePeriodoLavorativo;
     }
 
     /**
@@ -146,11 +173,55 @@ class EsperienzaLavorativa {
     }
 
     /**
+     * Imposta nome azienda.
+     * @param nomeAzienda nome azienda
+     */
+    protected void setNomeAzienda(String nomeAzienda){
+        if (nomeAzienda == null)
+            throw new IllegalArgumentException("nomeAzienda non puo' essere null");
+        this.nomeAzienda = nomeAzienda;
+    }
+
+    /**
      * Restituisce mansioni svolte.
      * @return Mansioni svolte
      */
     protected Collection<String> getMansioniSvolte(){
         return this.mansioniSvolte;
+    }
+
+    /**
+     * Imposta mansioni svolte.
+     * @param mansioniSvolte Mansioni svolte
+     */
+    protected void setMansioniSvolte(Collection<String> mansioniSvolte){
+        if (mansioniSvolte == null)
+            throw new IllegalArgumentException("mansioniSvolte non puo' essere null");
+        this.mansioniSvolte = mansioniSvolte;
+    }
+
+    /**
+     * Aggiunge una mansione tra le mansioni svolte.
+     * @param mansioneSvolta mansione svolta da aggiungere
+     */
+    protected void addMansioneSvolta(String mansioneSvolta){
+        if (mansioneSvolta == null)
+            throw new IllegalArgumentException("mansioneSvolta non puo' essere null");
+
+        if (!this.mansioniSvolte.contains(mansioneSvolta))
+            this.mansioniSvolte.add(mansioneSvolta);
+    }
+
+    /**
+     * Rimuove una mansione tra le mansioni svolte.
+     * @param mansioneSvolta mansione svolta da rimuovere
+     * @return true se mansioneSvolta e' stato rimosso
+     */
+    protected boolean removeMansioneSvolta(String mansioneSvolta){
+        if (mansioneSvolta == null)
+            throw new IllegalArgumentException("mansioneSvolta non puo' essere null");
+
+        return this.mansioniSvolte.remove(mansioneSvolta);
     }
 
     /**
@@ -162,11 +233,29 @@ class EsperienzaLavorativa {
     }
 
     /**
+     * Imposta luogo di lavoro.
+     * @param luogoLavoro Luogo di lavoro
+     */
+    protected void setLuogoLavoro(String luogoLavoro){
+        if (luogoLavoro == null)
+            throw new IllegalArgumentException("luogoLavoro non puo' essere null");
+        this.luogoLavoro = luogoLavoro;
+    }
+
+    /**
      * Restituisce retribuzione lorda giornaliera.
      * @return Retribuzione lorda giornaliera
      */
     protected int getRetribuzioneLordaGiornaliera(){
         return this.retribuzioneLordaGiornaliera;
+    }
+
+    /**
+     * Imposta retribuzione lorda giornaliera.
+     * @param retribuzioneLordaGiornaliera retribuzione lorda giornaliera
+     */
+    protected void setRetribuzioneLordaGiornaliera(int retribuzioneLordaGiornaliera){
+        this.retribuzioneLordaGiornaliera = retribuzioneLordaGiornaliera;
     }
 
     /**
@@ -176,5 +265,27 @@ class EsperienzaLavorativa {
     public ConstraintViolations validate(){
         ConstraintViolations violations = this.validator.validate(this);
         return violations;
+    }
+
+    /**
+     * Verifica se this e' uguale a o
+     * @param o Oggetto con cui confrontare this
+     * @return true se this e' uguale a o, false altrimenti
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EsperienzaLavorativa that = (EsperienzaLavorativa) o;
+        return retribuzioneLordaGiornaliera == that.retribuzioneLordaGiornaliera && inizioPeriodoLavorativo.equals(that.inizioPeriodoLavorativo) && finePeriodoLavorativo.equals(that.finePeriodoLavorativo) && nomeAzienda.equals(that.nomeAzienda) && mansioniSvolte.equals(that.mansioniSvolte) && luogoLavoro.equals(that.luogoLavoro);
+    }
+
+    /**
+     * Restituisce hash
+     * @return hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(inizioPeriodoLavorativo, finePeriodoLavorativo, nomeAzienda, mansioniSvolte, luogoLavoro, retribuzioneLordaGiornaliera);
     }
 }
