@@ -1,12 +1,12 @@
 /**
  * Definisce classe che rappresenta un dipendente.
- * TODO: Migliorare il validator
  */
 package com.example.progettoingegneria;
 
 import am.ik.yavi.builder.ValidatorBuilder;
 import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
 
@@ -15,23 +15,26 @@ import java.time.LocalDate;
  *
  * Per creare un oggetto utilizzare il factory method of().
  */
+@JsonIgnoreProperties(value={ "tipo" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
 public class Dipendente extends Persona{
 
-    /** Tipo di persona nel sistema */
+    /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "dipendente";
     /** Username del dipendente */
-    private final String username;
+    private String username;
     /** Password del dipendente */
-    private final String password;
+    private String password;
 
     /** Validatore per il dipendente */
     private static final Validator<Dipendente> validator = ValidatorBuilder.<Dipendente>of()
         .constraint(Dipendente::getUsername, "username",
-            c -> c.notBlank()  // non puo' essere: nullo, vuoto, contenere solo spazi
+            c -> c.notBlank()             // non puo' essere: nullo, vuoto, contenere solo spazi
+                .lessThanOrEqual(50)      // lunghezza massima 50 caratteri
         )
         .constraint(Dipendente::getPassword, "password",
             c -> c.notBlank()                 // non puo' essere: nullo, vuoto, contenere solo spazi
-                .greaterThanOrEqual(12)  // deve avere almeno 12 caratteri
+                .greaterThanOrEqual(12)       // deve avere almeno 12 caratteri
+                .lessThanOrEqual(100)    // lunghezza massima 100 caratteri
                 .password(
                     policy -> policy
                         .uppercase()          // deve avere almeno una lettera maiuscola
@@ -69,6 +72,11 @@ public class Dipendente extends Persona{
 
         this.username = username;
         this.password = password;
+    }
+
+
+    public Dipendente(){
+        super();
     }
 
     /**
@@ -109,6 +117,10 @@ public class Dipendente extends Persona{
         return this.username;
     }
 
+    protected void setUsername(String username){
+        this.username = username;
+    }
+
     /**
      * Restituisce password del dipendente
      * @return Password del dipendente
@@ -117,13 +129,17 @@ public class Dipendente extends Persona{
         return this.password;
     }
 
+    protected void setPassword(String password){
+        this.password = password;
+    }
+
     /**
      * Restituisce le violazioni rilevate dal validatore dell'oggetto.
-     * TODO: Includere in violations l'output del validator di Persona per restituire tutti i problemi dei dati del dipendente
      * @return Violazioni nelle proprieta' oggetto
      */
     public ConstraintViolations validate(){
         ConstraintViolations violations = Dipendente.validator.validate(this);
+        violations.addAll(super.validate());  // validator Persona
         return violations;
     }
 }

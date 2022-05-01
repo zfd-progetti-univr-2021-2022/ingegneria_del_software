@@ -1,6 +1,9 @@
 package com.example.progettoingegneria;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) throws JsonProcessingException{
 
+        System.out.println("OGGETTI CREATI VIA CODICE:\n");
         Dipendente d = Dipendente.of(
             "nome",
             "cognome",
@@ -24,7 +28,6 @@ public class Main {
 
 
         System.out.println("Dipendente valido? " + d.validate());
-
         String resultDipendente = d.asJSON();
         System.out.println("Dipendente: " + resultDipendente);
 
@@ -70,7 +73,15 @@ public class Main {
                 "nome@example.com"
             ))
         );
+        System.out.println("Lavoratore valido? " + l.validate());
         System.out.println("Lavoratore: " + l.asJSON());
 
+        System.out.println("\nOGGETTI CREATI A PARTIRE DA JSON:\n");
+        ObjectMapper objectMapper = JsonMapper.builder().enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER).build();
+        objectMapper.findAndRegisterModules();
+        String mcurley_dipendente_json = "{\"nome\": \"Michelle\", \"cognome\": \"Curley\", \"luogoNascita\": \"665 Poplar Chase Lane\", \"dataNascita\": \"1945-03-20\", \"nazionalita\": \"americana\", \"indirizzoEmail\": \"mcurley@example.com\", \"numeroTelefono\": \"678-623-0532\", \"tipo\": \"dipendente\", \"username\": \"mcurley\", \"password\": \"DL//9=(cd&={xX\\.\"}";
+        Dipendente mcurley_d = objectMapper.readValue(mcurley_dipendente_json, Dipendente.class);
+        System.out.println("Dipendente valido? " + mcurley_d.validate());
+        System.out.println("Dipendente: " + mcurley_d.asJSON());
     }
 }
