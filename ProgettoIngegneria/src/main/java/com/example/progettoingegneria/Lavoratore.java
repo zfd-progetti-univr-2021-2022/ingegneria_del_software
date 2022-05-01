@@ -1,6 +1,6 @@
 /**
  * Definisce classe che rappresenta un lavoratore.
- * TODO: Migliorare il validator
+ * TODO: Migliorare il validator (in particolare per lingueParlate e patenti)
  */
 package com.example.progettoingegneria;
 
@@ -15,7 +15,7 @@ import java.time.LocalDate;
  * Classe che rappresenta un lavoratore.
  */
 public class Lavoratore extends Persona{
-    /** Tipo di persona nel sistema */
+    /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "lavoratore";
 
     /** Indirizzo di residenza */
@@ -35,8 +35,25 @@ public class Lavoratore extends Persona{
 
     /** Validatore dati di un lavoratore */
     private static final Validator<Lavoratore> validator = ValidatorBuilder.<Lavoratore>of()
-        .constraint(Lavoratore::getIndirizzoResidenza, "indirizzoResidenza", c -> c.notNull())
-        .constraint(Lavoratore::getEsperienzeLavorative, "esperienzeLavorative", c -> c.notNull())
+        .constraint(Lavoratore::getIndirizzoResidenza, "indirizzoResidenza",
+            c -> c.notBlank()  // non puo' essere: nullo, vuoto, contenere solo spazi
+                .lessThanOrEqual(255)
+        )
+        .constraint(Lavoratore::getEsperienzeLavorative, "esperienzeLavorative",
+            c -> c.notNull()  // non puo' essere nullo
+        )
+        .constraint(Lavoratore::getLingueParlate, "lingue parlate",
+            c -> c.notNull()  // non puo' essere nullo
+        )
+        .constraint(Lavoratore::getPatenti, "patenti",
+            c -> c.notNull()  // non puo' essere nullo
+        )
+        .constraint(Lavoratore::getPeriodiDisponibilita, "periodi disponibilita'",
+            c -> c.notNull()  // non puo' essere nullo
+        )
+        .constraint(Lavoratore::getRecapitiUrgenze, "recapiti urgenze",
+            c -> c.notEmpty()  // non puo' essere ne nullo ne vuoto
+        )
         .build();
 
     /**
@@ -57,7 +74,7 @@ public class Lavoratore extends Persona{
      * @param periodiDisponibilita Periodi di disponibilita' lavorativa
      * @param recapitiUrgenze Recapiti da usare in caso di urgenza
     */
-    private Lavoratore(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
+    public Lavoratore(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
                          String nazionalita, String indirizzoEmail, String numeroTelefono,
                          String indirizzoResidenza, Collection<EsperienzaLavorativa> esperienzeLavorative,
                          Collection<String> lingueParlate, Collection<Patente> patenti,
@@ -187,6 +204,20 @@ public class Lavoratore extends Persona{
     @Override
     public ConstraintViolations validate(){
         ConstraintViolations violations = Lavoratore.validator.validate(this);
+        violations.addAll(super.validate());  // validator Persona
+
+        for (EsperienzaLavorativa e: esperienzeLavorative) {
+            violations.addAll(e.validate());
+        }
+
+        for (PeriodoDisponibilita p: periodiDisponibilita) {
+            violations.addAll(p.validate());
+        }
+
+        for (RecapitoUrgenza r: recapitiUrgenze) {
+            violations.addAll(r.validate());
+        }
+
         return violations;
     }
 }

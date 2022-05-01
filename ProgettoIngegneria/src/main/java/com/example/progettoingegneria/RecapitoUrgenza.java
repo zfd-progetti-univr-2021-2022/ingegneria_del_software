@@ -1,12 +1,12 @@
 /**
  * Definisce classe accessibile solo nel package che rappresenta
  * un recapito da usare in caso di emergenza.
- * TODO: Creare un metodo validate() per restituire l'output del validator?
  */
 
 package com.example.progettoingegneria;
 
 import am.ik.yavi.builder.ValidatorBuilder;
+import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
 
 /**
@@ -115,5 +115,14 @@ class RecapitoUrgenza {
      */
     protected String getIndirizzoEmail(){
         return this.indirizzoEmail;
+    }
+
+    /**
+     * Restituisce le violazioni rilevate dal validatore del recapito urgenza.
+     * @return Violazioni nelle proprieta' oggetto
+     */
+    public ConstraintViolations validate(){
+        ConstraintViolations violations = RecapitoUrgenza.validator.validate(this);
+        return violations;
     }
 }

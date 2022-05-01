@@ -1,12 +1,14 @@
 /**
  * Definisce classe che rappresenta una esperienza lavorativa.
- *
- * TODO: Aggiungere validator e un metodo validate (?)
  */
 
 package com.example.progettoingegneria;
 
+import am.ik.yavi.builder.ValidatorBuilder;
+import am.ik.yavi.core.ConstraintViolations;
+import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collection;
 import java.time.LocalDate;
@@ -34,6 +36,40 @@ class EsperienzaLavorativa {
     private final String luogoLavoro;
     /** Retribuzione lorda giornaliera */
     private final int retribuzioneLordaGiornaliera;
+
+    /** Validatore per l'esperienza lavorativa */
+    @JsonIgnore
+    private final Validator<EsperienzaLavorativa> validator = ValidatorBuilder.<EsperienzaLavorativa>of()
+        .constraint(EsperienzaLavorativa::getInizioPeriodoLavorativo, "inizio periodo",
+            c -> c.notNull()                                      // non puo': essere null
+                .beforeOrEqual(this::getFinePeriodoLavorativo)    // deve venire prima della data di fine
+        )
+        .constraint(EsperienzaLavorativa::getFinePeriodoLavorativo, "fine periodo",
+            c -> c.notNull()                                      // non puo': essere null
+                .afterOrEqual(this::getInizioPeriodoLavorativo)   // deve venire dopo della data di inizio
+        )
+        .constraint(EsperienzaLavorativa::getNomeAzienda, "nome azienda",
+            c -> c.notBlank()          // non puo': essere null, vuota, contenere solo spazi
+                .lessThanOrEqual(100)  // lunghezza massima 100
+        )
+        .constraint(EsperienzaLavorativa::getMansioniSvolte, "mansioni svolte",
+            c -> c.notEmpty()  // non puo' essere: nulla o vuota
+        )
+        .forEachIfPresent(
+            EsperienzaLavorativa::getMansioniSvolte, "mansioni",
+            m -> m._string(String::toString, "mansione",
+                c -> c.notBlank()              // non puo': essere null, vuota, contenere solo spazi
+                    .lessThanOrEqual(50)  // lunghezza massima 50 caratteri
+            )
+        )
+        .constraint(EsperienzaLavorativa::getLuogoLavoro, "luogo lavoro",
+            c -> c.notBlank()          // non puo': essere null, vuota, contenere solo spazi
+                .lessThanOrEqual(255)  // lunghezza massima 255
+        )
+        .constraint(EsperienzaLavorativa::getRetribuzioneLordaGiornaliera, "retribuzione",
+            c -> c.greaterThanOrEqual(0)  // deve essere almeno 0
+        )
+        .build();
 
     /**
      * Costruttore che crea un oggetto che rappresenta una esperienza lavorativa.
@@ -131,5 +167,14 @@ class EsperienzaLavorativa {
      */
     protected int getRetribuzioneLordaGiornaliera(){
         return this.retribuzioneLordaGiornaliera;
+    }
+
+    /**
+     * Restituisce le violazioni rilevate dal validatore delle esperienze lavorative.
+     * @return Violazioni nelle proprieta' oggetto
+     */
+    public ConstraintViolations validate(){
+        ConstraintViolations violations = this.validator.validate(this);
+        return violations;
     }
 }

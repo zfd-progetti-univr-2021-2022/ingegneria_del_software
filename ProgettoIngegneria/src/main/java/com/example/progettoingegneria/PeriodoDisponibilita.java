@@ -1,11 +1,13 @@
 /**
  * Definisce classe che rappresenta un periodo di disponibilita' di un lavoratore.
- *
- * TODO: Aggiungere un validator e un metodo validate (?)
  */
 package com.example.progettoingegneria;
 
+import am.ik.yavi.builder.ValidatorBuilder;
+import am.ik.yavi.core.ConstraintViolations;
+import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
 
@@ -26,6 +28,23 @@ class PeriodoDisponibilita {
 
     /** Comune per cui il lavoratore e' disponibile */
     private final String comune;
+
+    /** Oggetto per validare i dati di un periodo di disponibilita' */
+    @JsonIgnore
+    private final Validator<PeriodoDisponibilita> validator = ValidatorBuilder.<PeriodoDisponibilita>of()
+        .constraint(PeriodoDisponibilita::getInizioPeriodoDisponibilita, "inizio periodo",
+            c -> c.notNull()                                      // non puo': essere null
+                .beforeOrEqual(this::getFinePeriodoDisponibilita) // deve venire prima della data di fine
+        )
+        .constraint(PeriodoDisponibilita::getFinePeriodoDisponibilita, "fine periodo",
+            c -> c.notNull()                                       // non puo': essere null
+                .afterOrEqual(this::getInizioPeriodoDisponibilita) // deve venire dopo della data di inizio
+        )
+        .constraint(PeriodoDisponibilita::getComune, "comune",
+            c -> c.notBlank()                                      // non puo': essere null, contenere solo spazi, essere vuota
+                .lessThanOrEqual(255)                         // lunghezza massima 255 caratteri
+        )
+        .build();
 
     /**
      * Crea oggetto che rappresenta un periodo di disponibilita' del lavoratore
@@ -78,5 +97,14 @@ class PeriodoDisponibilita {
      */
     protected String getComune(){
         return this.comune;
+    }
+
+    /**
+     * Restituisce le violazioni rilevate dal validatore del periodo di disponibilita'.
+     * @return Violazioni nelle proprieta' oggetto
+     */
+    public ConstraintViolations validate(){
+        ConstraintViolations violations = this.validator.validate(this);
+        return violations;
     }
 }
