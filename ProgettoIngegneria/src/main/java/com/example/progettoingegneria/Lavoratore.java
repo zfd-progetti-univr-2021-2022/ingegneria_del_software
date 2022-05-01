@@ -190,25 +190,28 @@ public class Lavoratore extends Persona{
     /**
      * Aggiunge una nuova esperienza lavorativa
      * @param esperienzaLavorativa Esperienza lavorativa da aggiungere
+     * @return true se esperienzaLavorativa e' stata aggiunta
      */
-    protected void addEsperienzaLavorativa(EsperienzaLavorativa esperienzaLavorativa){
+    protected boolean addEsperienzaLavorativa(EsperienzaLavorativa esperienzaLavorativa){
         if (esperienzaLavorativa == null)
             throw new IllegalArgumentException("esperienzaLavorativa non puo' essere null");
 
-        if (!this.esperienzeLavorative.contains(esperienzaLavorativa))
-            this.esperienzeLavorative.add(esperienzaLavorativa);
+        if (!this.esperienzeLavorative.contains(esperienzaLavorativa)) {
+            return this.esperienzeLavorative.add(esperienzaLavorativa);
+        }
+        return false;
     }
 
     /**
      * Rimuove una esperienza lavorativa
      * @param esperienzaLavorativa Esperienza lavorativa
+     * @return true se esperienzaLavorativa e' stata rimossa
      */
-    protected void removeEsperienzaLavorativa(EsperienzaLavorativa esperienzaLavorativa){
+    protected boolean removeEsperienzaLavorativa(EsperienzaLavorativa esperienzaLavorativa){
         if (esperienzaLavorativa == null)
             throw new IllegalArgumentException("esperienzaLavorativa non puo' essere null");
 
-        if (this.esperienzeLavorative.contains(esperienzaLavorativa))
-            this.esperienzeLavorative.remove(esperienzaLavorativa);
+        return this.esperienzeLavorative.remove(esperienzaLavorativa);
     }
 
     /**
@@ -232,25 +235,28 @@ public class Lavoratore extends Persona{
     /**
      * Aggiunge una lingua parlata
      * @param linguaParlata Lingua parlata
+     * @return true se linguaParlata e' stata aggiunta
      */
-    protected void addLinguaParlata(Lingua linguaParlata){
+    protected boolean addLinguaParlata(Lingua linguaParlata){
         if (linguaParlata == null)
             throw new IllegalArgumentException("linguaParlata non puo' essere null");
 
-        if (!this.lingueParlate.contains(linguaParlata))
-            this.lingueParlate.add(linguaParlata);
+        if (!this.lingueParlate.contains(linguaParlata)) {
+            return this.lingueParlate.add(linguaParlata);
+        }
+        return false;
     }
 
     /**
      * Rimuove una lingua parlata
      * @param linguaParlata lingua parlata
+     * @return true se linguaParlata e' stata rimossa
      */
-    protected void removeLinguaParlata(Lingua linguaParlata){
+    protected boolean removeLinguaParlata(Lingua linguaParlata){
         if (linguaParlata == null)
             throw new IllegalArgumentException("linguaParlata non puo' essere null");
 
-        if (this.lingueParlate.contains(linguaParlata))
-            this.lingueParlate.remove(linguaParlata);
+        return this.lingueParlate.remove(linguaParlata);
     }
 
     /**
@@ -274,25 +280,28 @@ public class Lavoratore extends Persona{
     /**
      * Aggiunge una patente
      * @param patente patente
+     * @return true se patente e' stata aggiunta
      */
-    protected void addPatente(Patente patente){
+    protected boolean addPatente(Patente patente){
         if (patente == null)
             throw new IllegalArgumentException("patente non puo' essere null");
 
-        if (!this.patenti.contains(patente))
-            this.patenti.add(patente);
+        if (!this.patenti.contains(patente)) {
+            return this.patenti.add(patente);
+        }
+        return false;
     }
 
     /**
      * Rimuove una patente
      * @param patente patente
+     * @return true se patente e' stato rimossa
      */
-    protected void removePatente(Patente patente){
+    protected boolean removePatente(Patente patente){
         if (patente == null)
             throw new IllegalArgumentException("patente non puo' essere null");
 
-        if (this.patenti.contains(patente))
-            this.patenti.remove(patente);
+        return this.patenti.remove(patente);
     }
 
     /**
@@ -332,25 +341,28 @@ public class Lavoratore extends Persona{
     /**
      * Aggiunge un periodo di disponibilita'
      * @param periodoDisponibilita periodo di disponibilita'
+     * @return true se periodoDisponibilita e' stato aggiunto
      */
-    protected void addPeriodoDisponibilita(PeriodoDisponibilita periodoDisponibilita){
+    protected boolean addPeriodoDisponibilita(PeriodoDisponibilita periodoDisponibilita){
         if (periodoDisponibilita == null)
             throw new IllegalArgumentException("periodoDisponibilita non puo' essere null");
 
-        if (!this.periodiDisponibilita.contains(periodoDisponibilita))
-            this.periodiDisponibilita.add(periodoDisponibilita);
+        if (!this.periodiDisponibilita.contains(periodoDisponibilita)) {
+            return this.periodiDisponibilita.add(periodoDisponibilita);
+        }
+        return false;
     }
 
     /**
      * Rimuove un periodo di disponibilita'
      * @param periodoDisponibilita periodo di disponibilita'
+     * @return true se periodoDisponibilita e' stato rimosso
      */
-    protected void removePeriodoDisponibilita(PeriodoDisponibilita periodoDisponibilita){
+    protected boolean removePeriodoDisponibilita(PeriodoDisponibilita periodoDisponibilita){
         if (periodoDisponibilita == null)
             throw new IllegalArgumentException("periodoDisponibilita non puo' essere null");
 
-        if (this.periodiDisponibilita.contains(periodoDisponibilita))
-            this.periodiDisponibilita.remove(periodoDisponibilita);
+        return this.periodiDisponibilita.remove(periodoDisponibilita);
     }
 
     /**
@@ -374,13 +386,16 @@ public class Lavoratore extends Persona{
     /**
      * Aggiunge un recapito urgenza.
      * @param recapitoUrgenza recapito urgenza
+     * @return true se recapitoUrgenza e' stato aggiunto
      */
-    protected void addRecapitoUrgenza(RecapitoUrgenza recapitoUrgenza){
+    protected boolean addRecapitoUrgenza(RecapitoUrgenza recapitoUrgenza){
         if (recapitoUrgenza == null)
             throw new IllegalArgumentException("recapitoUrgenza non puo' essere null");
 
-        if (!this.recapitiUrgenze.contains(recapitoUrgenza))
-            this.recapitiUrgenze.add(recapitoUrgenza);
+        if (!this.recapitiUrgenze.contains(recapitoUrgenza)) {
+            return this.recapitiUrgenze.add(recapitoUrgenza);
+        }
+        return false;
     }
 
     /**

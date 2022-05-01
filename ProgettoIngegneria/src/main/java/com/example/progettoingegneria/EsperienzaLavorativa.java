@@ -203,13 +203,16 @@ class EsperienzaLavorativa {
     /**
      * Aggiunge una mansione tra le mansioni svolte.
      * @param mansioneSvolta mansione svolta da aggiungere
+     * @return true se mansioneSvolta e' stata aggiunta
      */
-    protected void addMansioneSvolta(String mansioneSvolta){
+    protected boolean addMansioneSvolta(String mansioneSvolta){
         if (mansioneSvolta == null)
             throw new IllegalArgumentException("mansioneSvolta non puo' essere null");
 
-        if (!this.mansioniSvolte.contains(mansioneSvolta))
-            this.mansioniSvolte.add(mansioneSvolta);
+        if (!this.mansioniSvolte.contains(mansioneSvolta)) {
+            return this.mansioniSvolte.add(mansioneSvolta);
+        }
+        return false;
     }
 
     /**
