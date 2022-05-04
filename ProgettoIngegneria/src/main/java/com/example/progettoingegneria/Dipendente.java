@@ -16,7 +16,7 @@ import java.util.Objects;
  *
  * Per creare un oggetto utilizzare il factory method of().
  */
-@JsonIgnoreProperties(value={ "tipo" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
+@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
 public class Dipendente extends Persona{
 
     /** Tipo di persona nel sistema: utile per l'output JSON */
@@ -25,6 +25,8 @@ public class Dipendente extends Persona{
     private String username;
     /** Password del dipendente */
     private String password;
+    /** Booleano che indica se e' admin **/
+    private final boolean isAdmin = false;
 
     /** Validatore per il dipendente */
     private static final Validator<Dipendente> validator = ValidatorBuilder.<Dipendente>of()
@@ -60,7 +62,7 @@ public class Dipendente extends Persona{
      * @param username Username
      * @param password Password
      */
-    private Dipendente(String nome, String cognome, String luogoNascita, LocalDate dataNascita, String nazionalita,
+    protected Dipendente(String nome, String cognome, String luogoNascita, LocalDate dataNascita, String nazionalita,
                        String indirizzoEmail, String numeroTelefono, String username, String password){
 
         super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
@@ -160,6 +162,22 @@ public class Dipendente extends Persona{
     }
 
     /**
+     * Restituisce falso per gli oggetti Dipendente
+     * @return false
+     */
+    public boolean isAdmin(){
+        return false;
+    }
+
+    /**
+     * Restituisce vero per gli oggetti Dipendente e Admin.
+     * @return true
+     */
+    public boolean isDipendente(){
+        return true;
+    }
+
+    /**
      * Verifica se this e' uguale a o
      * @param o Oggetto con cui confrontare this
      * @return true se this e' uguale a o, false altrimenti
@@ -180,5 +198,24 @@ public class Dipendente extends Persona{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), username, password);
+    }
+
+    /**
+     * Restituisce in formato leggibile le informazioni del dipendente
+     * @return Stringa con informazioni dipendente
+     */
+    @Override
+    public String toString() {
+        return "Dipendente{" +
+            "nome='" + getNome() + '\'' +
+            ", cognome='" + getCognome() + '\'' +
+            ", luogoNascita='" + getLuogoNascita() + '\'' +
+            ", dataNascita=" + getDataNascita() +
+            ", nazionalita='" + getNazionalita() + '\'' +
+            ", indirizzoEmail='" + getIndirizzoEmail() + '\'' +
+            ", numeroTelefono='" + getNumeroTelefono() + '\'' +
+            ", username='" + username + '\'' +
+            ", password='****'" +
+            '}';
     }
 }

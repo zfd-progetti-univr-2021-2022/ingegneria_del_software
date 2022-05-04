@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * Classe che rappresenta un lavoratore.
  */
-@JsonIgnoreProperties(value={ "tipo" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
+@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
 public class Lavoratore extends Persona{
     /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "lavoratore";
@@ -442,6 +442,24 @@ public class Lavoratore extends Persona{
         }
 
         return violations;
+    }
+
+    /**
+     * Un lavoratore non e' Admin
+     * @return false
+     */
+    @Override
+    public boolean isAdmin() {
+        return false;
+    }
+
+    /**
+     * Un lavoratore non e' Dipendente (e non e' Admin)
+     * @return false
+     */
+    @Override
+    public boolean isDipendente(){
+        return false;
     }
 
     /**

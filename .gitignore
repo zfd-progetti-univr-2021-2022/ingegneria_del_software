@@ -1,2 +1,8 @@
 # ignora cartella build
 ProgettoIngegneria/target
+
+# ignora output log
+log.txt
+
+# ignora cartella .idea
+.idea

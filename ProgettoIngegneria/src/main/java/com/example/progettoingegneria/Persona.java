@@ -316,4 +316,17 @@ abstract class Persona implements PersonaInterface {
     public int hashCode() {
         return Objects.hash(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
     }
+
+    @Override
+    public String toString() {
+        return "Persona{" +
+            "nome='" + nome + '\'' +
+            ", cognome='" + cognome + '\'' +
+            ", luogoNascita='" + luogoNascita + '\'' +
+            ", dataNascita=" + dataNascita +
+            ", nazionalita='" + nazionalita + '\'' +
+            ", indirizzoEmail='" + indirizzoEmail + '\'' +
+            ", numeroTelefono='" + numeroTelefono + '\'' +
+            '}';
+    }
 }

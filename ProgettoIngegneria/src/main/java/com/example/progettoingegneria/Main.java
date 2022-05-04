@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -76,6 +78,21 @@ public class Main {
         System.out.println("Lavoratore valido? " + l.validate());
         System.out.println("Lavoratore: " + l.asJSON());
 
+        Admin admin = Admin.of(
+            "nome",
+            "cognome",
+            "luogo nascita",
+            LocalDate.of(2000, 4, 28),
+            "italiana",
+            "nome@example.com",
+            "045045045",
+            "ncognome",
+            "secret"
+        );
+        System.out.println("Admin valido? " + admin.validate());
+        System.out.println("Admin: " + admin.asJSON());
+        System.out.println("Admin e' admin? " + admin.isAdmin());
+
         System.out.println("\nOGGETTI CREATI A PARTIRE DA JSON:\n");
         ObjectMapper objectMapper = JsonMapper.builder().enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER).build();
         objectMapper.findAndRegisterModules();
@@ -84,9 +101,27 @@ public class Main {
         System.out.println("Dipendente valido? " + mcurley_d.validate());
         System.out.println("Dipendente: " + mcurley_d.asJSON());
 
-        String vgoulette_l_json = "{\"nome\":\"Vincent\",\"cognome\":\"Goulette\",\"luogoNascita\":\"652 Keyser Ridge Road\",\"dataNascita\":\"1978-08-14\",\"nazionalita\":\"francese\",\"indirizzoEmail\":\"vgoulette@example.com\",\"numeroTelefono\":\"336-510-8563\",\"tipo\":\"lavoratore\",\"indirizzoResidenza\":\"4776 Bastin Drive\",\"esperienzeLavorative\":[{\"inizioPeriodoLavorativo\":\"2021-03-05\",\"finePeriodoLavorativo\":\"2021-06-05\",\"nomeAzienda\":\"Museum Company\",\"mansioniSvolte\":[\"guardia\"],\"luogoLavoro\":\"4686 Hall Valley Drive\",\"retribuzioneLordaGiornaliera\":120},{\"inizioPeriodoLavorativo\":\"2021-07-15\",\"finePeriodoLavorativo\":\"2021-09-25\",\"nomeAzienda\":\"Infinite Wealth Planners\",\"mansioniSvolte\":[\"guardia\", \"  \"],\"luogoLavoro\":\"3862 Earnhardt Drive\",\"retribuzioneLordaGiornaliera\":155}],\"lingueParlate\":[\"ITALIANO\",\"INGLESE\"],\"patenti\":[\"A\",\"B\"],\"automunito\":true,\"periodiDisponibilita\":[{\"inizioPeriodoDisponibilita\":\"2022-05-10\",\"finePeriodoDisponibilita\":\"2022-05-25\",\"comune\":\"Via MoltoProbabilmenteNonEsistente 5 Verona\"}],\"recapitiUrgenze\":[{\"nome\":\"nome\",\"cognome\":\"cognome\",\"numeroTelefono\":\"098345098\",\"indirizzoEmail\":\"nome@example.com\"}]}";
+        String vgoulette_l_json = "{\"nome\":\"Vincent\",\"cognome\":\"Goulette\",\"luogoNascita\":\"652 Keyser Ridge Road\",\"dataNascita\":\"1978-08-14\",\"nazionalita\":\"francese\",\"indirizzoEmail\":\"vgoulette@example.com\",\"numeroTelefono\":\"336-510-8563\",\"tipo\":\"lavoratore\",\"indirizzoResidenza\":\"4776 Bastin Drive\",\"esperienzeLavorative\":[{\"inizioPeriodoLavorativo\":\"2021-03-05\",\"finePeriodoLavorativo\":\"2021-06-05\",\"nomeAzienda\":\"Museum Company\",\"mansioniSvolte\":[\"guardia\"],\"luogoLavoro\":\"4686 Hall Valley Drive\",\"retribuzioneLordaGiornaliera\":120},{\"inizioPeriodoLavorativo\":\"2021-07-15\",\"finePeriodoLavorativo\":\"2021-09-25\",\"nomeAzienda\":\"Infinite Wealth Planners\",\"mansioniSvolte\":[\"guardia\"],\"luogoLavoro\":\"3862 Earnhardt Drive\",\"retribuzioneLordaGiornaliera\":155}],\"lingueParlate\":[\"ITALIANO\",\"INGLESE\"],\"patenti\":[\"A\",\"B\"],\"automunito\":true,\"periodiDisponibilita\":[{\"inizioPeriodoDisponibilita\":\"2022-05-10\",\"finePeriodoDisponibilita\":\"2022-05-25\",\"comune\":\"Via MoltoProbabilmenteNonEsistente 5 Verona\"}],\"recapitiUrgenze\":[{\"nome\":\"nome\",\"cognome\":\"cognome\",\"numeroTelefono\":\"098345098\",\"indirizzoEmail\":\"nome@example.com\"}]}";
         Lavoratore vgoulette_l = objectMapper.readValue(vgoulette_l_json, Lavoratore.class);
         System.out.println("Lavoratore valido? " + vgoulette_l.validate());
         System.out.println("Lavoratore: " + vgoulette_l.asJSON());
+
+        System.out.println("\nMANAGEMENT SYSTEM:\n");
+        ManagementSystem ms = ManagementSystem.getInstance();
+        ms.login("mario", "secret");
+        try {
+            System.out.println("Aggiungi dipendente");
+            ms.addDipendente(d);
+            System.out.println("Aggiungi lavoratore");
+            ms.addLavoratore(vgoulette_l);
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+        catch (URISyntaxException e){
+            System.out.println(e);
+        }
+
+        System.out.println(ms);
     }
 }

@@ -1,0 +1,26 @@
+[
+    {
+        "nome":"Michelle",
+        "cognome":"Curley",
+        "luogoNascita":"665 Poplar Chase Lane",
+        "dataNascita":"1945-03-20",
+        "nazionalita":"americana",
+        "indirizzoEmail":"mcurley@example.com",
+        "numeroTelefono":"678-623-0532",
+        "tipo":"dipendente",
+        "username":"mcurley",
+        "password":"DL//9=(cd&={xX."
+    },
+    {
+        "nome":"nome",
+        "cognome":"cognome",
+        "luogoNascita":"luogo nascita",
+        "dataNascita":"2000-04-28",
+        "nazionalita":"italiana",
+        "indirizzoEmail":"nome@example.com",
+        "numeroTelefono":"045045045",
+        "tipo":"dipendente",
+        "username":"ncognome",
+        "password":"secret"
+    }
+]

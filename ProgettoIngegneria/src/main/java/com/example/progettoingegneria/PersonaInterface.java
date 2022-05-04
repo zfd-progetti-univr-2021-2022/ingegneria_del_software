@@ -27,4 +27,16 @@ public interface PersonaInterface {
      * @return Problemi validazione
      */
     ConstraintViolations validate();
+
+    /**
+     * Restituisce vero se una persona e' admin, falso altrimenti
+     * @return vero se una persona e' admin, falso altrimenti
+     */
+    boolean isAdmin();
+
+    /**
+     * Restituisce vero se una persona e' dipendente (o admin), falso altrimenti
+     * @return vero se una persona e' dipendente (o admin), falso altrimenti
+     */
+    boolean isDipendente();
 }
