@@ -1,0 +1,14 @@
+[
+    {
+    "nome":"mario",
+    "cognome":"rossi",
+    "luogoNascita":"luogo nascita",
+    "dataNascita":"2000-04-28",
+    "nazionalita":"italiana",
+    "indirizzoEmail":"nome@example.com",
+    "numeroTelefono":"045045045",
+    "tipo":"admin",
+    "username":"mario",
+    "password":"secret"
+    }
+]
