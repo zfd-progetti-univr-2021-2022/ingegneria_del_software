@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 
-<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="550" prefWidth="460" >
+<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="580" prefWidth="460" >
 
     <GridPane layoutX="40" layoutY="40" hgap="7" vgap="10">
         <Text text="Nome" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
@@ -36,12 +36,15 @@
         <TextField fx:id="inputEsperienze" GridPane.columnIndex="1" GridPane.rowIndex="9" />
         <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="10"  />
         <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="10"  />
-        <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="11"  />
-        <TextField fx:id="inputPatente" GridPane.columnIndex="1" GridPane.rowIndex="11"  />
-        <Text text="Auto munito" GridPane.columnIndex="0" GridPane.rowIndex="12"  />
-        <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="12"  />
-        <Button fx:id="AggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="13" />
-        <Button fx:id="registraLavoratore" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+        <Text text="Periodi disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="11"  />
+        <TextField fx:id="periodi" GridPane.columnIndex="1" GridPane.rowIndex="11"  />
+        <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="12"  />
+        <TextField fx:id="inputPatente" GridPane.columnIndex="1" GridPane.rowIndex="12"  />
+        <Text text="Auto munito" GridPane.columnIndex="0" GridPane.rowIndex="13"  />
+        <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="13"  />
+        <Button fx:id="AggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+        <Button fx:id="aggiungiEsperienza" text="Aggiungi Esperienza" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+        <Button fx:id="registraLavoratore" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="14" />
     </GridPane>
 
 </Pane>
