@@ -12,6 +12,14 @@ public class ManagementSystemResponse {
         this.details = details;
     }
 
+    public ManagementSystemStatus getStatus() {
+        return status;
+    }
+
+    public Collection<String> getDetails() {
+        return details;
+    }
+
     @Override
     public String toString() {
         String res = "[" + this.status + "]";

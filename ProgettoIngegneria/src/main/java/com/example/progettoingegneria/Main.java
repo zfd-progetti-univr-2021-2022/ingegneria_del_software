@@ -107,9 +107,11 @@ public class Main {
         System.out.println("Lavoratore: " + vgoulette_l.asJSON());
 
         System.out.println("\nMANAGEMENT SYSTEM:\n");
-        ManagementSystem ms = ManagementSystem.getInstance();
-        ms.login("mario", "secret");
+
+        ManagementSystem ms = null;
         try {
+            ms = ManagementSystem.getInstance();
+            ms.login("mario", "secret");
             System.out.println("Aggiungi dipendente");
             ms.addDipendente(d);
             System.out.println("Aggiungi lavoratore");
@@ -122,6 +124,7 @@ public class Main {
             System.out.println(e);
         }
 
-        System.out.println(ms);
+        if (ms != null)
+            System.out.println(ms);
     }
 }

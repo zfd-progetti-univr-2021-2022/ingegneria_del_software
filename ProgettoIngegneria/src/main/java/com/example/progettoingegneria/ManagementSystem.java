@@ -14,102 +14,171 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ManagementSystem {
 
     private static ManagementSystem instance = null;
     private Persona loggedInUser = null;
-    private final Collection<Dipendente> dipendenti = new ArrayList<Dipendente>();
-    private final Collection<Lavoratore> lavoratori = new ArrayList<Lavoratore>();
-    private final Collection<Admin> admins = new ArrayList<Admin>();
+    private final Collection<Dipendente> dipendenti = new ArrayList<>();
+    private final Collection<Lavoratore> lavoratori = new ArrayList<>();
+    private final Collection<Admin> admins = new ArrayList<>();
     private final ObjectMapper objectMapper = JsonMapper.builder().enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER).build();
-    private final String resourcePath = new File(ManagementSystem.class.getResource("dipendenti.json").getFile()).toPath().getParent().toString();
-    private final File dipendentiFile = Paths.get(resourcePath, "dipendenti.json").toFile();
-    private final File lavoratoriFile = Paths.get(resourcePath, "lavoratori.json").toFile();
-    private final File adminFile = Paths.get(resourcePath, "admin.json").toFile();
+    private String resourcePath = new File(ManagementSystem.class.getResource("dipendenti.json").getFile()).toPath().getParent().toString();
+    private File dipendentiFile = Paths.get(resourcePath, "dipendenti.json").toFile();
+    private File lavoratoriFile = Paths.get(resourcePath, "lavoratori.json").toFile();
+    private File adminFile = Paths.get(resourcePath, "admin.json").toFile();
 
-    private ManagementSystem(){
+    /**
+     * Costruttore del Management System:
+     * imposta il mapper della libreria jackson e importa i file JSON
+     * @throws IOException
+     */
+    private ManagementSystem(String customPath) throws IOException, URISyntaxException {
+        if (customPath != null){
+            this.resourcePath = customPath;
+            this.dipendentiFile = Paths.get(resourcePath, "dipendenti.json").toFile();
+            this.lavoratoriFile = Paths.get(resourcePath, "lavoratori.json").toFile();
+            this.adminFile = Paths.get(resourcePath, "admin.json").toFile();
+        }
         objectMapper.findAndRegisterModules();
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        try {
-            Logger.info("Inizio setup iniziale");
-            this.initialSetup();
-            Logger.debug("Fine setup iniziale");
-        }
-        catch (IOException e){
-            System.out.println(e);
-        }
-        catch (URISyntaxException e){
-            System.out.println(e);
-        }
+        Logger.info("Inizio setup iniziale");
+        this.initialSetup();
+        Logger.debug("Fine setup iniziale");
     }
 
-    public static ManagementSystem getInstance(){
+    /**
+     * Se non esistono altre istanze del Management System la crea e la restituisce.
+     * Altrimenti restituisce l'istanza gia' esistente.
+     *
+     * Usa il percorso di default dei file JSON.
+     *
+     * @return Istanza del Management System
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     * @throws URISyntaxException
+     */
+    public static ManagementSystem getInstance() throws IOException, URISyntaxException {
+        return getInstance(null);
+    }
+
+    /**
+     * Se non esistono altre istanze del Management System la crea e la restituisce.
+     * Altrimenti restituisce l'istanza gia' esistente.
+     *
+     * Usa il percorso personalizzato per trovare i file JSON.
+     *
+     * @return Istanza del Management System
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     * @throws URISyntaxException
+     */
+    public static ManagementSystem getInstance(String customPath) throws IOException, URISyntaxException {
         if (ManagementSystem.instance == null){
-            ManagementSystem.instance = new ManagementSystem();
+            Logger.debug("Creata istanza del management system con percorso file JSON custom");
+            ManagementSystem.instance = new ManagementSystem(customPath);
         }
         return ManagementSystem.instance;
     }
 
-    private void initialSetup() throws IOException, URISyntaxException {
+    /**
+     * Gestisce il setup iniziale del Management System: importa i file JSON.
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
+    private void initialSetup() throws IOException {
         Logger.debug("Importo file JSON");
         this.importJSONDipendenti(dipendentiFile);
         this.importJSONLavoratori(lavoratoriFile);
         this.importJSONAdmin(adminFile);
     }
 
+    /**
+     * Importa i dipendenti dal file JSON filePath.
+     * @param filePath File JSON con dipendenti in input
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
     private void importJSONDipendenti(File filePath) throws IOException {
         Logger.debug("Importo dipendenti dal file JSON {}", filePath.toString());
         List<Dipendente> dipendenti = Arrays.asList(objectMapper.readValue(filePath, Dipendente[].class));
         this.dipendenti.addAll(dipendenti);
     }
 
+    /**
+     * Importa i lavoratori dal file JSON filePath.
+     * @param filePath File JSON con lavoratori in input
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
     private void importJSONLavoratori(File filePath) throws IOException {
         Logger.debug("Importo lavoratori dal file JSON {}", filePath.toString());
         List<Lavoratore> lavoratori = Arrays.asList(objectMapper.readValue(filePath, Lavoratore[].class));
         this.lavoratori.addAll(lavoratori);
     }
 
+    /**
+     * Importa gli admin dal file JSON filePath.
+     * @param filePath File JSON con admin in input
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
     private void importJSONAdmin(File filePath) throws IOException {
         Logger.debug("Importo admin dal file JSON {}", filePath.toString());
         List<Admin> admins = Arrays.asList(objectMapper.readValue(filePath, Admin[].class));
         this.admins.addAll(admins);
     }
 
-    private void exportJSONDipendenti(File filePath) throws IOException, URISyntaxException {
+    /**
+     * Esporta i dipendenti come file JSON del file filePath.
+     * @param filePath File JSON con dipendenti in output
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
+    private void exportJSONDipendenti(File filePath) throws IOException {
         Logger.debug("Esporto dipendenti su file JSON {}", filePath.toString());
         PrintWriter writer = new PrintWriter(filePath);
         objectMapper.writeValue(writer, this.dipendenti);
         writer.close();
     }
 
-    private void exportJSONLavoratori(File filePath) throws IOException, URISyntaxException {
+    /**
+     * Esporta i lavoratori come file JSON del file filePath.
+     * @param filePath File JSON con lavoratori in output
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
+    private void exportJSONLavoratori(File filePath) throws IOException {
         Logger.debug("Esporto lavoratori su file JSON {}", filePath.toString());
         PrintWriter writer = new PrintWriter(filePath);
         objectMapper.writeValue(writer, this.lavoratori);
         writer.close();
     }
 
-    private void exportJSONAdmins(File filePath) throws IOException, URISyntaxException {
+    /**
+     * Esporta gli admin come file JSON del file filePath.
+     * @param filePath File JSON con admin in output
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
+    private void exportJSONAdmins(File filePath) throws IOException {
         Logger.debug("Esporto admin su file JSON {}", filePath.toString());
         PrintWriter writer = new PrintWriter(filePath);
         objectMapper.writeValue(writer, this.admins);
         writer.close();
     }
 
-    public void commitChanges() throws IOException, URISyntaxException {
+    /**
+     * Memorizza su file JSON le modifiche effettuate precedentemente.
+     * @throws IOException Errore che puo' avvenire durante la lettura dei file JSON
+     */
+    public void commitChanges() throws IOException {
         Logger.info("Memorizzo modifiche sui file JSON");
         exportJSONDipendenti(dipendentiFile);
         exportJSONLavoratori(lavoratoriFile);
         exportJSONAdmins(adminFile);
     }
 
+    /**
+     * Gestisce il login dell'utente.
+     * @param username Username dell'utente
+     * @param password Password dell'utente
+     * @return true se il login ha avuto successo, false altrimenti
+     */
     public boolean login(String username, String password){
         if (username == null || password == null){
             throw new IllegalArgumentException("username e password non possono essere nulli");
@@ -139,6 +208,18 @@ public class ManagementSystem {
         return false;
     }
 
+    /**
+     * Restituisce l'utente attualmente autenticato nel Management System.
+     * @return utente attualmente autenticato nel Management System
+     */
+    public Persona getLoggedInUser(){
+        return loggedInUser;
+    }
+
+    /**
+     * Gestisce il logout dell'utente.
+     * @return true se l'utente e' stato disconnesso, false se l'utente non era autenticato
+     */
     public boolean logout(){
         if (loggedInUser == null){
             return false;
@@ -148,126 +229,340 @@ public class ManagementSystem {
         return true;
     }
 
-    public boolean addLavoratore(Lavoratore lavoratore) throws IOException, URISyntaxException {
+    /**
+     * Restituisce i lavoratori nel sistema.
+     * @return lavoratori nel sistema
+     */
+    public Collection<Lavoratore> getLavoratori() {
+        return lavoratori;
+    }
+
+    /**
+     * Restituisce i dipendenti nel sistema.
+     * @return dipendenti nel sistema
+     */
+    public Collection<Dipendente> getDipendenti() {
+        return dipendenti;
+    }
+
+    /**
+     * Restituisce gli admin nel sistema.
+     * @return Admin nel sistema
+     */
+    public Collection<Admin> getAdmins() {
+        return admins;
+    }
+
+    /**
+     * Gestisce la creazione di un account lavoratore.
+     *
+     * Un utente puo' creare un account lavoratore se:
+     * - ha effettuato l'accesso
+     * - e' dipendente (o admin)
+     * - i dati del lavoratore da inserire sono validi
+     *
+     * @param lavoratore Lavoratore da aggiungere dal sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
+     * @throws URISyntaxException
+     */
+    public ManagementSystemResponse addLavoratore(Lavoratore lavoratore) throws IOException, URISyntaxException {
+        if (lavoratore == null)
+            throw new IllegalArgumentException("lavoratore non puo' essere null");
+
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
 
         Logger.info("Un utente vuole iscrivere il lavoratore {} {}", lavoratore.getNome(), lavoratore.getCognome());
 
         if (!loggedInUser.isDipendente()) {
             Logger.info("L'utente non ha i permessi necessari per iscrivere il lavoratore");
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo i dipendenti e gli admin possono aggiungere lavoratori")
+            );
         }
 
         Dipendente utente = (Dipendente) loggedInUser;
 
-        if (lavoratore.validate().size() == 0 ) {
-            if ((!lavoratori.contains(lavoratore)) && lavoratori.add(lavoratore)){
-                commitChanges();
-                Logger.info("L'utente {} ha aggiunto il lavoratore {} {}", utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome());
-                return true;
-            }
-            else{
-                Logger.info("Non e' stato possibile aggiungere il lavoratore: possibile duplicato");
-            }
+        if (lavoratore.validate().size() > 0 ) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                lavoratore.validate()
+            );
         }
-        else{
-            Logger.info("Alcuni dati del lavoratore sono stati scritti non correttamente");
+
+        if (!((!lavoratori.contains(lavoratore)) && lavoratori.add(lavoratore))) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile eseguire l'azione: possibile duplicato")
+            );
         }
-        return false;
+
+        commitChanges();
+        Logger.info(
+            "L'utente {} ha aggiunto il lavoratore {} {}",
+            utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome()
+        );
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.OK,
+            List.of()
+        );
     }
 
-    public boolean removeLavoratore(Lavoratore lavoratore) throws IOException, URISyntaxException {
+    /**
+     * Gestisce la eliminazione di un lavoratore.
+     *
+     * Un utente puo' eliminare un lavoratore se:
+     * - ha effettuato l'accesso
+     * - e' dipendente (o admin)
+     *
+     * @param lavoratore Lavoratore da rimuovere dal sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
+     */
+    public ManagementSystemResponse removeLavoratore(Lavoratore lavoratore) throws IOException {
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
 
         Logger.info("Un utente vuole rimuovere il lavoratore {} {}", lavoratore.getNome(), lavoratore.getCognome());
 
         if (!loggedInUser.isDipendente())
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo i dipendenti e gli admin possono rimuovere lavoratori")
+            );
 
         Dipendente utente = (Dipendente) loggedInUser;
 
-        if (this.lavoratori.contains(lavoratore) && lavoratori.remove(lavoratore)) {
-            commitChanges();
-            Logger.info("L' utente {} vuole rimuovere il lavoratore {} {}", utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome());
-            return true;
-        }
-        else{
-            Logger.info("Non e' stato possibile rimuovere il lavoratore {} {}", lavoratore.getNome(), lavoratore.getCognome());
+        if (!(this.lavoratori.contains(lavoratore) && lavoratori.remove(lavoratore))) {
+            Logger.info(
+                "Non e' stato possibile rimuovere il lavoratore {} {} da parte dell'utente {}",
+                lavoratore.getNome(), lavoratore.getCognome(), utente.getUsername()
+            );
+
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile eseguire l'azione")
+            );
         }
 
-        return false;
+        commitChanges();
+        Logger.info(
+            "L' utente {} ha rimosso il lavoratore {} {}",
+            utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome()
+        );
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.OK,
+            List.of()
+        );
     }
 
-    public boolean addDipendente(Dipendente dipendente) throws IOException, URISyntaxException {
+    /**
+     * Gestisce la creazione di un account dipendente.
+     *
+     * Un utente puo' creare un account dipendente se:
+     * - ha effettuato l'accesso
+     * - e' admin
+     * - i dati del dipendente da inserire sono validi (es. requisiti di password)
+     *
+     * @param dipendente Dipendente da aggiungere dal sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
+     * @throws URISyntaxException
+     */
+    public ManagementSystemResponse addDipendente(Dipendente dipendente) throws IOException, URISyntaxException {
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
+
+        Logger.info("Un utente vuole aggiungere il dipendente {} {}", dipendente.getNome(), dipendente.getCognome());
 
         if (!loggedInUser.isAdmin())
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo gli admin possono aggiungere altri dipendenti")
+            );
 
-        if (dipendente.validate().size() == 0 ) {
-            if (dipendenti.add(dipendente)){
-                commitChanges();
-                return true;
-            }
+        Dipendente utente = (Dipendente) loggedInUser;
+
+        if (dipendente.validate().size() > 0) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                dipendente.validate()
+            );
         }
-        return false;
+
+        if (!((!dipendenti.contains(dipendente)) && dipendenti.add(dipendente))) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile eseguire l'azione")
+            );
+        }
+
+        commitChanges();
+        Logger.info("L'utente {} ha inserito il dipendente {} {} (username {})", utente.getUsername(), dipendente.getNome(), dipendente.getCognome(), dipendente.getUsername());
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.OK,
+            List.of()
+        );
     }
 
-    public boolean removeDipendente(Dipendente dipendente) throws IOException, URISyntaxException {
+    /**
+     * Gestisce la eliminazione di un account dipendente.
+     *
+     * Un utente puo' eliminare un account dipendente se:
+     * - ha effettuato l'accesso
+     * - e' admin
+     *
+     * @param dipendente Dipendente da rimuovere dal sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' apparire durante salvataggio modifiche su file
+     */
+    public ManagementSystemResponse removeDipendente(Dipendente dipendente) throws IOException {
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
 
         if (!loggedInUser.isAdmin())
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo gli admin possono aggiungere altri dipendenti")
+            );
 
         if (dipendenti.remove(dipendente)) {
             commitChanges();
-            return true;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.OK,
+                List.of()
+            );
         }
-        return false;
+
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.ACTION_FAILED,
+            List.of("Non e' stato possibile eseguire l'azione")
+        );
     }
 
-    public boolean addAdmin(Admin admin) throws IOException, URISyntaxException {
+    /**
+     * Gestisce la creazione di un account admin.
+     *
+     * L'utente puo' registrare un account admin se:
+     * - ha effettuato l'accesso
+     * - se e' anch'esso un admin
+     * - se i dati dell'admin nuovo rispettano tutti i requisiti (es. password abbastanza lunga, con caratteri speciali, ...)
+     *
+     * @param admin Admin da aggiungere al sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' apparire durante salvataggio modifiche su file
+     */
+    public ManagementSystemResponse addAdmin(Admin admin) throws IOException {
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
 
         if (!loggedInUser.isAdmin())
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo gli admin possono aggiungere altri admin")
+            );
 
-        if (admin.validate().size() == 0 ) {
-            if (admins.add(admin)){
-                commitChanges();
-                return true;
-            }
+        if (admin.validate().size() > 0 ) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                admin.validate()
+            );
         }
-        return false;
+
+        if (!admins.add(admin)){
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile eseguire l'azione")
+            );
+        }
+
+        commitChanges();
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.OK,
+            List.of()
+        );
     }
 
-    public boolean removeAdmin(Admin admin) throws IOException, URISyntaxException {
+    /**
+     * Gestisce l'eliminazione di un account admin da parte di un utente.
+     *
+     * Un utente puo' eliminare un admin se:
+     * - ha effettuato l'accesso
+     * - e' anch'esso admin
+     * - non sta eliminando se stesso
+     * - non e' l'unico admin presente nel sistema
+     *
+     * @param admin Admin da rimuovere dal sistema
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore durante salvataggio modifiche
+     */
+    public ManagementSystemResponse removeAdmin(Admin admin) throws IOException {
         if (loggedInUser == null)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
 
         if (!loggedInUser.isAdmin())
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo gli admin possono rimuovere altri admin")
+            );
+
+        if (admin.equals(loggedInUser)){
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.REMOVE_SELF,
+                List.of("Un admin non puo' auto-disiscriversi dal sistema")
+            );
+        }
 
         if (admins.size() <= 1)
-            return false;
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ONE_ADMIN,
+                List.of("Impossibile rimuovere l'admin: e' l'unico admin registrato nel sistema")
+            );
 
-        if (admins.remove(admin)) {
-            commitChanges();
-            return true;
+        if (!admins.remove(admin)) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile eseguire l'azione")
+            );
         }
-        return false;
+
+        commitChanges();
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.OK,
+            List.of()
+        );
     }
 
+    /**
+     * Restituisce una stringa con dipendenti, lavoratori e admin nel sistema
+     * @return Stringa con dipendenti, lavoratori e admin
+     */
     @Override
     public String toString() {
         return "ManagementSystem{" +
             "Dipendenti" + dipendenti.toString() +
             "Lavoratori" + lavoratori.toString() +
+            "Admin" + admins.toString() +
             "}";
     }
 }
