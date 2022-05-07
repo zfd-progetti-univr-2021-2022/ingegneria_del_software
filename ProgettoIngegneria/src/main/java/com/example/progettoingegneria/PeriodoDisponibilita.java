@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Objects;
  *
  * Per creare un oggetto utilizzare il factory method of().
  */
-class PeriodoDisponibilita {
+public class PeriodoDisponibilita {
 
     /** Data inizio periodo di disponibilita' del lavoratore */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -140,9 +142,11 @@ class PeriodoDisponibilita {
      * Restituisce le violazioni rilevate dal validatore del periodo di disponibilita'.
      * @return Violazioni nelle proprieta' oggetto
      */
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        List<String> violationsMessages = new ArrayList<>();
         ConstraintViolations violations = this.validator.validate(this);
-        return violations;
+        violations.forEach(v -> violationsMessages.add(v.message()));
+        return violationsMessages;
     }
 
     /**

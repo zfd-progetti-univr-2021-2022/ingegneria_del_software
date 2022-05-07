@@ -9,8 +9,10 @@ import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -425,23 +427,30 @@ public class Lavoratore extends Persona{
      * @return Violazioni nelle proprieta' oggetto
      */
     @Override
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        // validator Persona
+        List<String> violationsMessages = new ArrayList<>(super.validate());
+
+        // validator Lavoratore
         ConstraintViolations violations = Lavoratore.validator.validate(this);
-        violations.addAll(super.validate());  // validator Persona
+        violations.forEach(v -> violationsMessages.add(v.message()));
 
+        // validator di ogni esperienza lavorativa
         for (EsperienzaLavorativa e: esperienzeLavorative) {
-            violations.addAll(e.validate());
+            violationsMessages.addAll(e.validate());
         }
 
+        // validator di ogni periodo di disponibilita
         for (PeriodoDisponibilita p: periodiDisponibilita) {
-            violations.addAll(p.validate());
+            violationsMessages.addAll(p.validate());
         }
 
+        // validator di ogni recapito urgenza
         for (RecapitoUrgenza r: recapitiUrgenze) {
-            violations.addAll(r.validate());
+            violationsMessages.addAll(r.validate());
         }
 
-        return violations;
+        return violationsMessages;
     }
 
     /**

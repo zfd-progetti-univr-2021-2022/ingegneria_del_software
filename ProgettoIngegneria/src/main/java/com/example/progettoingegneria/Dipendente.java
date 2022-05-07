@@ -9,6 +9,8 @@ import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -155,10 +157,15 @@ public class Dipendente extends Persona{
      * Restituisce le violazioni rilevate dal validatore dell'oggetto.
      * @return Violazioni nelle proprieta' oggetto
      */
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        // validator Persona
+        List<String> violationsMessages = new ArrayList<>(super.validate());
+
+        // validator Dipendente
         ConstraintViolations violations = Dipendente.validator.validate(this);
-        violations.addAll(super.validate());  // validator Persona
-        return violations;
+        violations.forEach(v -> violationsMessages.add(v.message()));
+
+        return violationsMessages;
     }
 
     /**

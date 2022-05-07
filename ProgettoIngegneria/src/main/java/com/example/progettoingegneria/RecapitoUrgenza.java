@@ -9,6 +9,8 @@ import am.ik.yavi.builder.ValidatorBuilder;
 import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,7 +18,7 @@ import java.util.Objects;
  *
  * Per istanziare un oggetto utilizzare il factory method of().
  */
-class RecapitoUrgenza {
+public class RecapitoUrgenza {
 
     /** Nome recapito */
     private String nome;
@@ -169,9 +171,11 @@ class RecapitoUrgenza {
      * Restituisce le violazioni rilevate dal validatore del recapito urgenza.
      * @return Violazioni nelle proprieta' oggetto
      */
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        List<String> violationsMessages = new ArrayList<>();
         ConstraintViolations violations = RecapitoUrgenza.validator.validate(this);
-        return violations;
+        violations.forEach(v -> violationsMessages.add(v.message()));
+        return violationsMessages;
     }
 
     /**

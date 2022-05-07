@@ -5,13 +5,16 @@
 package com.example.progettoingegneria;
 
 import am.ik.yavi.builder.ValidatorBuilder;
+import am.ik.yavi.constraint.base.ContainerConstraintBase;
 import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -19,7 +22,7 @@ import java.util.Objects;
  *
  * Per creare un oggetto usare il factory method of().
  */
-class EsperienzaLavorativa {
+public class EsperienzaLavorativa {
 
     /** Inizio periodo lavorativo */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -54,7 +57,7 @@ class EsperienzaLavorativa {
                 .lessThanOrEqual(100)  // lunghezza massima 100
         )
         .constraint(EsperienzaLavorativa::getMansioniSvolte, "mansioni svolte",
-            c -> c.notEmpty()  // non puo' essere: nulla o vuota
+            ContainerConstraintBase::notEmpty  // non puo' essere: nulla o vuota
         )
         .forEachIfPresent(
             EsperienzaLavorativa::getMansioniSvolte, "mansioni",
@@ -265,9 +268,11 @@ class EsperienzaLavorativa {
      * Restituisce le violazioni rilevate dal validatore delle esperienze lavorative.
      * @return Violazioni nelle proprieta' oggetto
      */
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        List<String> violationsMessages = new ArrayList<>();
         ConstraintViolations violations = this.validator.validate(this);
-        return violations;
+        violations.forEach(v -> violationsMessages.add(v.message()));
+        return violationsMessages;
     }
 
     /**

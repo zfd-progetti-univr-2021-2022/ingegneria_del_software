@@ -4,8 +4,9 @@
  */
 package com.example.progettoingegneria;
 
-import am.ik.yavi.core.ConstraintViolations;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import java.util.List;
 
 /**
  * Tnterfaccia usata dalle classi
@@ -26,7 +27,7 @@ public interface PersonaInterface {
      * Restituisce i problemi di validazione dell'oggetto
      * @return Problemi validazione
      */
-    ConstraintViolations validate();
+    List<String> validate();
 
     /**
      * Restituisce vero se una persona e' admin, falso altrimenti

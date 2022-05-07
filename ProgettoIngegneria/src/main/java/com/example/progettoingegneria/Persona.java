@@ -5,6 +5,8 @@
 package com.example.progettoingegneria;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -21,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Rappresenta una persona generica all'interno del sistema.
  */
-abstract class Persona implements PersonaInterface {
+public abstract class Persona implements PersonaInterface {
 
     /** Nome */
     private String nome;
@@ -101,10 +103,7 @@ abstract class Persona implements PersonaInterface {
                         return false;
 
                     // se e' specificato deve avere al massimo 20 caratteri
-                    if (s.length() > 20)
-                        return false;
-
-                    return true;
+                    return s.length() <= 20;
                 }
             })
         )
@@ -282,17 +281,18 @@ abstract class Persona implements PersonaInterface {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        String result = mapper.writeValueAsString(this);
-        return result;
+        return mapper.writeValueAsString(this);
     }
 
     /**
      * Restituisce le violazioni rilevate dal validatore dei dati della persona.
      * @return Violazioni nelle proprieta' oggetto
      */
-    public ConstraintViolations validate(){
+    public List<String> validate(){
+        List<String> violationsMessages = new ArrayList<>();
         ConstraintViolations violations = Persona.validator.validate(this);
-        return violations;
+        violations.forEach(v -> violationsMessages.add(v.message()));
+        return violationsMessages;
     }
 
     /**
