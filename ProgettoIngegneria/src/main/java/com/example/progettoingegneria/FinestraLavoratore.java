@@ -15,6 +15,7 @@ public class FinestraLavoratore extends Application{
         Scene scene;
         Button aggiungiContatto;
         Button registraLavoratore;
+        Button aggiungiEsperienza;
         TextField periodi;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
         try { scene = new Scene(loader.load()); }
@@ -28,6 +29,15 @@ public class FinestraLavoratore extends Application{
             public void handle(ActionEvent event) {
                 //apro la finestra per aggiungere contatti
                 new FinestraContatto().start(new Stage());
+            }
+        });
+
+        aggiungiEsperienza= (Button) loader.getNamespace().get("aggiungiEsperienza");
+        aggiungiEsperienza.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //apro la finestra per aggiungere contatti
+                new FinestraEsperienzaLavorativa().start(new Stage());
             }
         });
 

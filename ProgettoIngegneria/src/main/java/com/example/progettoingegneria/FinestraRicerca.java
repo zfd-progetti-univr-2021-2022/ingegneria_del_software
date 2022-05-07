@@ -14,7 +14,6 @@ public class FinestraRicerca extends Application {
     public void start(Stage stage) {
         Scene scene;
         Button aggiungiLavoratore;
-        Button aggiungiMansione;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraRicerca.fxml"));
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
@@ -25,15 +24,6 @@ public class FinestraRicerca extends Application {
             public void handle(ActionEvent event) {
                 //apro la finestra per aggiungere contatti
                 new FinestraLavoratore().start(new Stage());
-            }
-        });
-
-        aggiungiMansione= (Button) loader.getNamespace().get("aggiungiMansione");
-        aggiungiMansione.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //apro la finestra per aggiungere contatti
-                new FinestraEsperienzaLavorativa().start(new Stage());
             }
         });
 
