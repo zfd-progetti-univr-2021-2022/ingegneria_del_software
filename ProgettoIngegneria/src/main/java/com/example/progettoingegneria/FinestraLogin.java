@@ -29,7 +29,7 @@ public class FinestraLogin extends Application{
                 TextField nomeUtente=(TextField) loader.getNamespace().get("inputUtente");
                 PasswordField password=(PasswordField) loader.getNamespace().get("inputPassword");
                 //se inserisco le credenziali dell'amministratore apro la finestra per aggiungere i dipendenti
-                if(nomeUtente.getText().equals("ADMIN") && password.getText().equals("ADMIN")){
+                if(nomeUtente.getText().equals("mario") && password.getText().equals("secret")){
                     new FinestraDipendente().start(new Stage());
                     stage.close();
                 }

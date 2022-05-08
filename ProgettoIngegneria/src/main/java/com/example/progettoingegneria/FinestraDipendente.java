@@ -6,29 +6,64 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
 
 public class FinestraDipendente extends Application {
     public void start(Stage stage) {
         Scene scene;
-        Button registraDipendente;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraDipendente.fxml"));
-
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
 
-        registraDipendente= (Button) loader.getNamespace().get("registraDipendente");
+        TextField nome= (TextField) loader.getNamespace().get("inputNome");
+        TextField cognome= (TextField) loader.getNamespace().get("inputCognome");
+        TextField codice= (TextField) loader.getNamespace().get("inputCodice");
+        TextField luogoNascita= (TextField) loader.getNamespace().get("inputLuogoNascita");
+        TextField giornoNascita= (TextField) loader.getNamespace().get("giornoNascita");
+        TextField meseNascita= (TextField) loader.getNamespace().get("meseNascita");
+        TextField annoNascita= (TextField) loader.getNamespace().get("annoNascita");
+        TextField nazionalita= (TextField) loader.getNamespace().get("inputNazionalita");
+        TextField mail= (TextField) loader.getNamespace().get("inputMail");
+        TextField numero= (TextField) loader.getNamespace().get("inputRecapito");
+        TextField utente= (TextField) loader.getNamespace().get("inputUtente");
+        TextField password= (TextField) loader.getNamespace().get("inputPassword");
+
+        Button registraDipendente= (Button) loader.getNamespace().get("registraDipendente");
         registraDipendente.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Evviva");
-                stage.close();
+                LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
+               Dipendente d= Dipendente.of(nome.getText(),cognome.getText(),luogoNascita.getText(),dataNascita,nazionalita.getText(),
+                        mail.getText(), numero.getText(), utente.getText(), password.getText());
+                try {
+                    ManagementSystem ms = ManagementSystem.getInstance();
+                    ms.addDipendente(d);
+                }
+                catch (IOException e){System.out.println(e);}
+                catch (URISyntaxException e){System.out.println(e);}
+
+                nome.setText("");
+                cognome.setText("");
+                codice.setText("");
+                luogoNascita.setText("");
+                giornoNascita.setText("");
+                meseNascita.setText("");
+                annoNascita.setText("");
+                nazionalita.setText("");
+                mail.setText("");
+                numero.setText("");
+                utente.setText("");
+                password.setText("");
             }
         });
 
         stage.setScene(scene);
+        stage.setTitle("Aggiungi Dipendente");
         stage.setResizable(false);
         stage.show();
     }

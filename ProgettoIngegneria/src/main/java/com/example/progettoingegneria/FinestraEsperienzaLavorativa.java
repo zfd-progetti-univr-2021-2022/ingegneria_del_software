@@ -12,13 +12,12 @@ import java.io.IOException;
 public class FinestraEsperienzaLavorativa extends Application{
     public void start(Stage stage) {
         Scene scene;
-        Button aggiungi;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraEsperienzaLavorativa.fxml"));
 
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
 
-        aggiungi= (Button) loader.getNamespace().get("AggiungiMansione");
+        Button aggiungi= (Button) loader.getNamespace().get("AggiungiEsperienza");
         aggiungi.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -27,6 +26,7 @@ public class FinestraEsperienzaLavorativa extends Application{
         });
 
         stage.setScene(scene);
+        stage.setTitle("Aggiungi Dipendente");
         stage.setResizable(false);
         stage.show();
     }
