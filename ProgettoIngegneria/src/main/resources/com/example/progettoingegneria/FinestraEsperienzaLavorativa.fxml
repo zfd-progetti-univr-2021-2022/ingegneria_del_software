@@ -31,7 +31,7 @@
         </GridPane>
         <Text text="Retribuzione" GridPane.columnIndex="0" GridPane.rowIndex="5" />
         <TextField fx:id="inputRetribuzione" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
-        <Button fx:id="AggiungiMansione" text="Aggiungi" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+        <Button fx:id="AggiungiEsperienza" text="Aggiungi" GridPane.columnIndex="2" GridPane.rowIndex="6" />
     </GridPane>
 
 </Pane>
