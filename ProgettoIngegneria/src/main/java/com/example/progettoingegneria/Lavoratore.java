@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Classe che rappresenta un lavoratore.
@@ -472,28 +471,5 @@ public class Lavoratore extends Persona{
     @Override
     public boolean isDipendente(){
         return false;
-    }
-
-    /**
-     * Verifica se this e' uguale a o
-     * @param o Oggetto con cui confrontare this
-     * @return true se this e' uguale a o, false altrimenti
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Lavoratore that = (Lavoratore) o;
-        return automunito == that.automunito && indirizzoResidenza.equals(that.indirizzoResidenza) && esperienzeLavorative.equals(that.esperienzeLavorative) && lingueParlate.equals(that.lingueParlate) && patenti.equals(that.patenti) && periodiDisponibilita.equals(that.periodiDisponibilita) && recapitiUrgenze.equals(that.recapitiUrgenze);
-    }
-
-    /**
-     * Restituisce hash
-     * @return hash
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), indirizzoResidenza, esperienzeLavorative, lingueParlate, patenti, automunito, periodiDisponibilita, recapitiUrgenze);
     }
 }
