@@ -39,7 +39,7 @@ public class FinestraDipendente extends Application {
             public void handle(ActionEvent event) {
                 LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
                Dipendente d= Dipendente.of(nome.getText(),cognome.getText(),luogoNascita.getText(),dataNascita,nazionalita.getText(),
-                        mail.getText(), numero.getText(), utente.getText(), password.getText());
+                        mail.getText(), numero.getText(), utente.getText(), password.getText(),codice.getText());
                 try {
                     ManagementSystem ms = ManagementSystem.getInstance();
                     ms.addDipendente(d);
