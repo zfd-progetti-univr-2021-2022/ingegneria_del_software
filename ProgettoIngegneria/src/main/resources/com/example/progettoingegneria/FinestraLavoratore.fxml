@@ -32,8 +32,8 @@
         <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
         <Text text="Mail" GridPane.columnIndex="0" GridPane.rowIndex="8"  />
         <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="8"  />
-        <Text text="Esperienze/Specializzazioni" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <TextField fx:id="inputSpecializzazioni" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+        <Text text="Comuni di disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <TextField fx:id="inputComuni" GridPane.columnIndex="1" GridPane.rowIndex="9" />
         <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="10"  />
         <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="10"  />
         <Text text="Periodi disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="11"  />

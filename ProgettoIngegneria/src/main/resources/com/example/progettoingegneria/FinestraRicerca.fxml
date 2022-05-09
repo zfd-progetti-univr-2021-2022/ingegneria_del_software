@@ -10,7 +10,7 @@
 
 <Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="610" prefHeight="730">
     <GridPane layoutX="40" layoutY="40" hgap="15" vgap="10">
-        <GridPane layoutX="40" layoutY="40" hgap="15" vgap="10" GridPane.rowIndex="0">
+        <GridPane layoutX="40" layoutY="40" hgap="15" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <Text text="Nome" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
             <TextField fx:id="inputNome" GridPane.columnIndex="1" GridPane.rowIndex="0"  />
             <CheckBox fx:id="checkNome" GridPane.columnIndex="3" GridPane.rowIndex="0"  />
@@ -29,7 +29,7 @@
             <Text text="Auto/Patente" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
             <CheckBox fx:id="inputTrasporto" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
             <CheckBox fx:id="checkTrasporto" GridPane.columnIndex="3" GridPane.rowIndex="5"  />
-            <Button fx:id="cerca" text="Cerca" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+            <Button fx:id="cerca" text="Cerca" GridPane.columnIndex="6" GridPane.rowIndex="5" />
         </GridPane>
         <ScrollPane  GridPane.columnIndex="0" prefWidth="500" GridPane.rowIndex="1">
             <TableView prefWidth="500"/>
