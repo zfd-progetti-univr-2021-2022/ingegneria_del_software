@@ -78,15 +78,16 @@ public class Lavoratore extends Persona{
      * @param automunito Se e' automunito o meno
      * @param periodiDisponibilita Periodi di disponibilita' lavorativa
      * @param recapitiUrgenze Recapiti da usare in caso di urgenza
+     * @param codiceFiscale Codice fiscale
     */
     private Lavoratore(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
                          String nazionalita, String indirizzoEmail, String numeroTelefono,
                          String indirizzoResidenza, Collection<EsperienzaLavorativa> esperienzeLavorative,
                          Collection<Lingua> lingueParlate, Collection<Patente> patenti,
                          boolean automunito, Collection<PeriodoDisponibilita> periodiDisponibilita,
-                         Collection<RecapitoUrgenza> recapitiUrgenze) {
+                         Collection<RecapitoUrgenza> recapitiUrgenze, String codiceFiscale) {
 
-        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
+        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono, codiceFiscale);
 
         if (indirizzoResidenza == null || esperienzeLavorative == null || lingueParlate == null
             || patenti == null || periodiDisponibilita == null || recapitiUrgenze == null){
@@ -127,6 +128,7 @@ public class Lavoratore extends Persona{
      * @param automunito Se e' automunito o meno
      * @param periodiDisponibilita Periodi di disponibilita' lavorativa
      * @param recapitiUrgenze Recapiti da usare in caso di urgenza
+     * @param codiceFiscale Codice fiscale
      * @return Oggetto che rappresenta il lavoratore
      */
     public static Lavoratore of(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
@@ -134,7 +136,7 @@ public class Lavoratore extends Persona{
                                 String indirizzoResidenza, Collection<EsperienzaLavorativa> esperienzeLavorative,
                                 Collection<Lingua> lingueParlate, Collection<Patente> patenti,
                                 boolean automunito, Collection<PeriodoDisponibilita> periodiDisponibilita,
-                                Collection<RecapitoUrgenza> recapitiUrgenze) {
+                                Collection<RecapitoUrgenza> recapitiUrgenze, String codiceFiscale) {
         return new Lavoratore(
             nome,
             cognome,
@@ -149,7 +151,8 @@ public class Lavoratore extends Persona{
             patenti,
             automunito,
             periodiDisponibilita,
-            recapitiUrgenze
+            recapitiUrgenze,
+            codiceFiscale
         );
     }
 

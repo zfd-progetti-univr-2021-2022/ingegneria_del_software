@@ -106,7 +106,8 @@ public class TestManagementSystem {
             List.of(),
             false,
             List.of(),
-            List.of()
+            List.of(),
+            faker.idNumber().ssnValid()
         );
 
         // crea data attuale e sottraici 20 anni
@@ -134,7 +135,8 @@ public class TestManagementSystem {
                     faker.phoneNumber().phoneNumber(),
                     faker.internet().emailAddress()
                 )
-            )
+            ),
+            faker.idNumber().ssnValid()
         );
 
         // all'inizio non dovrebbe esserci nessun lavoratore

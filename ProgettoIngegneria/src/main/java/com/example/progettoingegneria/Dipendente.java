@@ -63,11 +63,12 @@ public class Dipendente extends Persona{
      * @param numeroTelefono NUmero telefono
      * @param username Username
      * @param password Password
+     * @param codiceFiscale Codice fiscale
      */
     protected Dipendente(String nome, String cognome, String luogoNascita, LocalDate dataNascita, String nazionalita,
-                       String indirizzoEmail, String numeroTelefono, String username, String password){
+                       String indirizzoEmail, String numeroTelefono, String username, String password, String codiceFiscale){
 
-        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
+        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono, codiceFiscale);
 
         // nota: il controllo del numero di telefono viene fatto qui perche' il lavoratore,
         // che eredita da Persona, puo' avere numero di telefono nullo
@@ -99,11 +100,12 @@ public class Dipendente extends Persona{
      * @param numeroTelefono NUmero telefono
      * @param username Username
      * @param password Password
+     * @param codiceFiscale Codice Fiscale
      * @return Oggetto che rappresenta un dipendente
      */
     public static Dipendente of(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
                                 String nazionalita, String indirizzoEmail, String numeroTelefono,
-                                String username, String password){
+                                String username, String password, String codiceFiscale){
         return new Dipendente(
             nome,
             cognome,
@@ -113,7 +115,8 @@ public class Dipendente extends Persona{
             indirizzoEmail,
             numeroTelefono,
             username,
-            password
+            password,
+            codiceFiscale
         );
     }
 

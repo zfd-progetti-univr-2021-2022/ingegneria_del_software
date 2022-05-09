@@ -20,11 +20,12 @@ public class Admin extends Dipendente{
      * @param numeroTelefono NUmero telefono
      * @param username Username
      * @param password Password
+     * @param codiceFiscale Codice fiscale
      */
     private Admin(String nome, String cognome, String luogoNascita, LocalDate dataNascita, String nazionalita,
-                       String indirizzoEmail, String numeroTelefono, String username, String password){
+                       String indirizzoEmail, String numeroTelefono, String username, String password, String codiceFiscale){
 
-        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono, username, password);
+        super(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono, username, password, codiceFiscale);
     }
 
     /**
@@ -47,11 +48,12 @@ public class Admin extends Dipendente{
      * @param numeroTelefono NUmero telefono
      * @param username Username
      * @param password Password
+     * @param codiceFiscale Codice fiscale
      * @return Oggetto che rappresenta un dipendente
      */
     public static Admin of(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
                                 String nazionalita, String indirizzoEmail, String numeroTelefono,
-                                String username, String password){
+                                String username, String password, String codiceFiscale){
         return new Admin(
             nome,
             cognome,
@@ -61,7 +63,8 @@ public class Admin extends Dipendente{
             indirizzoEmail,
             numeroTelefono,
             username,
-            password
+            password,
+            codiceFiscale
         );
     }
 

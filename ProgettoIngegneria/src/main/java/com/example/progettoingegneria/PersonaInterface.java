@@ -40,4 +40,16 @@ public interface PersonaInterface {
      * @return vero se una persona e' dipendente (o admin), falso altrimenti
      */
     boolean isDipendente();
+
+    /**
+     * Restituisce il codice fiscale.
+     * @return Codice fiscale.
+     */
+    String getCodiceFiscale();
+
+    /**
+     * Imposta il codice fiscale.
+     * @param codiceFiscale Codice fiscale
+     */
+    void setCodiceFiscale(String codiceFiscale);
 }

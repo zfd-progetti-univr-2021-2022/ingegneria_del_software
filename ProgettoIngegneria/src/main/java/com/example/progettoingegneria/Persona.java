@@ -1,5 +1,7 @@
 /**
  * Definisce classe astratta che rappresenta una persona nel sistema.
+ *
+ * TODO: aggiungere codiceFiscale al validator
  */
 
 package com.example.progettoingegneria;
@@ -42,6 +44,9 @@ public abstract class Persona implements PersonaInterface {
     private String indirizzoEmail;
     /** Numero di telefono */
     private String numeroTelefono;
+
+    /** Codice fiscale */
+    private String codiceFiscale;
 
     /** Oggetto per validare i dati di una persona */
     private static final Validator<Persona> validator = ValidatorBuilder.<Persona>of()
@@ -119,12 +124,13 @@ public abstract class Persona implements PersonaInterface {
      * @param nazionalita Nazionalita'
      * @param indirizzoEmail Indirizzo email
      * @param numeroTelefono Numero telefono (opzionale per i lavoratori)
+     * @param codiceFiscale Codice fiscale
      */
     protected Persona(String nome, String cognome, String luogoNascita, LocalDate dataNascita,
-                      String nazionalita, String indirizzoEmail, String numeroTelefono){
+                      String nazionalita, String indirizzoEmail, String numeroTelefono, String codiceFiscale){
 
         if (nome == null || cognome == null || luogoNascita == null ||
-            dataNascita == null || nazionalita == null || indirizzoEmail == null){
+            dataNascita == null || nazionalita == null || indirizzoEmail == null || codiceFiscale == null){
             // numeroTelefono e' opzionale per i lavoratori
             throw new IllegalArgumentException("I parametri non possono essere nulli (ad eccezione del numero di telefono)");
         }
@@ -137,6 +143,8 @@ public abstract class Persona implements PersonaInterface {
         this.indirizzoEmail = indirizzoEmail;
 
         this.numeroTelefono = numeroTelefono;
+
+        this.codiceFiscale = codiceFiscale;
     }
 
     /**
@@ -269,6 +277,24 @@ public abstract class Persona implements PersonaInterface {
         if (numeroTelefono == null)
             throw new IllegalArgumentException("numeroTelefono non puo' essere null");
         this.numeroTelefono = numeroTelefono;
+    }
+
+    /**
+     * Restituisce il codice fiscale.
+     * @return Codice fiscale.
+     */
+    public String getCodiceFiscale(){
+        return this.codiceFiscale;
+    }
+
+    /**
+     * Imposta il codice fiscale.
+     * @param codiceFiscale Codice fiscale
+     */
+    public void setCodiceFiscale(String codiceFiscale){
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere null");
+        this.codiceFiscale = codiceFiscale;
     }
 
     /**
