@@ -46,21 +46,12 @@ public class FinestraLavoratore extends Application{
         TextField patente=(TextField) loader.getNamespace().get("inputPatente");
         CheckBox automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
 
-        Button aggiungiContatto = (Button) loader.getNamespace().get("AggiungiContattoLavoratore");
+        Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
         aggiungiContatto.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //apro la finestra per aggiungere contatti
                 new FinestraContatto().start(new Stage());
-            }
-        });
-
-        Button aggiungiEsperienza= (Button) loader.getNamespace().get("aggiungiEsperienza");
-        aggiungiEsperienza.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //apro la finestra per aggiungere contatti
-                new FinestraEsperienzaLavorativa().start(new Stage());
             }
         });
 
@@ -78,7 +69,6 @@ public class FinestraLavoratore extends Application{
                     try {
                         ManagementSystem ms = ManagementSystem.getInstance();
                         ms.addLavoratore(p);
-                        System.out.println(p+"\n"+p.getPatenti()+"\n"+p.getLingueParlate()+"\n"+p.getPeriodiDisponibilita());
                     }
                     catch (IOException e){System.out.println(e);}
                     catch (URISyntaxException e){System.out.println(e);}

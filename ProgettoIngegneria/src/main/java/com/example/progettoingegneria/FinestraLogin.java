@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 public class FinestraLogin extends Application{
     public void start(Stage stage) {
         Scene scene;
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLogin.fxml"));
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
@@ -27,27 +28,18 @@ public class FinestraLogin extends Application{
         accedi.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //se inserisco le credenziali dell'amministratore apro la finestra per aggiungere i dipendenti
-                if(nomeUtente.getText().equals("mario") && password.getText().equals("secret")){
-                    try {
-                        ManagementSystem ms = ManagementSystem.getInstance();
-                        ms.login(nomeUtente.getText(),password.getText());
+                try {
+                    ManagementSystem ms = ManagementSystem.getInstance();
+                    ms.login(nomeUtente.getText(),password.getText());
+                    if(ms.getLoggedInUser()==null)
+                        new FinestraErrore().start(new Stage());
+                    else{
+                        new FinestraRicerca().start(new Stage());
+                        stage.close();
                     }
-                    catch (IOException e){System.out.println(e);}
-                    catch (URISyntaxException e){System.out.println(e);}
-                    new FinestraDipendente().start(new Stage());
-                    stage.close();
                 }
-                else{
-                    try {
-                        ManagementSystem ms = ManagementSystem.getInstance();
-                        ms.login(nomeUtente.getText(),password.getText());
-                    }
-                    catch (IOException e){System.out.println(e);}
-                    catch (URISyntaxException e){System.out.println(e);}
-                    new FinestraRicerca().start(new Stage());
-                    stage.close();
-                }
+                catch (IOException e){System.out.println(e);}
+                catch (URISyntaxException e){System.out.println(e);}
             }
         });
 

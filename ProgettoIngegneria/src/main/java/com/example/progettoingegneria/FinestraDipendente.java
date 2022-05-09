@@ -42,7 +42,7 @@ public class FinestraDipendente extends Application {
                         mail.getText(), numero.getText(), utente.getText(), password.getText(),codice.getText());
                 try {
                     ManagementSystem ms = ManagementSystem.getInstance();
-                    ms.addDipendente(d);
+                    System.out.println(ms.addDipendente(d));
                 }
                 catch (IOException e){System.out.println(e);}
                 catch (URISyntaxException e){System.out.println(e);}
