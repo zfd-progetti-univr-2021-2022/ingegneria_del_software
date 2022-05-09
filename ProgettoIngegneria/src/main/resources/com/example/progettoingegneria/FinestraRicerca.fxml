@@ -35,5 +35,6 @@
             <TableView prefWidth="500"/>
         </ScrollPane>
         <Button fx:id="aggiungiLavoratore" text="Aggiungi Lavoratore" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Button fx:id="aggiungiDipendente" text="Aggiungi Dipendente" GridPane.columnIndex="0" GridPane.rowIndex="3" />
     </GridPane>
 </Pane>

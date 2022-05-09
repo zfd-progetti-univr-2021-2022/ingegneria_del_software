@@ -42,8 +42,7 @@
         <TextField fx:id="inputPatente" GridPane.columnIndex="1" GridPane.rowIndex="12"  />
         <Text text="Auto munito" GridPane.columnIndex="0" GridPane.rowIndex="13"  />
         <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="13"  />
-        <Button fx:id="AggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="14" />
-        <Button fx:id="aggiungiEsperienza" text="Aggiungi Esperienza" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+        <Button fx:id="aggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="14" />
         <Button fx:id="registraLavoratore" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="14" />
     </GridPane>
 
