@@ -612,6 +612,135 @@ public class ManagementSystem {
     }
 
     /**
+     * Aggiunge un'esperienza lavorativa ad un lavoratore
+     * @param codiceFiscale Codice fiscale del lavoratore
+     * @param esperienzaLavorativa Esperienza lavorativa da aggiungere
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore durante salvataggio modifiche
+     */
+    public ManagementSystemResponse addEsperienzaLavorativa(String codiceFiscale, EsperienzaLavorativa esperienzaLavorativa) throws IOException {
+        if (codiceFiscale == null || esperienzaLavorativa == null){
+            throw new IllegalArgumentException("codiceFiscale e esperienzaLavorativa non possono essere nulli");
+        }
+
+        if (loggedInUser == null)
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
+
+        Logger.info("Un utente vuole aggiungere un'esperienza lavorativa al lavoratore con codice fiscale {}", codiceFiscale);
+
+        if (!loggedInUser.isDipendente()) {
+            Logger.info("L'utente non ha i permessi necessari per aggiungere l'esperienza lavorativa");
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo i dipendenti e gli admin possono aggiungere esperienze lavorative")
+            );
+        }
+
+        Dipendente utente = (Dipendente) loggedInUser;
+
+        for (Lavoratore lavoratore: this.lavoratori) {
+            if (!lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                continue;
+            }
+
+            // trovato lavoratore
+            if (esperienzaLavorativa.validate().size() > 0 ) {
+                return new ManagementSystemResponse(
+                    ManagementSystemStatus.INVALID_INPUT,
+                    esperienzaLavorativa.validate()
+                );
+            }
+
+            if (!lavoratore.addEsperienzaLavorativa(esperienzaLavorativa)) {
+                return new ManagementSystemResponse(
+                    ManagementSystemStatus.ACTION_FAILED,
+                    List.of("Non e' stato possibile eseguire l'azione: possibile duplicato")
+                );
+            }
+
+            commitChanges();
+            Logger.info(
+                "L'utente {} ha aggiunto una nuova esperienza lavorativa al lavoratore {} {}",
+                utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome()
+            );
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.OK,
+                List.of()
+            );
+        }
+
+        // lavoratore non trovato
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.INVALID_INPUT,
+            List.of("Non e' stato possibile trovare un lavoratore con il codice fiscale specificato")
+        );
+    }
+
+    /**
+     * Rimuove un'esperienza lavorativa ad un lavoratore
+     * @param codiceFiscale Codice fiscale del lavoratore
+     * @param esperienzaLavorativa Esperienza lavorativa da aggiungere
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore durante salvataggio modifiche
+     */
+    public ManagementSystemResponse removeEsperienzaLavorativa(String codiceFiscale, int esperienzaLavorativaId) throws IOException {
+        if (codiceFiscale == null){
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+        }
+
+        if (loggedInUser == null)
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.NOT_LOGGED_IN,
+                List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
+            );
+
+        Logger.info("Un utente vuole rimuovere un'esperienza lavorativa al lavoratore con codice fiscale {}", codiceFiscale);
+
+        if (!loggedInUser.isDipendente()) {
+            Logger.info("L'utente non ha i permessi necessari per rimuovere esperienze lavorative");
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo i dipendenti e gli admin possono rimuovere esperienze lavorative")
+            );
+        }
+
+        Dipendente utente = (Dipendente) loggedInUser;
+
+        for (Lavoratore lavoratore: this.lavoratori) {
+            if (!lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                continue;
+            }
+
+            // trovato lavoratore
+            if (!lavoratore.removeEsperienzaLavorativa(esperienzaLavorativaId)) {
+                return new ManagementSystemResponse(
+                    ManagementSystemStatus.ACTION_FAILED,
+                    List.of("Non e' stato possibile eseguire l'azione")
+                );
+            }
+
+            commitChanges();
+            Logger.info(
+                "L'utente {} ha rimosso un'attivita' lavorativa del lavoratore {} {}",
+                utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome()
+            );
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.OK,
+                List.of()
+            );
+        }
+
+        // lavoratore non trovato
+        return new ManagementSystemResponse(
+            ManagementSystemStatus.INVALID_INPUT,
+            List.of("Non e' stato possibile trovare un lavoratore con il codice fiscale specificato")
+        );
+    }
+
+    /**
      * Restituisce una stringa con dipendenti, lavoratori e admin nel sistema
      * @return Stringa con dipendenti, lavoratori e admin
      */
