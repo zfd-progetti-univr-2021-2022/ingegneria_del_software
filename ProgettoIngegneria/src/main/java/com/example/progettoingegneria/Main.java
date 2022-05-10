@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws JsonProcessingException{
+    public static void main(String[] args) throws IOException, URISyntaxException {
 
         System.out.println("OGGETTI CREATI VIA CODICE:\n");
         Dipendente d = Dipendente.of(
@@ -111,23 +111,36 @@ public class Main {
 
         System.out.println("\nMANAGEMENT SYSTEM:\n");
 
-        ManagementSystem ms = null;
-        try {
-            ms = ManagementSystem.getInstance();
-            ms.login("mario", "secret");
-            System.out.println("Aggiungi dipendente");
-            ms.addDipendente(d);
-            System.out.println("Aggiungi lavoratore");
-            ms.addLavoratore(vgoulette_l);
-        }
-        catch (IOException e){
-            System.out.println(e);
-        }
-        catch (URISyntaxException e){
-            System.out.println(e);
-        }
+        ManagementSystem ms = ManagementSystem.getInstance();
+        ms.login("mario", "secret");
+        System.out.println("Aggiungi dipendente");
+        ms.addDipendente(d);
+        ms.addDipendente(mcurley_d);
+        System.out.println("Aggiungi lavoratore");
+        ms.addLavoratore(vgoulette_l);
+        ms.addEsperienzaLavorativa(vgoulette_l.getCodiceFiscale(), EsperienzaLavorativa.of(
+            LocalDate.of(2000, 1, 2),
+            LocalDate.of(2000, 2, 2),
+            "Nome",
+            List.of("Architetto"),
+            "luogo",
+            123
+        ));
+        Lavoratore t = (Lavoratore) ms.getLavoratori().toArray()[0];
+        EsperienzaLavorativa e = (EsperienzaLavorativa) t.getEsperienzeLavorative().toArray()[1];
+        System.out.println("ID: " + e.getId());
+        System.out.println(ms);
 
-        if (ms != null)
-            System.out.println(ms);
+        System.out.println("Dipendenti nel MS: " + ms.getDipendenti());
+        System.out.println("Lavoratori nel MS: " + ms.getLavoratori());
+        for (Lavoratore lavoratore: ms.getLavoratori()){
+            System.out.println(lavoratore);
+            for (EsperienzaLavorativa el: lavoratore.getEsperienzeLavorative()) {
+                System.out.println(el);
+                System.out.println("ID: " + el.getId());
+                System.out.println("");
+            }
+            System.out.println("------------------------------------");
+        }
     }
 }
