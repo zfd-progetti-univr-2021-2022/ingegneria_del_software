@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.JOptionPane;
 import java.util.Locale;
 
 public class FinestraLavoratore extends Application{
@@ -77,7 +78,7 @@ public class FinestraLavoratore extends Application{
                     stage.close();
                 }
                 else
-                    new FinestraErrore().start(new Stage());
+                    JOptionPane.showMessageDialog(null, "INSERISCI ALMENO UN CONTATTO", "ERRORE", JOptionPane.ERROR_MESSAGE);
             }
         });
 

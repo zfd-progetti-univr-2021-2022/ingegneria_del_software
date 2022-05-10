@@ -10,6 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -32,7 +33,7 @@ public class FinestraLogin extends Application{
                     ManagementSystem ms = ManagementSystem.getInstance();
                     ms.login(nomeUtente.getText(),password.getText());
                     if(ms.getLoggedInUser()==null)
-                        new FinestraErrore().start(new Stage());
+                        JOptionPane.showMessageDialog(null, "NOME UTENTE O PASSWORD NON CORRETTI", "ERRORE", JOptionPane.ERROR_MESSAGE);
                     else{
                         new FinestraRicerca().start(new Stage());
                         stage.close();

@@ -43,22 +43,11 @@ public class FinestraDipendente extends Application {
                 try {
                     ManagementSystem ms = ManagementSystem.getInstance();
                     System.out.println(ms.addDipendente(d));
+                    stage.close();
                 }
                 catch (IOException e){System.out.println(e);}
                 catch (URISyntaxException e){System.out.println(e);}
 
-                nome.setText("");
-                cognome.setText("");
-                codice.setText("");
-                luogoNascita.setText("");
-                giornoNascita.setText("");
-                meseNascita.setText("");
-                annoNascita.setText("");
-                nazionalita.setText("");
-                mail.setText("");
-                numero.setText("");
-                utente.setText("");
-                password.setText("");
             }
         });
 
