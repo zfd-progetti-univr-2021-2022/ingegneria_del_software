@@ -320,18 +320,38 @@ public class ManagementSystem {
      * - ha effettuato l'accesso
      * - e' dipendente (o admin)
      *
-     * @param lavoratore Lavoratore da rimuovere dal sistema
+     * @param codiceFiscale Codice fiscale del lavoratore da rimuovere dal sistema
      * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
      * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
      */
-    public ManagementSystemResponse removeLavoratore(Lavoratore lavoratore) throws IOException {
+    public ManagementSystemResponse removeLavoratore(String codiceFiscale) throws IOException {
+
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere null");
+
         if (loggedInUser == null)
             return new ManagementSystemResponse(
                 ManagementSystemStatus.NOT_LOGGED_IN,
                 List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
             );
 
-        Logger.info("Un utente vuole rimuovere il lavoratore {} {}", lavoratore.getNome(), lavoratore.getCognome());
+        Lavoratore lavoratoreToRemove = null;
+        for (Lavoratore lavoratore: this.lavoratori) {
+            if (lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                lavoratoreToRemove = lavoratore;
+                break;
+            }
+        }
+
+        if (lavoratoreToRemove == null) {
+            // lavoratore non trovato
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                List.of("Non e' stato possibile trovare un lavoratore con il codice fiscale specificato")
+            );
+        }
+
+        Logger.info("Un utente vuole rimuovere il lavoratore {} {}", lavoratoreToRemove.getNome(), lavoratoreToRemove.getCognome());
 
         if (!loggedInUser.isDipendente())
             return new ManagementSystemResponse(
@@ -341,10 +361,10 @@ public class ManagementSystem {
 
         Dipendente utente = (Dipendente) loggedInUser;
 
-        if (!(this.lavoratori.contains(lavoratore) && lavoratori.remove(lavoratore))) {
+        if (!(this.lavoratori.contains(lavoratoreToRemove) && lavoratori.remove(lavoratoreToRemove))) {
             Logger.info(
                 "Non e' stato possibile rimuovere il lavoratore {} {} da parte dell'utente {}",
-                lavoratore.getNome(), lavoratore.getCognome(), utente.getUsername()
+                lavoratoreToRemove.getNome(), lavoratoreToRemove.getCognome(), utente.getUsername()
             );
 
             return new ManagementSystemResponse(
@@ -356,7 +376,7 @@ public class ManagementSystem {
         commitChanges();
         Logger.info(
             "L' utente {} ha rimosso il lavoratore {} {}",
-            utente.getUsername(), lavoratore.getNome(), lavoratore.getCognome()
+            utente.getUsername(), lavoratoreToRemove.getNome(), lavoratoreToRemove.getCognome()
         );
         return new ManagementSystemResponse(
             ManagementSystemStatus.OK,
@@ -423,11 +443,14 @@ public class ManagementSystem {
      * - ha effettuato l'accesso
      * - e' admin
      *
-     * @param dipendente Dipendente da rimuovere dal sistema
+     * @param codiceFiscale Codice fiscale dipendente da rimuovere dal sistema
      * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
      * @throws IOException Errore che puo' apparire durante salvataggio modifiche su file
      */
-    public ManagementSystemResponse removeDipendente(Dipendente dipendente) throws IOException {
+    public ManagementSystemResponse removeDipendente(String codiceFiscale) throws IOException {
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+
         if (loggedInUser == null)
             return new ManagementSystemResponse(
                 ManagementSystemStatus.NOT_LOGGED_IN,
@@ -440,7 +463,23 @@ public class ManagementSystem {
                 List.of("Solo gli admin possono aggiungere altri dipendenti")
             );
 
-        if (dipendenti.remove(dipendente)) {
+        Dipendente dipendenteToRemove = null;
+        for (Dipendente dipendente: this.dipendenti) {
+            if (dipendente.getCodiceFiscale().equals(codiceFiscale)){
+                dipendenteToRemove = dipendente;
+                break;
+            }
+        }
+
+        if (dipendenteToRemove == null) {
+            // dipendente non trovato
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                List.of("Non e' stato possibile trovare un dipendente con il codice fiscale specificato")
+            );
+        }
+
+        if (dipendenti.remove(dipendenteToRemove)) {
             commitChanges();
             return new ManagementSystemResponse(
                 ManagementSystemStatus.OK,
@@ -509,11 +548,14 @@ public class ManagementSystem {
      * - non sta eliminando se stesso
      * - non e' l'unico admin presente nel sistema
      *
-     * @param admin Admin da rimuovere dal sistema
+     * @param codiceFiscale Codice fiscale admin da rimuovere dal sistema
      * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
      * @throws IOException Errore durante salvataggio modifiche
      */
-    public ManagementSystemResponse removeAdmin(Admin admin) throws IOException {
+    public ManagementSystemResponse removeAdmin(String codiceFiscale) throws IOException {
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+
         if (loggedInUser == null)
             return new ManagementSystemResponse(
                 ManagementSystemStatus.NOT_LOGGED_IN,
@@ -526,7 +568,23 @@ public class ManagementSystem {
                 List.of("Solo gli admin possono rimuovere altri admin")
             );
 
-        if (admin.equals(loggedInUser)){
+        Admin adminToRemove = null;
+        for (Admin admin: this.admins) {
+            if (admin.getCodiceFiscale().equals(codiceFiscale)){
+                adminToRemove = admin;
+                break;
+            }
+        }
+
+        if (adminToRemove == null) {
+            // admin non trovato
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                List.of("Non e' stato possibile trovare un admin con il codice fiscale specificato")
+            );
+        }
+
+        if (adminToRemove.equals(loggedInUser)){
             return new ManagementSystemResponse(
                 ManagementSystemStatus.REMOVE_SELF,
                 List.of("Un admin non puo' auto-disiscriversi dal sistema")
@@ -539,7 +597,7 @@ public class ManagementSystem {
                 List.of("Impossibile rimuovere l'admin: e' l'unico admin registrato nel sistema")
             );
 
-        if (!admins.remove(admin)) {
+        if (!admins.remove(adminToRemove)) {
             return new ManagementSystemResponse(
                 ManagementSystemStatus.ACTION_FAILED,
                 List.of("Non e' stato possibile eseguire l'azione")
