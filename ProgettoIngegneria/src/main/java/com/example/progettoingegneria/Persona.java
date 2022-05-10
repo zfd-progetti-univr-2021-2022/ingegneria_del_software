@@ -9,7 +9,6 @@ package com.example.progettoingegneria;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import am.ik.yavi.builder.ValidatorBuilder;
@@ -76,7 +75,7 @@ public abstract class Persona implements PersonaInterface {
         )
         .constraint(Persona::getNazionalita, "nazionalita'",
             c -> c.notBlank()              // non puo': essere null, contenere solo spazi, essere vuota
-                .lessThanOrEqual(20)       // lunghezza massima 20: 17 e' il massimo qui https://www.dizy.com/it/lista/6017297130979328
+                .lessThanOrEqual(50)       // lunghezza massima 50: 17 e' il massimo qui https://www.dizy.com/it/lista/6017297130979328
         )
         .constraint(Persona::getIndirizzoEmail, "email",
             c -> c.notBlank()              // non puo': essere null, contenere solo spazi, essere vuota
@@ -331,7 +330,7 @@ public abstract class Persona implements PersonaInterface {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Persona persona = (Persona) o;
-        return nome.equals(persona.nome) && cognome.equals(persona.cognome) && luogoNascita.equals(persona.luogoNascita) && dataNascita.equals(persona.dataNascita) && nazionalita.equals(persona.nazionalita) && indirizzoEmail.equals(persona.indirizzoEmail) && numeroTelefono.equals(persona.numeroTelefono);
+        return this.codiceFiscale.equals(persona.codiceFiscale);
     }
 
     /**
@@ -340,7 +339,7 @@ public abstract class Persona implements PersonaInterface {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(nome, cognome, luogoNascita, dataNascita, nazionalita, indirizzoEmail, numeroTelefono);
+        return this.codiceFiscale.hashCode();
     }
 
     @Override

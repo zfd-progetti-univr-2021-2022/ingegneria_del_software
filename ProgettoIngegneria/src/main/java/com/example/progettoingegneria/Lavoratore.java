@@ -13,12 +13,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Classe che rappresenta un lavoratore.
  */
-@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente" }, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
+@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente", "uniqueEsperienzaLavorativaId"}, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
 public class Lavoratore extends Persona{
     /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "lavoratore";
@@ -26,7 +25,7 @@ public class Lavoratore extends Persona{
     /** Indirizzo di residenza */
     private String indirizzoResidenza;
     /** Insieme di esperienze lavorative del lavoratore */
-    private Collection<EsperienzaLavorativa> esperienzeLavorative;
+    private Collection<EsperienzaLavorativa> esperienzeLavorative = new ArrayList<>();
     /** Insieme di lingue parlate dal lavoratore */
     private Collection<Lingua> lingueParlate;
     /** Insieme di patenti possedute dal lavoratore */
@@ -37,6 +36,9 @@ public class Lavoratore extends Persona{
     private Collection<PeriodoDisponibilita> periodiDisponibilita;
     /** Insieme di recapiti da usare in caso di emergenza */
     private Collection<RecapitoUrgenza> recapitiUrgenze;
+
+    /** Identificativo univoco esperienza lavorativa */
+    private int uniqueEsperienzaLavorativaId = 0;
 
     /** Validatore dati di un lavoratore */
     private static final Validator<Lavoratore> validator = ValidatorBuilder.<Lavoratore>of()
@@ -185,11 +187,19 @@ public class Lavoratore extends Persona{
     /**
      * Imposta esperienze lavorative.
      * @param esperienzeLavorative Esperienze lavorative
+     * @return true se tutte le esperienze lavorative sono state aggiunte correttamente
      */
-    protected void setEsperienzeLavorative(Collection<EsperienzaLavorativa> esperienzeLavorative){
+    protected boolean setEsperienzeLavorative(Collection<EsperienzaLavorativa> esperienzeLavorative){
         if (esperienzeLavorative == null)
             throw new IllegalArgumentException("esperienzeLavorative non puo' essere null");
-        this.esperienzeLavorative = esperienzeLavorative;
+
+        boolean success = true;
+        for (EsperienzaLavorativa esperienzaLavorativa: esperienzeLavorative) {
+            if (!addEsperienzaLavorativa(esperienzaLavorativa)){
+                success = false;
+            }
+        }
+        return success;
     }
 
     /**
@@ -201,6 +211,9 @@ public class Lavoratore extends Persona{
         if (esperienzaLavorativa == null)
             throw new IllegalArgumentException("esperienzaLavorativa non puo' essere null");
 
+        esperienzaLavorativa.setId(uniqueEsperienzaLavorativaId);
+        uniqueEsperienzaLavorativaId++;
+
         if (!this.esperienzeLavorative.contains(esperienzaLavorativa)) {
             return this.esperienzeLavorative.add(esperienzaLavorativa);
         }
@@ -209,14 +222,16 @@ public class Lavoratore extends Persona{
 
     /**
      * Rimuove una esperienza lavorativa
-     * @param esperienzaLavorativa Esperienza lavorativa
+     * @param esperienzaLavorativaId Identificativo esperienza lavorativa
      * @return true se esperienzaLavorativa e' stata rimossa
      */
-    protected boolean removeEsperienzaLavorativa(EsperienzaLavorativa esperienzaLavorativa){
-        if (esperienzaLavorativa == null)
-            throw new IllegalArgumentException("esperienzaLavorativa non puo' essere null");
-
-        return this.esperienzeLavorative.remove(esperienzaLavorativa);
+    protected boolean removeEsperienzaLavorativa(int esperienzaLavorativaId){
+        for (EsperienzaLavorativa esperienzaLavorativa : esperienzeLavorative) {
+            if (esperienzaLavorativa.getId() == esperienzaLavorativaId){
+                return this.esperienzeLavorative.remove(esperienzaLavorativa);
+            }
+        }
+        return false;
     }
 
     /**
@@ -472,28 +487,5 @@ public class Lavoratore extends Persona{
     @Override
     public boolean isDipendente(){
         return false;
-    }
-
-    /**
-     * Verifica se this e' uguale a o
-     * @param o Oggetto con cui confrontare this
-     * @return true se this e' uguale a o, false altrimenti
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Lavoratore that = (Lavoratore) o;
-        return automunito == that.automunito && indirizzoResidenza.equals(that.indirizzoResidenza) && esperienzeLavorative.equals(that.esperienzeLavorative) && lingueParlate.equals(that.lingueParlate) && patenti.equals(that.patenti) && periodiDisponibilita.equals(that.periodiDisponibilita) && recapitiUrgenze.equals(that.recapitiUrgenze);
-    }
-
-    /**
-     * Restituisce hash
-     * @return hash
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), indirizzoResidenza, esperienzeLavorative, lingueParlate, patenti, automunito, periodiDisponibilita, recapitiUrgenze);
     }
 }
