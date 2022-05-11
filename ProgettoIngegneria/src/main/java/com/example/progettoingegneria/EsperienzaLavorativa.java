@@ -42,7 +42,7 @@ public class EsperienzaLavorativa {
     private int retribuzioneLordaGiornaliera;
 
     /** ID dell'esperienza lavorativa */
-    private int id;
+    private int id = -1;
 
     /** Validatore per l'esperienza lavorativa */
     @JsonIgnore

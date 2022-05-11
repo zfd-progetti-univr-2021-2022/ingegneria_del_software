@@ -1,3 +1,8 @@
+/**
+ * Esegue unit test sul management system.
+ *
+ * TODO: testare i metodi che si occupano di aggiungere, eliminare e modificare le esperienze lavorative dei lavoratori
+ */
 package com.example.progettoingegneria;
 
 import java.io.File;

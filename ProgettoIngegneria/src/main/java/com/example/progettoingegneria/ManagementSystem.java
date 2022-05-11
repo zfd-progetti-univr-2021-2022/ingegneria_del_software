@@ -765,6 +765,81 @@ public class ManagementSystem {
     }
 
     /**
+     * Modifica una esperienza lavorativa all'interno del sistema
+     * @param codiceFiscale Codice fiscale del lavoratore
+     * @param esperienzaLavorativaId Identificativo dell'esperienza lavorativa
+     * @param newEsperienzaLavorativa Nuova esperienza lavorativa che sostituisce l'esperienza lavorativa attuale
+     * @return ManagementSystemResponse Risposta del sistema con status ed eventuali messaggi di errore
+     * @throws IOException Errore durante salvataggio modifiche
+     */
+    public ManagementSystemResponse modifyEsperienzaLavorativa(String codiceFiscale, int esperienzaLavorativaId, EsperienzaLavorativa newEsperienzaLavorativa) throws IOException {
+        EsperienzaLavorativa originalEsperienzaLavorativa = getEsperienzaLavorativa(codiceFiscale, esperienzaLavorativaId);
+        if (originalEsperienzaLavorativa == null){
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile trovare l'esperienza lavorativa e/o il lavoratore per cui effettuare le modifiche")
+            );
+        }
+
+        // imposta id della vecchia esperienza lavorativa e prova a cancellarla tra le esperienze lavorative dell'utente
+        newEsperienzaLavorativa.setId(originalEsperienzaLavorativa.getId());
+        removeEsperienzaLavorativa(codiceFiscale, esperienzaLavorativaId);
+
+        // prova ad aggiungere l'esperienza lavorativa modificata
+        ManagementSystemResponse response = addEsperienzaLavorativa(codiceFiscale, newEsperienzaLavorativa);
+
+        // se la richiesta non ha avuto successo elimina l'esperienza lavorativa modificata e riaggiungi l'originale
+        if (response.getStatus() != ManagementSystemStatus.OK){
+            removeEsperienzaLavorativa(codiceFiscale, newEsperienzaLavorativa.getId());
+            addEsperienzaLavorativa(codiceFiscale, originalEsperienzaLavorativa);
+            return response;
+        }
+
+        return new ManagementSystemResponse(ManagementSystemStatus.OK, List.of());
+    }
+
+    /**
+     * Recupera una esperienza lavorativa da un lavoratore.
+     * Restituisce null se non e' stato possibile trovare lavoratore/esperienza lavorativa.
+     *
+     * @param codiceFiscale Codice fiscale del lavoratore
+     * @param esperienzaLavorativaId Identificativo esperienza lavorativa
+     * @return Esperienza lavorativa selezionata oppure null in caso di errore
+     */
+    private EsperienzaLavorativa getEsperienzaLavorativa(String codiceFiscale, int esperienzaLavorativaId) {
+        if (codiceFiscale == null){
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+        }
+
+        if (loggedInUser == null)
+            return null;
+
+        Logger.info("Un utente vuole recuperare l'esperienza lavorativa con id {} del lavoratore con codice fiscale {}", esperienzaLavorativaId, codiceFiscale);
+
+        if (!loggedInUser.isDipendente()) {
+            Logger.info("L'utente non ha i permessi necessari per ottenere informazioni sull'esperienza lavorativa");
+            return null;
+        }
+
+        for (Lavoratore lavoratore: this.lavoratori) {
+            if (!lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                continue;
+            }
+
+            // trovato lavoratore
+            for (EsperienzaLavorativa esperienzaLavorativa: lavoratore.getEsperienzeLavorative()){
+                if (esperienzaLavorativa.getId() == esperienzaLavorativaId){
+                    return esperienzaLavorativa;
+                }
+            }
+            return null;
+        }
+
+        // lavoratore non trovato
+        return null;
+    }
+
+    /**
      * Restituisce una stringa con dipendenti, lavoratori e admin nel sistema
      * @return Stringa con dipendenti, lavoratori e admin
      */
