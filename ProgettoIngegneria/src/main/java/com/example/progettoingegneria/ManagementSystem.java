@@ -1,3 +1,10 @@
+/**
+ * Definisce la classe del management system.
+ *
+ * TODO: gestire account dipendenti e admin con lo stesso username. Due utenti non dovrebbero poter inserire lo stesso username
+ *
+ * TODO: impedire all'utente di eseguire operazioni su esperienze lavorative che hanno piu' di 5 anni
+ */
 package com.example.progettoingegneria;
 
 import org.tinylog.Logger;
@@ -34,7 +41,7 @@ public class ManagementSystem {
      * imposta il mapper della libreria jackson e importa i file JSON
      * @throws IOException
      */
-    private ManagementSystem(String customPath) throws IOException, URISyntaxException {
+    private ManagementSystem(String customPath) throws IOException {
         if (customPath != null){
             this.resourcePath = customPath;
             this.dipendentiFile = Paths.get(resourcePath, "dipendenti.json").toFile();
@@ -80,6 +87,13 @@ public class ManagementSystem {
             ManagementSystem.instance = new ManagementSystem(customPath);
         }
         return ManagementSystem.instance;
+    }
+
+    /**
+     * Elimina l'istanza del management system: usato per fare il reset del sistema.
+     */
+    protected static void deleteInstance(){
+        ManagementSystem.instance = null;
     }
 
     /**
@@ -335,6 +349,16 @@ public class ManagementSystem {
                 List.of("Per eseguire questa operazione e' necessario effettuare l'accesso")
             );
 
+        Logger.info("Un utente vuole rimuovere il lavoratore con codice fiscale {}", codiceFiscale);
+
+        if (!loggedInUser.isDipendente())
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.PERMISSION_ERROR,
+                List.of("Solo i dipendenti e gli admin possono rimuovere lavoratori")
+            );
+
+        Dipendente utente = (Dipendente) loggedInUser;
+
         Lavoratore lavoratoreToRemove = null;
         for (Lavoratore lavoratore: this.lavoratori) {
             if (lavoratore.getCodiceFiscale().equals(codiceFiscale)){
@@ -351,15 +375,7 @@ public class ManagementSystem {
             );
         }
 
-        Logger.info("Un utente vuole rimuovere il lavoratore {} {}", lavoratoreToRemove.getNome(), lavoratoreToRemove.getCognome());
-
-        if (!loggedInUser.isDipendente())
-            return new ManagementSystemResponse(
-                ManagementSystemStatus.PERMISSION_ERROR,
-                List.of("Solo i dipendenti e gli admin possono rimuovere lavoratori")
-            );
-
-        Dipendente utente = (Dipendente) loggedInUser;
+        Logger.info("L'utente {} vuole rimuovere il lavoratore {} {}", utente.getUsername(), lavoratoreToRemove.getNome(), lavoratoreToRemove.getCognome());
 
         if (!(this.lavoratori.contains(lavoratoreToRemove) && lavoratori.remove(lavoratoreToRemove))) {
             Logger.info(
@@ -398,6 +414,10 @@ public class ManagementSystem {
      * @throws URISyntaxException
      */
     public ManagementSystemResponse addDipendente(Dipendente dipendente) throws IOException, URISyntaxException {
+        if (dipendente == null){
+            throw new IllegalArgumentException("dipendente non puo' essere nullo");
+        }
+
         if (loggedInUser == null)
             return new ManagementSystemResponse(
                 ManagementSystemStatus.NOT_LOGGED_IN,
@@ -421,7 +441,7 @@ public class ManagementSystem {
             );
         }
 
-        if (!((!dipendenti.contains(dipendente)) && dipendenti.add(dipendente))) {
+        if (dipendenti.contains(dipendente) || (!dipendenti.add(dipendente))) {
             return new ManagementSystemResponse(
                 ManagementSystemStatus.ACTION_FAILED,
                 List.of("Non e' stato possibile eseguire l'azione")
@@ -506,6 +526,10 @@ public class ManagementSystem {
      * @throws IOException Errore che puo' apparire durante salvataggio modifiche su file
      */
     public ManagementSystemResponse addAdmin(Admin admin) throws IOException {
+        if (admin == null){
+            throw new IllegalArgumentException("admin non puo' essere nullo");
+        }
+
         if (loggedInUser == null)
             return new ManagementSystemResponse(
                 ManagementSystemStatus.NOT_LOGGED_IN,
@@ -525,7 +549,7 @@ public class ManagementSystem {
             );
         }
 
-        if (!admins.add(admin)){
+        if (admins.contains(admin) || (!admins.add(admin))){
             return new ManagementSystemResponse(
                 ManagementSystemStatus.ACTION_FAILED,
                 List.of("Non e' stato possibile eseguire l'azione")
@@ -682,7 +706,7 @@ public class ManagementSystem {
     /**
      * Rimuove un'esperienza lavorativa ad un lavoratore
      * @param codiceFiscale Codice fiscale del lavoratore
-     * @param esperienzaLavorativa Esperienza lavorativa da aggiungere
+     * @param esperienzaLavorativaId Identificativo esperienza lavorativa da rimuovere
      * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
      * @throws IOException Errore durante salvataggio modifiche
      */
