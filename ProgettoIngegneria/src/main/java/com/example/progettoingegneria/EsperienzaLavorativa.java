@@ -41,6 +41,9 @@ public class EsperienzaLavorativa {
     /** Retribuzione lorda giornaliera */
     private int retribuzioneLordaGiornaliera;
 
+    /** ID dell'esperienza lavorativa */
+    private int id = -1;
+
     /** Validatore per l'esperienza lavorativa */
     @JsonIgnore
     private final Validator<EsperienzaLavorativa> validator = ValidatorBuilder.<EsperienzaLavorativa>of()
@@ -265,6 +268,22 @@ public class EsperienzaLavorativa {
     }
 
     /**
+     * Restituisce identificativo dell'esperienza di lavoro del lavoratore
+     * @return ID esperienza lavorativa
+     */
+    protected int getId(){
+        return this.id;
+    }
+
+    /**
+     * Imposta identificativo dell'esperienza lavorativa
+     * @param id Identificativo dell'esperienza lavorativa
+     */
+    protected void setId(int id){
+        this.id = id;
+    }
+
+    /**
      * Restituisce le violazioni rilevate dal validatore delle esperienze lavorative.
      * @return Violazioni nelle proprieta' oggetto
      */
@@ -295,5 +314,21 @@ public class EsperienzaLavorativa {
     @Override
     public int hashCode() {
         return Objects.hash(inizioPeriodoLavorativo, finePeriodoLavorativo, nomeAzienda, mansioniSvolte, luogoLavoro, retribuzioneLordaGiornaliera);
+    }
+
+    /**
+     * Restituisce stringa con tutte le proprieta' dell'oggetto
+     * @return Stringa con tutte le proprieta' dell'oggetto
+     */
+    @Override
+    public String toString() {
+        return "EsperienzaLavorativa{" +
+            "inizioPeriodoLavorativo=" + inizioPeriodoLavorativo +
+            ", finePeriodoLavorativo=" + finePeriodoLavorativo +
+            ", nomeAzienda='" + nomeAzienda + '\'' +
+            ", mansioniSvolte=" + mansioniSvolte +
+            ", luogoLavoro='" + luogoLavoro + '\'' +
+            ", retribuzioneLordaGiornaliera=" + retribuzioneLordaGiornaliera +
+            '}';
     }
 }

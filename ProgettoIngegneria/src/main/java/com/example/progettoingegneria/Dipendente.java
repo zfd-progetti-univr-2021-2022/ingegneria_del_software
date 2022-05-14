@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Crea oggetti che rappresentano un dipendente.
@@ -185,29 +184,6 @@ public class Dipendente extends Persona{
      */
     public boolean isDipendente(){
         return true;
-    }
-
-    /**
-     * Verifica se this e' uguale a o
-     * @param o Oggetto con cui confrontare this
-     * @return true se this e' uguale a o, false altrimenti
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Dipendente that = (Dipendente) o;
-        return username.equals(that.username) && password.equals(that.password);
-    }
-
-    /**
-     * Restituisce hash
-     * @return hash
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), username, password);
     }
 
     /**

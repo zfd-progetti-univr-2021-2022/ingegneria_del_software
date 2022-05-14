@@ -9,6 +9,7 @@
     "numeroTelefono":"045045045",
     "tipo":"admin",
     "username":"mario",
-    "password":"secret"
+    "password":"secret",
+    "codiceFiscale":"ABCD"
     }
 ]
