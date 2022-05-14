@@ -156,7 +156,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce nome della persona.
      * @return Nome
      */
-    protected String getNome(){
+    public String getNome(){
         return this.nome;
     }
 
@@ -174,7 +174,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce cognome della persona.
      * @return Cognome
      */
-    protected String getCognome(){
+    public String getCognome(){
         return this.cognome;
     }
 
@@ -192,7 +192,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce luogo di nascita della persona.
      * @return Luogo di nascita
      */
-    protected String getLuogoNascita(){
+    public String getLuogoNascita(){
         return this.luogoNascita;
     }
 
@@ -210,7 +210,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce data di nascita della persona.
      * @return Data di nascita
      */
-    protected LocalDate getDataNascita(){
+    public LocalDate getDataNascita(){
         return this.dataNascita;
     }
 
@@ -228,7 +228,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce nazionalita' della persona.
      * @return Nazionalita'
      */
-    protected String getNazionalita(){
+    public String getNazionalita(){
         return this.nazionalita;
     }
 
@@ -246,7 +246,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce indirizzo email della persona.
      * @return Indirizzo email
      */
-    protected String getIndirizzoEmail(){
+    public String getIndirizzoEmail(){
         return this.indirizzoEmail;
     }
 
@@ -264,7 +264,7 @@ public abstract class Persona implements PersonaInterface {
      * Restituisce numero di telefono della persona.
      * @return Numero di telefono
      */
-    protected String getNumeroTelefono(){
+    public String getNumeroTelefono(){
         return this.numeroTelefono;
     }
 
