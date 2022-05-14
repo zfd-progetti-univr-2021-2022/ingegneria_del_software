@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -133,6 +134,15 @@ public class TestManagementSystem {
         }
         codiciFiscali.add(codiceFiscale);
         return codiceFiscale;
+    }
+
+    /**
+     * Converte un tipo Date in LocalDate
+     * @param date Data di tipo Date
+     * @return data di tipo LocalDate
+     */
+    private LocalDate dateToLocalDate(Date date){
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     /**
@@ -623,5 +633,147 @@ public class TestManagementSystem {
         response = ms.removeDipendente(validDataDipendente.getCodiceFiscale());
         assertEquals(ManagementSystemStatus.OK, response.getStatus());
         assertEquals(0, ms.getDipendenti().size());
+    }
+
+    /**
+     * Aggiungi/rimuovi/modifica delle esperienze lavorative
+     *
+     * TODO: migliora i test e aggiungi i casi mancanti
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    void testAddAndRemoveEsperienzeLavorative() throws IOException, URISyntaxException {
+
+        ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
+
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Admin admin = Admin.of(
+            faker.name().firstName(),
+            faker.name().lastName(),
+            faker.address().streetAddress(),
+            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+            faker.address().country(),
+            faker.internet().emailAddress(),
+            generateTelephoneNumber(),
+            "admin",
+            generateStrongPassword(),
+            generateCodiceFiscale()
+        );
+
+        Dipendente dipendente = Dipendente.of(
+            faker.name().firstName(),
+            faker.name().lastName(),
+            faker.address().streetAddress(),
+            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+            faker.address().country(),
+            faker.internet().emailAddress(),
+            generateTelephoneNumber(),
+            "dipendente1",
+            generateStrongPassword(),
+            generateCodiceFiscale()
+        );
+
+        Lavoratore lavoratore = Lavoratore.of(
+            faker.name().firstName(),
+            faker.name().lastName(),
+            faker.address().streetAddress(),
+            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+            faker.address().country(),
+            faker.internet().emailAddress(),
+            generateTelephoneNumber(),
+            faker.address().streetAddress(),
+            List.of(),
+            List.of(),
+            List.of(),
+            false,
+            List.of(),
+            List.of(
+                RecapitoUrgenza.of(
+                    faker.name().firstName(),
+                    faker.name().lastName(),
+                    generateTelephoneNumber(),
+                    faker.internet().emailAddress()
+                )
+            ),
+            generateCodiceFiscale()
+        );
+
+        // accedi con l'admin di default e crea un admin
+        ms.login("mario", "secret");
+        ms.addAdmin(admin);
+        ms.logout();
+
+        // accedi con l'account admin e crea un dipendente
+        ms.login(admin.getUsername(), admin.getPassword());
+        ms.addDipendente(dipendente);
+        ms.logout();
+
+        // accedi con l'account dipendente e crea lavoratore
+        ms.login(dipendente.getUsername(), dipendente.getPassword());
+        ms.addLavoratore(lavoratore);
+
+        // verifica che le persone siano state inserite nel sistema
+        assertEquals(2, ms.getAdmins().size());
+        assertEquals(1, ms.getDipendenti().size());
+        assertEquals(1, ms.getLavoratori().size());
+
+        // prova ad aggiungere una esperienza lavorativa con dati non validi
+        ManagementSystemResponse response = ms.addEsperienzaLavorativa(lavoratore.getCodiceFiscale(),
+            EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
+                "",
+                List.of(""),
+                "",
+                200
+            )
+        );
+        assertEquals(ManagementSystemStatus.INVALID_INPUT, response.getStatus());
+        Lavoratore msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
+        assertEquals(0, msLavoratore.getEsperienzeLavorative().size());
+
+        // aggiungi una esperienza lavorativa
+        response = ms.addEsperienzaLavorativa(lavoratore.getCodiceFiscale(),
+            EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
+                faker.company().name(),
+                List.of(faker.job().title()),
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            )
+        );
+        assertEquals(ManagementSystemStatus.OK, response.getStatus());
+        msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
+        EsperienzaLavorativa msLavoratoreEsperienzaLavorativa = (EsperienzaLavorativa) msLavoratore.getEsperienzeLavorative().toArray()[0];
+        assertEquals(1, msLavoratore.getEsperienzeLavorative().size());
+
+        // modifica l'esperienza lavorativa appena creata
+        response = ms.modifyEsperienzaLavorativa(
+            lavoratore.getCodiceFiscale(),
+            msLavoratoreEsperienzaLavorativa.getId(),
+            EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
+                faker.company().name(),
+                List.of(faker.job().title()),
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            )
+        );
+        assertEquals(ManagementSystemStatus.OK, response.getStatus());
+        msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
+        msLavoratoreEsperienzaLavorativa = (EsperienzaLavorativa) msLavoratore.getEsperienzeLavorative().toArray()[0];
+        assertEquals(1, msLavoratore.getEsperienzeLavorative().size());
+
+        // rimuovi l'esperienza lavorativa
+        ms.removeEsperienzaLavorativa(lavoratore.getCodiceFiscale(), msLavoratoreEsperienzaLavorativa.getId());
+        assertEquals(ManagementSystemStatus.OK, response.getStatus());
+        msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
+        assertEquals(0, msLavoratore.getEsperienzeLavorative().size());
     }
 }

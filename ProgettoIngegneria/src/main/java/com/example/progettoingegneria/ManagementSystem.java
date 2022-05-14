@@ -663,6 +663,13 @@ public class ManagementSystem {
             );
         }
 
+        if (esperienzaLavorativa.validate().size() > 0 ) {
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.INVALID_INPUT,
+                esperienzaLavorativa.validate()
+            );
+        }
+
         Dipendente utente = (Dipendente) loggedInUser;
 
         for (Lavoratore lavoratore: this.lavoratori) {
@@ -671,13 +678,6 @@ public class ManagementSystem {
             }
 
             // trovato lavoratore
-            if (esperienzaLavorativa.validate().size() > 0 ) {
-                return new ManagementSystemResponse(
-                    ManagementSystemStatus.INVALID_INPUT,
-                    esperienzaLavorativa.validate()
-                );
-            }
-
             if (!lavoratore.addEsperienzaLavorativa(esperienzaLavorativa)) {
                 return new ManagementSystemResponse(
                     ManagementSystemStatus.ACTION_FAILED,
