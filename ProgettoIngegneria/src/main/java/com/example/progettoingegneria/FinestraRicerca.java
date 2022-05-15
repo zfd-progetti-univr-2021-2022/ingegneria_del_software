@@ -126,12 +126,14 @@ public class FinestraRicerca extends Application {
 
         TableColumn indirizzoEmail = new TableColumn("Mail");
         indirizzoEmail.setCellValueFactory(new PropertyValueFactory<>("indirizzoEmail"));
+        indirizzoEmail.setMinWidth(118);
 
         TableColumn numero = new TableColumn("Numero");
         numero.setCellValueFactory(new PropertyValueFactory<>("numeroTelefono"));
 
         TableColumn codiceTab = new TableColumn("Codice");
         codiceTab.setCellValueFactory(new PropertyValueFactory<>("codiceFiscale"));
+        codiceTab.setMinWidth(130);
 
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
     }
@@ -153,7 +155,7 @@ public class FinestraRicerca extends Application {
                         break;
                     }
                 }
-                catch(Exception e){System.out.println("lingua vuota");}
+                catch(Exception e){System.out.println("Errore lingua");}
             }
         }
 
@@ -162,9 +164,23 @@ public class FinestraRicerca extends Application {
 
         //CheckBox checkMansioni
 
-        //CheckBox checkDisponibilita
+        String [] singoloPeriodo,inizio,fine;
+        LocalDate dataInizio,dataFine;
 
-        //controllo che abbia una patente
+        if(!(checkDisponibilita.isSelected())){
+            try{
+                singoloPeriodo=disponibilita.getText().split("-");
+                inizio=singoloPeriodo[0].split("/");
+                fine=singoloPeriodo[1].split("/");
+                dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
+                dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
+                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine,"")))
+                    supporto.add(a);
+            }
+            catch(Exception exception){System.out.println("Errore dispopnibilità");}
+        }
+
+        //controllo che abbia almeno una patente
         if(!(checkPatente.isSelected()) && patente.isSelected() && a.getPatenti().size()!=0)
             supporto.add(a);
 

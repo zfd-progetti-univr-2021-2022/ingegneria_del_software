@@ -92,12 +92,19 @@ public class FinestraLavoratore extends Application{
     private void inizializzaLingue(String lingue) {
         String [] arrLingue=lingue.split(",");
         for(int i=0; i<arrLingue.length; i++)
-            lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
+            try{
+                lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
+            }
+            catch(Exception exception){System.out.println("Lingua non valida");}
     }
     private void  inizializzaPatenti(String patente) {
         String [] arrPatenti=patente.split(",");
-        for(int i=0; i<arrPatenti.length; i++)
-            patenti.add(Patente.valueOf(arrPatenti[i].toUpperCase()));
+        for(int i=0; i<arrPatenti.length; i++){
+            try{
+                patenti.add(Patente.valueOf(arrPatenti[i].toUpperCase()));
+            }
+            catch(Exception exception){System.out.println("Patente non valida");}
+        }
     }
     private void  inizializzaPeriodi(String periodo, String comuni) {
         String [] periodi=periodo.split(",");
@@ -105,12 +112,15 @@ public class FinestraLavoratore extends Application{
         LocalDate dataInizio,dataFine;
 
         for(int i=0; i<periodi.length; i++) {
-            singoloPeriodo=periodi[i].split("-");
-            inizio=singoloPeriodo[0].split("/");
-            fine=singoloPeriodo[1].split("/");
-            dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
-            dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-            periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni));
+            try{
+                singoloPeriodo=periodi[i].split("-");
+                inizio=singoloPeriodo[0].split("/");
+                fine=singoloPeriodo[1].split("/");
+                dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
+                dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
+                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni));
+            }
+            catch(Exception e){JOptionPane.showMessageDialog(null, "ERORE DI INSERIMENTO NEI PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);}
         }
     }
 }

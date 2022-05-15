@@ -344,7 +344,7 @@ public class Lavoratore extends Persona{
      * Restituisce i periodi di disponibilita' del lavoratore.
      * @return Periodi di disponibilita'
      */
-    protected Collection<PeriodoDisponibilita> getPeriodiDisponibilita(){
+    public Collection<PeriodoDisponibilita> getPeriodiDisponibilita(){
         return this.periodiDisponibilita;
     }
 
