@@ -95,7 +95,7 @@ public class FinestraLavoratore extends Application{
             try{
                 lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
             }
-            catch(Exception exception){System.out.println("Lingua non valida");}
+            catch(Exception exception){JOptionPane.showMessageDialog(null, "ERRORE INERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);}
     }
     private void  inizializzaPatenti(String patente) {
         String [] arrPatenti=patente.split(",");
@@ -103,6 +103,7 @@ public class FinestraLavoratore extends Application{
             try{
                 patenti.add(Patente.valueOf(arrPatenti[i].toUpperCase()));
             }
+            //non metto una finestra d'errore perchè il lavoratore potrebbe essere sprovvisto di patente
             catch(Exception exception){System.out.println("Patente non valida");}
         }
     }
