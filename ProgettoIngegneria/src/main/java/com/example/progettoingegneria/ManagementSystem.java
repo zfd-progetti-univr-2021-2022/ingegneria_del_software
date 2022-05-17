@@ -840,6 +840,80 @@ public class ManagementSystem {
     }
 
     /**
+     * Restituisce tutti i lavoratori che hanno le caratteristiche passate come parametro.
+     *
+     * Se un parametro e' null quell'attributo verra' ignorato.
+     *
+     * TODO: controlla lingue parlate, periodi disponibilita', mansioni e patenti
+     *
+     * @param nome Nome dei lavoratori da cercare
+     * @param cognome Cognome dei lavoratori da cercare
+     * @param lingueParlate Lingue parlate dai lavoratori da cercare
+     * @param periodiDisponibilita Periodi di disponibilita' dei lavoratori da cercare
+     * @param mansioni Mansioni svolte dai lavoratori da cercare
+     * @param luogoResidenza Luogo di residenza dei lavoratori da cercare
+     * @param automunito true se i lavoratori da cercare sono automuniti, false se non sono automuniti
+     * @param patenti Patenti dei lavoratori da cercare
+     * @return Insieme di lavoratori che hanno tutte le caratteristiche specificate
+     */
+    public Collection<Lavoratore> selectLavoratoriAnd(String nome, String cognome, Collection<Lingua> lingueParlate, Collection<PeriodoDisponibilita> periodiDisponibilita, Collection<String> mansioni, String luogoResidenza, Boolean automunito, Collection<Patente> patenti){
+
+        HashSet<Lavoratore> lavoratoriSelezionati = new HashSet<>();
+        for (Lavoratore lavoratore: this.lavoratori){
+
+            if (!checkEqualIfNotNull(nome, lavoratore.getNome()))
+                continue;
+
+            if (!checkEqualIfNotNull(cognome, lavoratore.getCognome()))
+                continue;
+
+            // controlla lingue parlate
+
+            // controlla periodi disponibilita'
+
+            // controlla mansioni
+
+            if (!checkEqualIfNotNull(luogoResidenza, lavoratore.getIndirizzoResidenza()))
+                continue;
+
+            if (!checkEqualIfNotNull(automunito, lavoratore.getAutomunito()))
+                continue;
+
+            // controlla patenti
+
+            lavoratoriSelezionati.add(lavoratore);
+        }
+
+        return lavoratoriSelezionati;
+    }
+
+    /**
+     * Restituisce true se "a" e "b" sono equals oppure se uno dei due e' null.
+     * @param a Valore String
+     * @param b Valore String
+     * @return true se uno dei due parametri e' null oppure se sono entrambi equals
+     */
+    private boolean checkEqualIfNotNull(String a, String b){
+        if (a == null || b == null){
+            return true;
+        }
+        return a.equals(b);
+    }
+
+    /**
+     * Restituisce true se "a" e "b" sono equals oppure se uno dei due e' null.
+     * @param a Valore Boolean
+     * @param b Valore Boolean
+     * @return true se uno dei due parametri e' null oppure se sono entrambi equals
+     */
+    private boolean checkEqualIfNotNull(Boolean a, Boolean b){
+        if (a == null || b == null){
+            return true;
+        }
+        return a.equals(b);
+    }
+
+    /**
      * Restituisce una stringa con dipendenti, lavoratori e admin nel sistema
      * @return Stringa con dipendenti, lavoratori e admin
      */
