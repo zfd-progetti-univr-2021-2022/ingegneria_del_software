@@ -162,7 +162,7 @@ public class Lavoratore extends Persona{
      * Restituisce l'indirizzo di residenza del lavoratore.
      * @return Indirizzo di residenza del lavoratore
      */
-    protected String getIndirizzoResidenza(){
+    public String getIndirizzoResidenza(){
         return this.indirizzoResidenza;
     }
 
@@ -238,7 +238,7 @@ public class Lavoratore extends Persona{
      * Restituisce le lingue parlate dal lavoratore
      * @return Lingue parlate dal lavoratore
      */
-    protected Collection<Lingua> getLingueParlate(){
+    public Collection<Lingua> getLingueParlate(){
         return this.lingueParlate;
     }
 
@@ -283,7 +283,7 @@ public class Lavoratore extends Persona{
      * Restituisce le patenti del lavoratore
      * @return Patenti del lavoratore
      */
-    protected Collection<Patente> getPatenti(){
+    public Collection<Patente> getPatenti(){
         return this.patenti;
     }
 
@@ -328,7 +328,7 @@ public class Lavoratore extends Persona{
      * Restituisce se il lavoratore e' automunito oppure no
      * @return true se e' automunito, false altrimenti
      */
-    protected boolean getAutomunito(){
+    public boolean getAutomunito(){
         return this.automunito;
     }
 
@@ -344,7 +344,7 @@ public class Lavoratore extends Persona{
      * Restituisce i periodi di disponibilita' del lavoratore.
      * @return Periodi di disponibilita'
      */
-    protected Collection<PeriodoDisponibilita> getPeriodiDisponibilita(){
+    public Collection<PeriodoDisponibilita> getPeriodiDisponibilita(){
         return this.periodiDisponibilita;
     }
 

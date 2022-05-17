@@ -192,7 +192,7 @@ public class EsperienzaLavorativa {
      * Restituisce mansioni svolte.
      * @return Mansioni svolte
      */
-    protected Collection<String> getMansioniSvolte(){
+    public Collection<String> getMansioniSvolte(){
         return this.mansioniSvolte;
     }
 

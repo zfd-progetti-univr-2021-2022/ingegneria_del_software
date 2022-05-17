@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableView?>
 
-<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="610" prefHeight="730">
+<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="800" prefHeight="800">
     <GridPane layoutX="40" layoutY="40" hgap="15" vgap="10">
         <GridPane layoutX="40" layoutY="40" hgap="15" vgap="10" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <Text text="Nome" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
@@ -16,23 +16,29 @@
             <CheckBox fx:id="checkNome" GridPane.columnIndex="3" GridPane.rowIndex="0"  />
             <Text text="Cognome" GridPane.columnIndex="0" GridPane.rowIndex="1"  />
             <TextField fx:id="inputCognome" GridPane.columnIndex="1" GridPane.rowIndex="1"  />
-            <CheckBox fx:id="checkCogome" GridPane.columnIndex="3" GridPane.rowIndex="1"  />
+            <CheckBox fx:id="checkCognome" GridPane.columnIndex="3" GridPane.rowIndex="1"  />
             <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="2"  />
             <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="2"  />
             <CheckBox fx:id="checkLingue" GridPane.columnIndex="3" GridPane.rowIndex="2"  />
-            <Text text="Disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="3"  />
+            <Text text="Periodo Disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="3"  />
             <TextField fx:id="inputDisponibilita" GridPane.columnIndex="1" GridPane.rowIndex="3"  />
             <CheckBox fx:id="checkDisponibilita" GridPane.columnIndex="3" GridPane.rowIndex="3"  />
-            <Text text="Mansioni" GridPane.columnIndex="0" GridPane.rowIndex="4"  />
-            <TextField fx:id="inputMansioni" GridPane.columnIndex="1" GridPane.rowIndex="4"  />
-            <CheckBox fx:id="checkMansioni" GridPane.columnIndex="3" GridPane.rowIndex="4"  />
-            <Text text="Auto/Patente" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
-            <CheckBox fx:id="inputTrasporto" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
-            <CheckBox fx:id="checkTrasporto" GridPane.columnIndex="3" GridPane.rowIndex="5"  />
-            <Button fx:id="cerca" text="Cerca" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+            <Text text="Residenza" GridPane.columnIndex="0" GridPane.rowIndex="4"  />
+            <TextField fx:id="inputResidenza" GridPane.columnIndex="1" GridPane.rowIndex="4"  />
+            <CheckBox fx:id="checkResidenza" GridPane.columnIndex="3" GridPane.rowIndex="4"  />
+            <Text text="Mansione" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
+            <TextField fx:id="inputMansioni" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
+            <CheckBox fx:id="checkMansioni" GridPane.columnIndex="3" GridPane.rowIndex="5"  />
+            <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="6"  />
+            <CheckBox fx:id="inputPatente" GridPane.columnIndex="1" GridPane.rowIndex="6"  />
+            <CheckBox fx:id="checkPatente" GridPane.columnIndex="3" GridPane.rowIndex="6"  />
+            <Text text="Automunito" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
+            <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
+            <CheckBox fx:id="checkAutomunito" GridPane.columnIndex="3" GridPane.rowIndex="7"  />
+            <Button fx:id="cerca" text="Cerca" GridPane.columnIndex="6" GridPane.rowIndex="7" />
         </GridPane>
-        <ScrollPane  GridPane.columnIndex="0" prefWidth="500" GridPane.rowIndex="1">
-            <TableView prefWidth="500"/>
+        <ScrollPane  GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <TableView fx:id="tabella" prefWidth="735"/>
         </ScrollPane>
         <Button fx:id="aggiungiLavoratore" text="Aggiungi Lavoratore" GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <Button fx:id="aggiungiDipendente" text="Aggiungi Dipendente" GridPane.columnIndex="0" GridPane.rowIndex="3" />
