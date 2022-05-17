@@ -26,7 +26,7 @@
             <Text text="Residenza" GridPane.columnIndex="0" GridPane.rowIndex="4"  />
             <TextField fx:id="inputResidenza" GridPane.columnIndex="1" GridPane.rowIndex="4"  />
             <CheckBox fx:id="checkResidenza" GridPane.columnIndex="3" GridPane.rowIndex="4"  />
-            <Text text="Mansioni" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
+            <Text text="Mansione" GridPane.columnIndex="0" GridPane.rowIndex="5"  />
             <TextField fx:id="inputMansioni" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
             <CheckBox fx:id="checkMansioni" GridPane.columnIndex="3" GridPane.rowIndex="5"  />
             <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="6"  />

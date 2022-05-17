@@ -32,10 +32,10 @@
         <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
         <Text text="Mail" GridPane.columnIndex="0" GridPane.rowIndex="8"  />
         <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="8"  />
-        <Text text="Comuni di disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <TextField fx:id="inputComuni" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-        <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="10"  />
-        <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="10"  />
+        <Text text="Lingue" GridPane.columnIndex="0" GridPane.rowIndex="9"  />
+        <TextField fx:id="inputLingue" GridPane.columnIndex="1" GridPane.rowIndex="9"  />
+        <Text text="Comuni di disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <TextField fx:id="inputComuni" GridPane.columnIndex="1" GridPane.rowIndex="10" />
         <Text text="Periodi disponibilità" GridPane.columnIndex="0" GridPane.rowIndex="11"  />
         <TextField fx:id="periodi" GridPane.columnIndex="1" GridPane.rowIndex="11"  />
         <Text text="Patente" GridPane.columnIndex="0" GridPane.rowIndex="12"  />
@@ -43,6 +43,7 @@
         <Text text="Auto munito" GridPane.columnIndex="0" GridPane.rowIndex="13"  />
         <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="13"  />
         <Button fx:id="aggiungiContattoLavoratore" text="Aggiungi Contatto" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+        <Button fx:id="aggiungiEsperienza" text="Aggiungi Esperienza" GridPane.columnIndex="1" GridPane.rowIndex="14" />
         <Button fx:id="registraLavoratore" text="Registra" GridPane.columnIndex="2" GridPane.rowIndex="14" />
     </GridPane>
 
