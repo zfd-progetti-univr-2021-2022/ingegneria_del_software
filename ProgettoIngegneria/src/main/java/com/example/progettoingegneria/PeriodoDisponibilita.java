@@ -159,7 +159,7 @@ public class PeriodoDisponibilita {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PeriodoDisponibilita that = (PeriodoDisponibilita) o;
-        return inizioPeriodoDisponibilita.equals(that.inizioPeriodoDisponibilita) && finePeriodoDisponibilita.equals(that.finePeriodoDisponibilita) /*&& comune.equals(that.comune)*/;
+        return inizioPeriodoDisponibilita.equals(that.inizioPeriodoDisponibilita) && finePeriodoDisponibilita.equals(that.finePeriodoDisponibilita) && comune.equals(that.comune);
     }
 
     /**

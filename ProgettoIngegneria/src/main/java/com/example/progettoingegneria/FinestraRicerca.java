@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class FinestraRicerca extends Application {
     Collection<Lavoratore> lavoratori=new HashSet<>();
@@ -46,7 +47,7 @@ public class FinestraRicerca extends Application {
 
         disponibilita= (TextField) loader.getNamespace().get("inputDisponibilita");
         checkDisponibilita=(CheckBox) loader.getNamespace().get("checkDisponibilita");
-        disponibilita.setText("1/1/2022-1/2/2022");
+        disponibilita.setText("1/1/2022-1/2/2022,Comune");
 
         patente=(CheckBox) loader.getNamespace().get("inputPatente");
         checkPatente=(CheckBox) loader.getNamespace().get("checkPatente");
@@ -162,22 +163,29 @@ public class FinestraRicerca extends Application {
         if(!(checkResidenza.isSelected()) && residenza.getText().equals(a.getIndirizzoResidenza()))
             supporto.add(a);
 
-        //CheckBox checkMansioni
+        //controllo per ogni esperienza lavorativa le mansioni svolte
+        if(!(checkMansioni.isSelected())){
+            for(EsperienzaLavorativa e:a.getEsperienzeLavorative()){
+                if(e.getMansioniSvolte().contains(mansioni.getText()))
+                    supporto.add(a);
+            }
+        }
 
-        String [] singoloPeriodo,inizio,fine;
+        String [] disp,singoloPeriodo,inizio,fine;
         LocalDate dataInizio,dataFine;
 
         if(!(checkDisponibilita.isSelected())){
             try{
-                singoloPeriodo=disponibilita.getText().split("-");
+                disp=disponibilita.getText().split(",");
+                singoloPeriodo=disp[0].split("-");
                 inizio=singoloPeriodo[0].split("/");
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine,"")))
+                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase())))
                     supporto.add(a);
             }
-            catch(Exception exception){System.out.println("Errore dispopnibilità");}
+            catch(Exception exception){System.out.println("Errore disponibilità");}
         }
 
         //controllo che abbia almeno una patente
