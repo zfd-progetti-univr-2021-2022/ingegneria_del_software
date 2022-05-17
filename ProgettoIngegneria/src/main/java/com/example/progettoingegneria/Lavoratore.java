@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -232,6 +233,18 @@ public class Lavoratore extends Persona{
             }
         }
         return false;
+    }
+
+    /**
+     * Restituisce una lista di tutte le mansioni univoche svolte dal lavoratore.
+     * @return Lista di tutte le mansioni univoche svolte dal lavoratore.
+     */
+    public Collection<String> getMansioni(){
+        HashSet<String> mansioni = new HashSet<>();
+        for (EsperienzaLavorativa esperienzaLavorativa: esperienzeLavorative){
+            mansioni.addAll(esperienzaLavorativa.getMansioniSvolte());
+        }
+        return mansioni;
     }
 
     /**
