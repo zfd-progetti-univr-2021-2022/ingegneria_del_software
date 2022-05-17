@@ -844,7 +844,7 @@ public class ManagementSystem {
      *
      * Se un parametro e' null quell'attributo verra' ignorato.
      *
-     * TODO: controlla lingue parlate, periodi disponibilita', mansioni e patenti
+     * TODO: selezionare solo le patenti richieste (?) da chi ricerca
      *
      * @param nome Nome dei lavoratori da cercare
      * @param cognome Cognome dei lavoratori da cercare
@@ -868,10 +868,16 @@ public class ManagementSystem {
                 continue;
 
             // controlla lingue parlate
+            if (!checkIfElementsInLingueCollection(lingueParlate, lavoratore.getLingueParlate()))
+                continue;
 
             // controlla periodi disponibilita'
+            if (!checkIfElementsInPeriodiDisponibilitaCollection(periodiDisponibilita, lavoratore.getPeriodiDisponibilita()))
+                continue;
 
             // controlla mansioni
+            if (!checkIfElementsInMansioniCollection(mansioni, lavoratore.getMansioni()))
+                continue;
 
             if (!checkEqualIfNotNull(luogoResidenza, lavoratore.getIndirizzoResidenza()))
                 continue;
@@ -880,6 +886,10 @@ public class ManagementSystem {
                 continue;
 
             // controlla patenti
+            if (patenti != null){
+                if (patenti.size() == 0)
+                    continue;
+            }
 
             lavoratoriSelezionati.add(lavoratore);
         }
@@ -911,6 +921,48 @@ public class ManagementSystem {
             return true;
         }
         return a.equals(b);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di lingue
+     * @param collection Collezione di lingue che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInLingueCollection(Collection<Lingua> elements, Collection<Lingua> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di periodi di disponibilita'
+     * @param collection Collezione di periodi di disponibilita' che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInPeriodiDisponibilitaCollection(Collection<PeriodoDisponibilita> elements, Collection<PeriodoDisponibilita> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di stringhe
+     * @param collection Collezione di stringhe che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInMansioniCollection(Collection<String> elements, Collection<String> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
     }
 
     /**
