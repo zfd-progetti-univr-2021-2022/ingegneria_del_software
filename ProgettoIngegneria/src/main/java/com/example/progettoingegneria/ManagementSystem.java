@@ -401,6 +401,71 @@ public class ManagementSystem {
     }
 
     /**
+     * Modifica un lavoratore esistente nel sistema.
+     *
+     * @param lavoratore Lavoratore con attributi modificati
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
+     * @throws URISyntaxException
+     */
+    public ManagementSystemResponse modifyLavoratore(Lavoratore lavoratore) throws IOException, URISyntaxException {
+        // ottieni le vecchie informazioni per permettere il ripristino dei dati in caso di fallimento
+        Lavoratore oldLavoratore = this.getLavoratore(lavoratore.getCodiceFiscale());
+        if (oldLavoratore == null){
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile trovare il lavoratore per cui effettuare le modifiche")
+            );
+        }
+
+        // tenta di eliminare il lavoratore con le vecchie informazioni
+        ManagementSystemResponse response = this.removeLavoratore(lavoratore.getCodiceFiscale());
+        if (response.getStatus() != ManagementSystemStatus.OK){
+            return response;
+        }
+
+        // inserisci il lavoratore con le nuove informazioni
+        response = this.addLavoratore(lavoratore);
+
+        if (response.getStatus() != ManagementSystemStatus.OK){
+            // non ha funzionato: reinserisci le vecchie informazioni
+            this.addLavoratore(oldLavoratore);
+            return response;
+        }
+
+        return new ManagementSystemResponse(ManagementSystemStatus.OK, List.of());
+    }
+
+    /**
+     * Restituisce il lavoratore avente un certo codice fiscale.
+     * Restituisce null se non e' possibile trovare il lavoratore (non e' presente nel sistema o non si hanno i permessi sufficienti)
+     *
+     * @param codiceFiscale codice fiscale del lavoratore da selezionare
+     * @return Lavoratore con il codice fiscale passato come parametro
+     */
+    private Lavoratore getLavoratore(String codiceFiscale){
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+
+        if (loggedInUser == null)
+            return null;
+
+        Logger.info("Un utente vuole recuperare il lavoratore con codice fiscale {}", codiceFiscale);
+
+        if (!loggedInUser.isDipendente()) {
+            Logger.info("L'utente non ha i permessi necessari per ottenere informazioni sul lavoratore");
+            return null;
+        }
+
+        for (Lavoratore lavoratore: lavoratori){
+            if (lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                return lavoratore;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Gestisce la creazione di un account dipendente.
      *
      * Un utente puo' creare un account dipendente se:
@@ -859,6 +924,13 @@ public class ManagementSystem {
     public Collection<Lavoratore> selectLavoratoriAnd(String nome, String cognome, Collection<Lingua> lingueParlate, Collection<PeriodoDisponibilita> periodiDisponibilita, Collection<String> mansioni, String luogoResidenza, Boolean automunito, Collection<Patente> patenti){
 
         HashSet<Lavoratore> lavoratoriSelezionati = new HashSet<>();
+
+        if (loggedInUser == null)
+            return lavoratoriSelezionati;
+
+        if (!loggedInUser.isDipendente())
+            return lavoratoriSelezionati;
+
         for (Lavoratore lavoratore: this.lavoratori){
 
             if (!checkEqualIfNotNull(nome, lavoratore.getNome()))
