@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Rappresenta una persona generica all'interno del sistema.
  */
-public abstract class Persona implements PersonaInterface {
+public abstract class Persona implements PersonaInterface, Comparable<Persona> {
 
     /** Nome */
     private String nome;
@@ -353,5 +353,16 @@ public abstract class Persona implements PersonaInterface {
             ", indirizzoEmail='" + indirizzoEmail + '\'' +
             ", numeroTelefono='" + numeroTelefono + '\'' +
             '}';
+    }
+
+    /**
+     * Confronta due persone. Una persona viene prima in ordine
+     * rispetto ad un altra in base all'ordine alfabetico dei loro codici fiscali
+     * @param other Persona da confrontare con this
+     * @return Numero negativo se this viene prima di other, 0 se sono uguali, positivo altrimenti se other viene prima di this
+     */
+    @Override
+    public int compareTo(Persona other) {
+        return this.getCodiceFiscale().compareTo(other.getCodiceFiscale());
     }
 }

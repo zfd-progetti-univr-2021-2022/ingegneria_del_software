@@ -52,4 +52,12 @@ public interface PersonaInterface {
      * @param codiceFiscale Codice fiscale
      */
     void setCodiceFiscale(String codiceFiscale);
+
+    /**
+     * Confronta due persone. Una persona viene prima in ordine
+     * rispetto ad un altra in base all'ordine alfabetico dei loro codici fiscali
+     * @param other Persona da confrontare con this
+     * @return Numero negativo se this viene prima di other, 0 se sono uguali, positivo altrimenti se other viene prima di this
+     */
+    int compareTo(Persona other);
 }
