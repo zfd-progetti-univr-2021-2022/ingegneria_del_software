@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -42,8 +43,12 @@ public class FinestraDipendente extends Application {
                         mail.getText(), numero.getText(), utente.getText(), password.getText(),codice.getText());
                 try {
                     ManagementSystem ms = ManagementSystem.getInstance();
-                    System.out.println(ms.addDipendente(d));
-                    stage.close();
+                    if(d.validate().size()==0){
+                        ms.addDipendente(d);
+                        stage.close();
+                    }
+                    else
+                        JOptionPane.showMessageDialog(null, d.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
                 }
                 catch (IOException e){System.out.println(e);}
                 catch (URISyntaxException e){System.out.println(e);}

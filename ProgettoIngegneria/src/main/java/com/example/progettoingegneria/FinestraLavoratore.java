@@ -43,8 +43,9 @@ public class FinestraLavoratore extends Application{
         residenza= (TextField) loader.getNamespace().get("inputResidenza");
         recapito= (TextField) loader.getNamespace().get("inputRecapito");
         mail= (TextField) loader.getNamespace().get("inputMail");
-        comuniDisp=(TextField) loader.getNamespace().get("inputComuni");
         lingue=(TextField) loader.getNamespace().get("inputLingue");
+        comuniDisp=(TextField) loader.getNamespace().get("inputComuni");
+        periodiDisp.setText("Comune1,Comune2");
         periodiDisp= (TextField) loader.getNamespace().get("periodi");
         periodiDisp.setText("1/1/2022-1/2/2022,12/3/2022-12/5/2022");
         patente=(TextField) loader.getNamespace().get("inputPatente");
@@ -74,7 +75,7 @@ public class FinestraLavoratore extends Application{
             public void handle(ActionEvent event) {
                 inizializzaLingue(lingue.getText());
                 inizializzaPatenti(patente.getText());
-                inizializzaPeriodi();//da sistemare
+                inizializzaPeriodi();
                 if(recapitiUrgenze.size()>0 && periodiDisponibilita.size()>0 && lingueParlate.size()>0){
                     LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
                     Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
@@ -100,8 +101,6 @@ public class FinestraLavoratore extends Application{
                         JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);
                     if(lingueParlate.size()==0)
                         JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);
-                    periodiDisponibilita.clear();
-                    lingueParlate.clear();
                 }
             }
         });
@@ -138,14 +137,15 @@ public class FinestraLavoratore extends Application{
         String [] singoloPeriodo,inizio,fine;
         LocalDate dataInizio,dataFine;
 
-        for(int i=0; i<periodi.length; i++) {
+        for(int i=0; i<periodi.length && comuni.length==periodi.length; i++) {
             try{
                 singoloPeriodo=periodi[i].split("-");
                 inizio=singoloPeriodo[0].split("/");
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()));
+                if(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()).validate().size()==0)
+                    periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()));
             }
             catch(Exception e){System.out.println("Errore periodo");}
         }

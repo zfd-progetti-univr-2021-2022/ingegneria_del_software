@@ -37,7 +37,7 @@ public class FinestraRicerca extends Application {
         checkLingue=(CheckBox) loader.getNamespace().get("checkLingue");
 
         residenza= (TextField) loader.getNamespace().get("inputResidenza");
-        checkResidenza=(CheckBox) loader.getNamespace().get("checkMansioni");
+        checkResidenza=(CheckBox) loader.getNamespace().get("checkResidenza");
 
         mansioni=(TextField) loader.getNamespace().get("inputMansioni");
         checkMansioni=(CheckBox) loader.getNamespace().get("checkMansioni");
@@ -70,7 +70,6 @@ public class FinestraRicerca extends Application {
         }
         catch (IOException e){System.out.println(e);}
         catch (URISyntaxException e){System.out.println(e);}
-
         aggiungiDipendente.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -93,16 +92,58 @@ public class FinestraRicerca extends Application {
                 lavoratori.addAll(ms.getLavoratori());
 
                 //aggiungo prima i risultati in and
-                //supporto=(HashSet)addAnd();
+                supporto.addAll(addAnd());
 
                 //poi i risultati in or
                 for(Persona p : lavoratori)
                     addOr((Lavoratore) p);
 
-                //aggiungo dopo i risultati in or
+                //visualizzo nella tabella
                 for(Lavoratore l : supporto)
                     tabella.getItems().add(l);
+
                 supporto.clear();
+            }
+        });
+
+        Button tutti= (Button) loader.getNamespace().get("tutti");
+        tutti.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //pulisco la tabella
+                for ( int i = 0; i<tabella.getItems().size(); i++)
+                    tabella.getItems().clear();
+
+                lavoratori.addAll(ms.getLavoratori());
+                for(Lavoratore l : lavoratori)
+                    tabella.getItems().add(l);
+            }
+        });
+
+        Button pulisci= (Button) loader.getNamespace().get("pulisci");
+        pulisci.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //pulisco la tabella
+                for ( int i = 0; i<tabella.getItems().size(); i++)
+                    tabella.getItems().clear();
+
+                nome.setText("");
+                checkNome.setSelected(false);
+                cognome.setText("");
+                checkCognome.setSelected(false);
+                lingue.setText("");
+                checkLingue.setSelected(false);
+                residenza.setText("");
+                checkResidenza.setSelected(false);
+                mansioni.setText("");
+                checkMansioni.setSelected(false);
+                disponibilita.setText("");
+                checkDisponibilita.setSelected(false);
+                patente.setSelected(false);
+                checkPatente.setSelected(false);
+                automunito.setSelected(false);
+                checkAutomunito.setSelected(false);
             }
         });
 
@@ -148,7 +189,7 @@ public class FinestraRicerca extends Application {
         Collection<Lingua> languages =null;
         Collection<PeriodoDisponibilita> periodiDisponibilita=null;
         Collection<String> job=null;
-        boolean auto= Boolean.parseBoolean(null);
+        Boolean auto= null;
         Collection<Patente> patenti=null;
 
         if(checkNome.isSelected())
@@ -187,7 +228,7 @@ public class FinestraRicerca extends Application {
             luogoResidenza=residenza.getText();
 
         if(checkAutomunito.isSelected() && automunito.isSelected())
-            auto=true;
+            auto=Boolean.valueOf(true);
 
         if(checkPatente.isSelected() && patente.isSelected())
             patenti.add(Patente.valueOf("B"));//aggiungo una patente per far capire che voglio i lavoratori con almeno una patente
@@ -197,7 +238,10 @@ public class FinestraRicerca extends Application {
         catch (IOException e){System.out.println(e);}
         catch (URISyntaxException e){System.out.println(e);}
 
-        return ms.selectLavoratoriAnd(name, surname, languages, periodiDisponibilita,job,luogoResidenza, auto, patenti);
+        if(name==null&&surname==null&&luogoResidenza==null&&languages==null&&periodiDisponibilita==null&&job==null&&auto==null&&patenti==null)
+            return new HashSet<Lavoratore>();
+        else
+            return ms.selectLavoratoriAnd(name, surname, languages, periodiDisponibilita,job,luogoResidenza, auto, patenti);
     }
 
     //metodo per la ricerca in or dei lavoratori
