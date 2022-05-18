@@ -72,25 +72,37 @@ public class FinestraLavoratore extends Application{
         registraLavoratore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(recapitiUrgenze.size()>0){//bisogna inserire almeno un contatto
+                inizializzaLingue(lingue.getText());
+                inizializzaPatenti(patente.getText());
+                inizializzaPeriodi();//da sistemare
+                if(recapitiUrgenze.size()>0 && periodiDisponibilita.size()>0 && lingueParlate.size()>0){
                     LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
-                    inizializzaLingue(lingue.getText());
-                    inizializzaPatenti(patente.getText());
-                    inizializzaPeriodi();
                     Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
                             recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
                     try {
                         ManagementSystem ms = ManagementSystem.getInstance();
-                        System.out.println(ms.addLavoratore(p));
+                        if(p.validate().size()==0){
+                            ms.addLavoratore(p);
+                            esperienzeLavorative.clear();
+                            recapitiUrgenze.clear();
+                            stage.close();
+                        }
+                        else
+                            JOptionPane.showMessageDialog(null, p.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException e){System.out.println(e);}
                     catch (URISyntaxException e){System.out.println(e);}
-
-                    recapitiUrgenze.clear();
-                    stage.close();
                 }
-                else
-                    JOptionPane.showMessageDialog(null, "INSERISCI ALMENO UN CONTATTO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                else{
+                    if(recapitiUrgenze.size()==0)
+                        JOptionPane.showMessageDialog(null, "INSERISCI ALMENO UN CONTATTO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if(periodiDisponibilita.size()==0)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if(lingueParlate.size()==0)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    periodiDisponibilita.clear();
+                    lingueParlate.clear();
+                }
             }
         });
 
@@ -108,7 +120,7 @@ public class FinestraLavoratore extends Application{
             try{
                 lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
             }
-            catch(Exception exception){JOptionPane.showMessageDialog(null, "ERRORE INERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);}
+            catch(Exception exception){System.out.println("Errore Lingua");}
     }
     private void  inizializzaPatenti(String patente) {
         String [] arrPatenti=patente.split(",");
@@ -135,7 +147,7 @@ public class FinestraLavoratore extends Application{
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
                 periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()));
             }
-            catch(Exception e){JOptionPane.showMessageDialog(null, "ERORE DI INSERIMENTO NEI PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);}
+            catch(Exception e){System.out.println("Errore periodo");}
         }
     }
 }

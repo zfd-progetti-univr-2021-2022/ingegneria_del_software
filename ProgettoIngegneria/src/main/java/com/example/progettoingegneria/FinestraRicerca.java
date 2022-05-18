@@ -9,12 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
 
 public class FinestraRicerca extends Application {
     Collection<Lavoratore> lavoratori=new HashSet<>();
@@ -94,9 +91,15 @@ public class FinestraRicerca extends Application {
                     tabella.getItems().clear();
 
                 lavoratori.addAll(ms.getLavoratori());
-                for(Persona p : lavoratori)
-                    addOr((Lavoratore) p);//carico l'array con i lavoratori scelti per caratteristiche or
 
+                //aggiungo prima i risultati in and
+                //supporto=(HashSet)addAnd();
+
+                //poi i risultati in or
+                for(Persona p : lavoratori)
+                    addOr((Lavoratore) p);
+
+                //aggiungo dopo i risultati in or
                 for(Lavoratore l : supporto)
                     tabella.getItems().add(l);
                 supporto.clear();
@@ -139,6 +142,65 @@ public class FinestraRicerca extends Application {
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
     }
 
+    //metodo per la ricerca in and dei lavoratori
+    private Collection<Lavoratore> addAnd(){
+        String name=null;String surname=null;String luogoResidenza=null;
+        Collection<Lingua> languages =null;
+        Collection<PeriodoDisponibilita> periodiDisponibilita=null;
+        Collection<String> job=null;
+        boolean auto= Boolean.parseBoolean(null);
+        Collection<Patente> patenti=null;
+
+        if(checkNome.isSelected())
+            name=nome.getText();
+
+        if(checkCognome.isSelected())
+            surname=cognome.getText();
+
+        if(checkLingue.isSelected()){
+            String [] arrLingue=lingue.getText().split(",");
+            for(int i=0; i<arrLingue.length; i++){
+                try{languages.add(Lingua.valueOf(arrLingue[i].toUpperCase()));}
+                catch(Exception e){System.out.println("Errore lingua");}
+            }
+        }
+
+        String [] disp,singoloPeriodo,inizio,fine;
+        LocalDate dataInizio,dataFine;
+        if(checkDisponibilita.isSelected()){
+            try{
+                disp=disponibilita.getText().split(",");//array diviso in date e comune alla fine
+                singoloPeriodo=disp[0].split("-");
+                inizio=singoloPeriodo[0].split("/");
+                fine=singoloPeriodo[1].split("/");
+                dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
+                dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
+                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase()));
+            }
+            catch(Exception exception){System.out.println("Errore disponibilità");}
+        }
+
+        if(checkMansioni.isSelected())
+            job= Arrays.asList(mansioni.getText().split(","));
+
+        if(checkResidenza.isSelected())
+            luogoResidenza=residenza.getText();
+
+        if(checkAutomunito.isSelected() && automunito.isSelected())
+            auto=true;
+
+        if(checkPatente.isSelected() && patente.isSelected())
+            patenti.add(Patente.valueOf("B"));//aggiungo una patente per far capire che voglio i lavoratori con almeno una patente
+
+        //creo il management system
+        try {ms = ManagementSystem.getInstance();}
+        catch (IOException e){System.out.println(e);}
+        catch (URISyntaxException e){System.out.println(e);}
+
+        return ms.selectLavoratoriAnd(name, surname, languages, periodiDisponibilita,job,luogoResidenza, auto, patenti);
+    }
+
+    //metodo per la ricerca in or dei lavoratori
     private void addOr(Lavoratore a){
         if(!(checkNome.isSelected()) && nome.getText().equals(a.getNome()))
             supporto.add(a);
