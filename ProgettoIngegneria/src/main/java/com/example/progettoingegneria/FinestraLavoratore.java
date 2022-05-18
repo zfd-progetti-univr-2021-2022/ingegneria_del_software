@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class FinestraLavoratore extends Application{
+    Lavoratore modifica=null;//in caso volessi modificare un lavoratore, questo parametro non sarà null
     static Collection<EsperienzaLavorativa> esperienzeLavorative=new HashSet<>();
     Collection<Lingua> lingueParlate=new ArrayList<Lingua>();
     Collection<Patente> patenti=new ArrayList<Patente>();
@@ -26,6 +27,9 @@ public class FinestraLavoratore extends Application{
     static Collection<RecapitoUrgenza> recapitiUrgenze=new ArrayList<RecapitoUrgenza>();
     TextField nome,cognome,codice,luogoNascita,giornoNascita,meseNascita,annoNascita,nazionalita,residenza,recapito,mail,comuniDisp,lingue,periodiDisp,patente;
     CheckBox automunito;
+
+    public FinestraLavoratore(){super();}
+    public FinestraLavoratore(Lavoratore l){super();modifica=l;}
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
@@ -45,11 +49,14 @@ public class FinestraLavoratore extends Application{
         mail= (TextField) loader.getNamespace().get("inputMail");
         lingue=(TextField) loader.getNamespace().get("inputLingue");
         comuniDisp=(TextField) loader.getNamespace().get("inputComuni");
-        periodiDisp.setText("Comune1,Comune2");
+        comuniDisp.setText("Comune1,Comune2");
         periodiDisp= (TextField) loader.getNamespace().get("periodi");
         periodiDisp.setText("1/1/2022-1/2/2022,12/3/2022-12/5/2022");
         patente=(TextField) loader.getNamespace().get("inputPatente");
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
+
+        if(modifica!=null)
+            inizializzaLavoratore();
 
         Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
         aggiungiContatto.setOnAction(new EventHandler<ActionEvent>() {
@@ -149,5 +156,23 @@ public class FinestraLavoratore extends Application{
             }
             catch(Exception e){System.out.println("Errore periodo");}
         }
+    }
+    private void inizializzaLavoratore() {
+        nome.setText(modifica.getNome());
+        cognome.setText(modifica.getCognome());
+        codice.setText(modifica.getCodiceFiscale());
+        luogoNascita.setText(modifica.getLuogoNascita());
+        giornoNascita.setText(modifica.getNome());
+        meseNascita.setText(modifica.getNome());
+        annoNascita.setText(modifica.getNome());
+        nazionalita.setText(modifica.getNazionalita());
+        residenza.setText(modifica.getIndirizzoResidenza());
+        recapito.setText(modifica.getNumeroTelefono());
+        mail.setText(modifica.getIndirizzoEmail());
+        lingue.setText(modifica.getNome());
+        comuniDisp.setText(modifica.getNome());
+        periodiDisp.setText(modifica.getNome());
+        patente.setText(modifica.getNome());
+        automunito.setSelected(modifica.getAutomunito());
     }
 }

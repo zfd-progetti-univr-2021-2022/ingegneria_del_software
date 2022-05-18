@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.awt.event.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class FinestraRicerca extends Application {
     TextField nome,cognome,lingue,residenza,mansioni,disponibilita;
     //checkbox per la ricerca
     CheckBox checkNome,checkCognome,checkLingue,checkResidenza,checkMansioni,checkDisponibilita,checkPatente,checkAutomunito,patente,automunito;
-    HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti con l'or
+    HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti
+    TableView tabella;
     public void start(Stage stage) {
         Scene scene;
 
@@ -64,7 +66,7 @@ public class FinestraRicerca extends Application {
         Button aggiungiDipendente= (Button) loader.getNamespace().get("aggiungiDipendente");
         try {
             ms = ManagementSystem.getInstance();
-            //se non sei amministratore non ti do la possibilità di aggiungere dipendenti
+            //se non sei amministratore non do la possibilità di aggiungere dipendenti
             if(!(ms.getLoggedInUser().isAdmin()))
                 aggiungiDipendente.setVisible(false);
         }
@@ -78,8 +80,8 @@ public class FinestraRicerca extends Application {
             }
         });
 
-        TableView tabella =(TableView) loader.getNamespace().get("tabella");
-        instanziaTabella(tabella);
+        tabella =(TableView) loader.getNamespace().get("tabella");
+        instanziaTabella();
 
         Button cerca= (Button) loader.getNamespace().get("cerca");
         cerca.setOnAction(new EventHandler<ActionEvent>() {
@@ -153,7 +155,7 @@ public class FinestraRicerca extends Application {
     }
 
     //metodo per creare l'intestazione della tabella
-    private void instanziaTabella(TableView tabella) {
+    private void instanziaTabella() {
         TableColumn nomeTab = new TableColumn("Nome");
         nomeTab.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
@@ -181,6 +183,17 @@ public class FinestraRicerca extends Application {
         codiceTab.setMinWidth(130);
 
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
+
+        tabella.setRowFactory( tv -> {
+            TableRow<Persona> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Persona rowData = row.getItem();
+                   new FinestraLavoratore((Lavoratore) rowData).start(new Stage());
+                }
+            });
+            return row ;
+        });
     }
 
     //metodo per la ricerca in and dei lavoratori
