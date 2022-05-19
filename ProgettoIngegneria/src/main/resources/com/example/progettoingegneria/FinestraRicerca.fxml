@@ -36,6 +36,8 @@
             <CheckBox fx:id="inputAutomunito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
             <CheckBox fx:id="checkAutomunito" GridPane.columnIndex="3" GridPane.rowIndex="7"  />
             <Button fx:id="cerca" text="Cerca" GridPane.columnIndex="6" GridPane.rowIndex="7" />
+            <Button fx:id="tutti" text="Visualizza Tutti" GridPane.columnIndex="7" GridPane.rowIndex="7" />
+            <Button fx:id="pulisci" text="Pulisci" GridPane.columnIndex="8" GridPane.rowIndex="7" />
         </GridPane>
         <ScrollPane  GridPane.columnIndex="0" GridPane.rowIndex="1">
             <TableView fx:id="tabella" prefWidth="735"/>

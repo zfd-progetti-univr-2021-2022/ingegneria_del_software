@@ -776,4 +776,31 @@ public class TestManagementSystem {
         msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
         assertEquals(0, msLavoratore.getEsperienzeLavorative().size());
     }
+
+    /**
+     * Prova ad eseguire ricerche in and dei lavoratori.
+     *
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    @Test
+    void searchLavoratoreAnd() throws IOException, URISyntaxException {
+        ManagementSystem ms = ManagementSystem.getInstance(resourcePath + "/search_tests");
+        ms.login("mario", "secret");
+
+        // non specificare nessun filtro: mi aspetto di restituire tutti i lavoratori
+        assertEquals(
+            new TreeSet<>(ms.getLavoratori()),
+            new TreeSet<>(ms.selectLavoratoriAnd(null, null, null, null, null, null, null, null))
+        );
+
+        // specifica il nome: dovrebbero esserci solo i lavoratori con questo nome
+        List<Lavoratore> lavoratoriVincent = new ArrayList<>(
+            ms.selectLavoratoriAnd("Vincent", null, null, null, null, null, null, null)
+        );
+
+        for (Lavoratore lavoratore: lavoratoriVincent){
+            assertEquals("Vincent", lavoratore.getNome());
+        }
+    }
 }

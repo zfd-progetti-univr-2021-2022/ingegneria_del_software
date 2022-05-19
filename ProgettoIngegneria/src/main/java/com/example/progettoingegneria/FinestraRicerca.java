@@ -8,13 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.awt.event.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
 
 public class FinestraRicerca extends Application {
     Collection<Lavoratore> lavoratori=new HashSet<>();
@@ -22,7 +20,8 @@ public class FinestraRicerca extends Application {
     TextField nome,cognome,lingue,residenza,mansioni,disponibilita;
     //checkbox per la ricerca
     CheckBox checkNome,checkCognome,checkLingue,checkResidenza,checkMansioni,checkDisponibilita,checkPatente,checkAutomunito,patente,automunito;
-    HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti con l'or
+    HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti
+    TableView tabella;
     public void start(Stage stage) {
         Scene scene;
 
@@ -40,7 +39,7 @@ public class FinestraRicerca extends Application {
         checkLingue=(CheckBox) loader.getNamespace().get("checkLingue");
 
         residenza= (TextField) loader.getNamespace().get("inputResidenza");
-        checkResidenza=(CheckBox) loader.getNamespace().get("checkMansioni");
+        checkResidenza=(CheckBox) loader.getNamespace().get("checkResidenza");
 
         mansioni=(TextField) loader.getNamespace().get("inputMansioni");
         checkMansioni=(CheckBox) loader.getNamespace().get("checkMansioni");
@@ -67,13 +66,12 @@ public class FinestraRicerca extends Application {
         Button aggiungiDipendente= (Button) loader.getNamespace().get("aggiungiDipendente");
         try {
             ms = ManagementSystem.getInstance();
-            //se non sei amministratore non ti do la possibilità di aggiungere dipendenti
+            //se non sei amministratore non do la possibilità di aggiungere dipendenti
             if(!(ms.getLoggedInUser().isAdmin()))
                 aggiungiDipendente.setVisible(false);
         }
         catch (IOException e){System.out.println(e);}
         catch (URISyntaxException e){System.out.println(e);}
-
         aggiungiDipendente.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -82,8 +80,8 @@ public class FinestraRicerca extends Application {
             }
         });
 
-        TableView tabella =(TableView) loader.getNamespace().get("tabella");
-        instanziaTabella(tabella);
+        tabella =(TableView) loader.getNamespace().get("tabella");
+        instanziaTabella();
 
         Button cerca= (Button) loader.getNamespace().get("cerca");
         cerca.setOnAction(new EventHandler<ActionEvent>() {
@@ -94,12 +92,60 @@ public class FinestraRicerca extends Application {
                     tabella.getItems().clear();
 
                 lavoratori.addAll(ms.getLavoratori());
-                for(Persona p : lavoratori)
-                    addOr((Lavoratore) p);//carico l'array con i lavoratori scelti per caratteristiche or
 
+                //aggiungo prima i risultati in and
+                supporto.addAll(addAnd());
+
+                //poi i risultati in or
+                for(Persona p : lavoratori)
+                    addOr((Lavoratore) p);
+
+                //visualizzo nella tabella
                 for(Lavoratore l : supporto)
                     tabella.getItems().add(l);
+
                 supporto.clear();
+            }
+        });
+
+        Button tutti= (Button) loader.getNamespace().get("tutti");
+        tutti.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //pulisco la tabella
+                for ( int i = 0; i<tabella.getItems().size(); i++)
+                    tabella.getItems().clear();
+
+                lavoratori.addAll(ms.getLavoratori());
+                for(Lavoratore l : lavoratori)
+                    tabella.getItems().add(l);
+            }
+        });
+
+        Button pulisci= (Button) loader.getNamespace().get("pulisci");
+        pulisci.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //pulisco la tabella
+                for ( int i = 0; i<tabella.getItems().size(); i++)
+                    tabella.getItems().clear();
+
+                nome.setText("");
+                checkNome.setSelected(false);
+                cognome.setText("");
+                checkCognome.setSelected(false);
+                lingue.setText("");
+                checkLingue.setSelected(false);
+                residenza.setText("");
+                checkResidenza.setSelected(false);
+                mansioni.setText("");
+                checkMansioni.setSelected(false);
+                disponibilita.setText("");
+                checkDisponibilita.setSelected(false);
+                patente.setSelected(false);
+                checkPatente.setSelected(false);
+                automunito.setSelected(false);
+                checkAutomunito.setSelected(false);
             }
         });
 
@@ -109,7 +155,7 @@ public class FinestraRicerca extends Application {
     }
 
     //metodo per creare l'intestazione della tabella
-    private void instanziaTabella(TableView tabella) {
+    private void instanziaTabella() {
         TableColumn nomeTab = new TableColumn("Nome");
         nomeTab.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
@@ -137,8 +183,81 @@ public class FinestraRicerca extends Application {
         codiceTab.setMinWidth(130);
 
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
+
+        tabella.setRowFactory( tv -> {
+            TableRow<Persona> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Persona rowData = row.getItem();
+                   new FinestraLavoratore((Lavoratore) rowData).start(new Stage());
+                }
+            });
+            return row ;
+        });
     }
 
+    //metodo per la ricerca in and dei lavoratori
+    private Collection<Lavoratore> addAnd(){
+        String name=null;String surname=null;String luogoResidenza=null;
+        Collection<Lingua> languages =null;
+        Collection<PeriodoDisponibilita> periodiDisponibilita=null;
+        Collection<String> job=null;
+        Boolean auto= null;
+        Collection<Patente> patenti=null;
+
+        if(checkNome.isSelected())
+            name=nome.getText();
+
+        if(checkCognome.isSelected())
+            surname=cognome.getText();
+
+        if(checkLingue.isSelected()){
+            String [] arrLingue=lingue.getText().split(",");
+            for(int i=0; i<arrLingue.length; i++){
+                try{languages.add(Lingua.valueOf(arrLingue[i].toUpperCase()));}
+                catch(Exception e){System.out.println("Errore lingua");}
+            }
+        }
+
+        String [] disp,singoloPeriodo,inizio,fine;
+        LocalDate dataInizio,dataFine;
+        if(checkDisponibilita.isSelected()){
+            try{
+                disp=disponibilita.getText().split(",");//array diviso in date e comune alla fine
+                singoloPeriodo=disp[0].split("-");
+                inizio=singoloPeriodo[0].split("/");
+                fine=singoloPeriodo[1].split("/");
+                dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
+                dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
+                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase()));
+            }
+            catch(Exception exception){System.out.println("Errore disponibilità");}
+        }
+
+        if(checkMansioni.isSelected())
+            job= Arrays.asList(mansioni.getText().split(","));
+
+        if(checkResidenza.isSelected())
+            luogoResidenza=residenza.getText();
+
+        if(checkAutomunito.isSelected() && automunito.isSelected())
+            auto=Boolean.valueOf(true);
+
+        if(checkPatente.isSelected() && patente.isSelected())
+            patenti.add(Patente.valueOf("B"));//aggiungo una patente per far capire che voglio i lavoratori con almeno una patente
+
+        //creo il management system
+        try {ms = ManagementSystem.getInstance();}
+        catch (IOException e){System.out.println(e);}
+        catch (URISyntaxException e){System.out.println(e);}
+
+        if(name==null&&surname==null&&luogoResidenza==null&&languages==null&&periodiDisponibilita==null&&job==null&&auto==null&&patenti==null)
+            return new HashSet<Lavoratore>();
+        else
+            return ms.selectLavoratoriAnd(name, surname, languages, periodiDisponibilita,job,luogoResidenza, auto, patenti);
+    }
+
+    //metodo per la ricerca in or dei lavoratori
     private void addOr(Lavoratore a){
         if(!(checkNome.isSelected()) && nome.getText().equals(a.getNome()))
             supporto.add(a);

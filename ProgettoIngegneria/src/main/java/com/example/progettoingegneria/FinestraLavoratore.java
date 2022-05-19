@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class FinestraLavoratore extends Application{
+    Lavoratore modifica=null;//in caso volessi modificare un lavoratore, questo parametro non sarà null
     static Collection<EsperienzaLavorativa> esperienzeLavorative=new HashSet<>();
     Collection<Lingua> lingueParlate=new ArrayList<Lingua>();
     Collection<Patente> patenti=new ArrayList<Patente>();
@@ -26,6 +27,9 @@ public class FinestraLavoratore extends Application{
     static Collection<RecapitoUrgenza> recapitiUrgenze=new ArrayList<RecapitoUrgenza>();
     TextField nome,cognome,codice,luogoNascita,giornoNascita,meseNascita,annoNascita,nazionalita,residenza,recapito,mail,comuniDisp,lingue,periodiDisp,patente;
     CheckBox automunito;
+
+    public FinestraLavoratore(){super();}
+    public FinestraLavoratore(Lavoratore l){super();modifica=l;}
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
@@ -43,12 +47,16 @@ public class FinestraLavoratore extends Application{
         residenza= (TextField) loader.getNamespace().get("inputResidenza");
         recapito= (TextField) loader.getNamespace().get("inputRecapito");
         mail= (TextField) loader.getNamespace().get("inputMail");
-        comuniDisp=(TextField) loader.getNamespace().get("inputComuni");
         lingue=(TextField) loader.getNamespace().get("inputLingue");
+        comuniDisp=(TextField) loader.getNamespace().get("inputComuni");
+        comuniDisp.setText("Comune1,Comune2");
         periodiDisp= (TextField) loader.getNamespace().get("periodi");
         periodiDisp.setText("1/1/2022-1/2/2022,12/3/2022-12/5/2022");
         patente=(TextField) loader.getNamespace().get("inputPatente");
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
+
+        if(modifica!=null)
+            inizializzaLavoratore();
 
         Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
         aggiungiContatto.setOnAction(new EventHandler<ActionEvent>() {
@@ -72,25 +80,35 @@ public class FinestraLavoratore extends Application{
         registraLavoratore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(recapitiUrgenze.size()>0){//bisogna inserire almeno un contatto
+                inizializzaLingue(lingue.getText());
+                inizializzaPatenti(patente.getText());
+                inizializzaPeriodi();
+                if(recapitiUrgenze.size()>0 && periodiDisponibilita.size()>0 && lingueParlate.size()>0){
                     LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
-                    inizializzaLingue(lingue.getText());
-                    inizializzaPatenti(patente.getText());
-                    inizializzaPeriodi();
                     Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
                             recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
                     try {
                         ManagementSystem ms = ManagementSystem.getInstance();
-                        System.out.println(ms.addLavoratore(p));
+                        if(p.validate().size()==0){
+                            ms.addLavoratore(p);
+                            esperienzeLavorative.clear();
+                            recapitiUrgenze.clear();
+                            stage.close();
+                        }
+                        else
+                            JOptionPane.showMessageDialog(null, p.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException e){System.out.println(e);}
                     catch (URISyntaxException e){System.out.println(e);}
-
-                    recapitiUrgenze.clear();
-                    stage.close();
                 }
-                else
-                    JOptionPane.showMessageDialog(null, "INSERISCI ALMENO UN CONTATTO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                else{
+                    if(recapitiUrgenze.size()==0)
+                        JOptionPane.showMessageDialog(null, "INSERISCI ALMENO UN CONTATTO", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if(periodiDisponibilita.size()==0)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if(lingueParlate.size()==0)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -108,7 +126,7 @@ public class FinestraLavoratore extends Application{
             try{
                 lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
             }
-            catch(Exception exception){JOptionPane.showMessageDialog(null, "ERRORE INERIMENTO LINGUA", "ERRORE", JOptionPane.ERROR_MESSAGE);}
+            catch(Exception exception){System.out.println("Errore Lingua");}
     }
     private void  inizializzaPatenti(String patente) {
         String [] arrPatenti=patente.split(",");
@@ -126,16 +144,35 @@ public class FinestraLavoratore extends Application{
         String [] singoloPeriodo,inizio,fine;
         LocalDate dataInizio,dataFine;
 
-        for(int i=0; i<periodi.length; i++) {
+        for(int i=0; i<periodi.length && comuni.length==periodi.length; i++) {
             try{
                 singoloPeriodo=periodi[i].split("-");
                 inizio=singoloPeriodo[0].split("/");
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()));
+                if(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()).validate().size()==0)
+                    periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,comuni[i].toUpperCase()));
             }
-            catch(Exception e){JOptionPane.showMessageDialog(null, "ERORE DI INSERIMENTO NEI PERIODI", "ERRORE", JOptionPane.ERROR_MESSAGE);}
+            catch(Exception e){System.out.println("Errore periodo");}
         }
+    }
+    private void inizializzaLavoratore() {
+        nome.setText(modifica.getNome());
+        cognome.setText(modifica.getCognome());
+        codice.setText(modifica.getCodiceFiscale());
+        luogoNascita.setText(modifica.getLuogoNascita());
+        giornoNascita.setText(modifica.getNome());
+        meseNascita.setText(modifica.getNome());
+        annoNascita.setText(modifica.getNome());
+        nazionalita.setText(modifica.getNazionalita());
+        residenza.setText(modifica.getIndirizzoResidenza());
+        recapito.setText(modifica.getNumeroTelefono());
+        mail.setText(modifica.getIndirizzoEmail());
+        lingue.setText(modifica.getNome());
+        comuniDisp.setText(modifica.getNome());
+        periodiDisp.setText(modifica.getNome());
+        patente.setText(modifica.getNome());
+        automunito.setSelected(modifica.getAutomunito());
     }
 }

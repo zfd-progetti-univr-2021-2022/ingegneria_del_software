@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import javax.swing.*;
 import java.io.IOException;
 
 
@@ -30,8 +32,12 @@ public class FinestraContatto extends Application{
             @Override
             public void handle(ActionEvent event) {
                 RecapitoUrgenza contatto = RecapitoUrgenza.of(nome.getText(),cognome.getText(), recapito.getText(), mail.getText());
-                FinestraLavoratore.getRecapitiUrgenze().add(contatto);
-                stage.close();
+                if(contatto.validate().size()==0){
+                    FinestraLavoratore.getRecapitiUrgenze().add(contatto);
+                    stage.close();
+                }
+                else
+                    JOptionPane.showMessageDialog(null, contatto.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
             }
         });
 

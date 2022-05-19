@@ -401,6 +401,71 @@ public class ManagementSystem {
     }
 
     /**
+     * Modifica un lavoratore esistente nel sistema.
+     *
+     * @param lavoratore Lavoratore con attributi modificati
+     * @return ManagementSystemResponse Risposta del sistema con status e eventuali messaggi di errore
+     * @throws IOException Errore che puo' avvenire durante il salvataggio delle modifiche su file
+     * @throws URISyntaxException
+     */
+    public ManagementSystemResponse modifyLavoratore(Lavoratore lavoratore) throws IOException, URISyntaxException {
+        // ottieni le vecchie informazioni per permettere il ripristino dei dati in caso di fallimento
+        Lavoratore oldLavoratore = this.getLavoratore(lavoratore.getCodiceFiscale());
+        if (oldLavoratore == null){
+            return new ManagementSystemResponse(
+                ManagementSystemStatus.ACTION_FAILED,
+                List.of("Non e' stato possibile trovare il lavoratore per cui effettuare le modifiche")
+            );
+        }
+
+        // tenta di eliminare il lavoratore con le vecchie informazioni
+        ManagementSystemResponse response = this.removeLavoratore(lavoratore.getCodiceFiscale());
+        if (response.getStatus() != ManagementSystemStatus.OK){
+            return response;
+        }
+
+        // inserisci il lavoratore con le nuove informazioni
+        response = this.addLavoratore(lavoratore);
+
+        if (response.getStatus() != ManagementSystemStatus.OK){
+            // non ha funzionato: reinserisci le vecchie informazioni
+            this.addLavoratore(oldLavoratore);
+            return response;
+        }
+
+        return new ManagementSystemResponse(ManagementSystemStatus.OK, List.of());
+    }
+
+    /**
+     * Restituisce il lavoratore avente un certo codice fiscale.
+     * Restituisce null se non e' possibile trovare il lavoratore (non e' presente nel sistema o non si hanno i permessi sufficienti)
+     *
+     * @param codiceFiscale codice fiscale del lavoratore da selezionare
+     * @return Lavoratore con il codice fiscale passato come parametro
+     */
+    private Lavoratore getLavoratore(String codiceFiscale){
+        if (codiceFiscale == null)
+            throw new IllegalArgumentException("codiceFiscale non puo' essere nullo");
+
+        if (loggedInUser == null)
+            return null;
+
+        Logger.info("Un utente vuole recuperare il lavoratore con codice fiscale {}", codiceFiscale);
+
+        if (!loggedInUser.isDipendente()) {
+            Logger.info("L'utente non ha i permessi necessari per ottenere informazioni sul lavoratore");
+            return null;
+        }
+
+        for (Lavoratore lavoratore: lavoratori){
+            if (lavoratore.getCodiceFiscale().equals(codiceFiscale)){
+                return lavoratore;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Gestisce la creazione di un account dipendente.
      *
      * Un utente puo' creare un account dipendente se:
@@ -837,6 +902,139 @@ public class ManagementSystem {
 
         // lavoratore non trovato
         return null;
+    }
+
+    /**
+     * Restituisce tutti i lavoratori che hanno le caratteristiche passate come parametro.
+     *
+     * Se un parametro e' null quell'attributo verra' ignorato.
+     *
+     * TODO: selezionare solo le patenti richieste (?) da chi ricerca
+     *
+     * @param nome Nome dei lavoratori da cercare
+     * @param cognome Cognome dei lavoratori da cercare
+     * @param lingueParlate Lingue parlate dai lavoratori da cercare
+     * @param periodiDisponibilita Periodi di disponibilita' dei lavoratori da cercare
+     * @param mansioni Mansioni svolte dai lavoratori da cercare
+     * @param luogoResidenza Luogo di residenza dei lavoratori da cercare
+     * @param automunito true se i lavoratori da cercare sono automuniti, false se non sono automuniti
+     * @param patenti Patenti dei lavoratori da cercare
+     * @return Insieme di lavoratori che hanno tutte le caratteristiche specificate
+     */
+    public Collection<Lavoratore> selectLavoratoriAnd(String nome, String cognome, Collection<Lingua> lingueParlate, Collection<PeriodoDisponibilita> periodiDisponibilita, Collection<String> mansioni, String luogoResidenza, Boolean automunito, Collection<Patente> patenti){
+
+        HashSet<Lavoratore> lavoratoriSelezionati = new HashSet<>();
+
+        if (loggedInUser == null)
+            return lavoratoriSelezionati;
+
+        if (!loggedInUser.isDipendente())
+            return lavoratoriSelezionati;
+
+        for (Lavoratore lavoratore: this.lavoratori){
+
+            if (!checkEqualIfNotNull(nome, lavoratore.getNome()))
+                continue;
+
+            if (!checkEqualIfNotNull(cognome, lavoratore.getCognome()))
+                continue;
+
+            // controlla lingue parlate
+            if (!checkIfElementsInLingueCollection(lingueParlate, lavoratore.getLingueParlate()))
+                continue;
+
+            // controlla periodi disponibilita'
+            if (!checkIfElementsInPeriodiDisponibilitaCollection(periodiDisponibilita, lavoratore.getPeriodiDisponibilita()))
+                continue;
+
+            // controlla mansioni
+            if (!checkIfElementsInMansioniCollection(mansioni, lavoratore.getMansioni()))
+                continue;
+
+            if (!checkEqualIfNotNull(luogoResidenza, lavoratore.getIndirizzoResidenza()))
+                continue;
+
+            if (!checkEqualIfNotNull(automunito, lavoratore.getAutomunito()))
+                continue;
+
+            // controlla patenti
+            if (patenti != null){
+                if (patenti.size() == 0)
+                    continue;
+            }
+
+            lavoratoriSelezionati.add(lavoratore);
+        }
+
+        return lavoratoriSelezionati;
+    }
+
+    /**
+     * Restituisce true se "a" e "b" sono equals oppure se uno dei due e' null.
+     * @param a Valore String
+     * @param b Valore String
+     * @return true se uno dei due parametri e' null oppure se sono entrambi equals
+     */
+    private boolean checkEqualIfNotNull(String a, String b){
+        if (a == null || b == null){
+            return true;
+        }
+        return a.equals(b);
+    }
+
+    /**
+     * Restituisce true se "a" e "b" sono equals oppure se uno dei due e' null.
+     * @param a Valore Boolean
+     * @param b Valore Boolean
+     * @return true se uno dei due parametri e' null oppure se sono entrambi equals
+     */
+    private boolean checkEqualIfNotNull(Boolean a, Boolean b){
+        if (a == null || b == null){
+            return true;
+        }
+        return a.equals(b);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di lingue
+     * @param collection Collezione di lingue che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInLingueCollection(Collection<Lingua> elements, Collection<Lingua> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di periodi di disponibilita'
+     * @param collection Collezione di periodi di disponibilita' che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInPeriodiDisponibilitaCollection(Collection<PeriodoDisponibilita> elements, Collection<PeriodoDisponibilita> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
+    }
+
+    /**
+     * Restituisce true se "elements" sono contenuti in "collection" oppure se uno dei due e' null.
+     * @param elements Collezione di stringhe
+     * @param collection Collezione di stringhe che dovrebbero contenere "elements"
+     * @return true se "elements" sono contenuti in "collection" oppure se uno dei due e' null
+     */
+    private boolean checkIfElementsInMansioniCollection(Collection<String> elements, Collection<String> collection){
+        if (elements == null || collection == null){
+            return true;
+        }
+
+        return collection.containsAll(elements);
     }
 
     /**
