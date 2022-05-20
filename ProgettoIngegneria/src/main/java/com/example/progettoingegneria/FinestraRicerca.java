@@ -105,6 +105,7 @@ public class FinestraRicerca extends Application {
                     tabella.getItems().add(l);
 
                 supporto.clear();
+                lavoratori.clear();
             }
         });
 
@@ -117,8 +118,10 @@ public class FinestraRicerca extends Application {
                     tabella.getItems().clear();
 
                 lavoratori.addAll(ms.getLavoratori());
+
                 for(Lavoratore l : lavoratori)
                     tabella.getItems().add(l);
+                lavoratori.clear();
             }
         });
 
@@ -185,11 +188,23 @@ public class FinestraRicerca extends Application {
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
 
         tabella.setRowFactory( tv -> {
-            TableRow<Persona> row = new TableRow<>();
+            TableRow<Lavoratore> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    Persona rowData = row.getItem();
-                   new FinestraLavoratore((Lavoratore) rowData).start(new Stage());
+                    Lavoratore rowData = row.getItem();
+                    System.out.println(rowData.getCodiceFiscale());
+
+                    lavoratori.addAll(ms.getLavoratori());
+
+                    for(Lavoratore l:lavoratori){
+                        if(rowData.getCodiceFiscale().equals(l.getCodiceFiscale())){
+                            rowData=l;
+                            System.out.println(l.getEsperienzeLavorative());
+                            break;
+                        }
+                    }
+
+                    new FinestraLavoratore(rowData).start(new Stage());
                 }
             });
             return row ;

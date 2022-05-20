@@ -11,9 +11,13 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class FinestraContatto extends Application{
+    Collection <RecapitoUrgenza> recapiti=new ArrayList<RecapitoUrgenza>();
+
+    public FinestraContatto(Collection<RecapitoUrgenza> c) {super();recapiti=c;}
 
     public void start(Stage stage) {
         Scene scene;
@@ -33,7 +37,7 @@ public class FinestraContatto extends Application{
             public void handle(ActionEvent event) {
                 RecapitoUrgenza contatto = RecapitoUrgenza.of(nome.getText(),cognome.getText(), recapito.getText(), mail.getText());
                 if(contatto.validate().size()==0){
-                    FinestraLavoratore.getRecapitiUrgenze().add(contatto);
+                    recapiti.add(contatto);
                     stage.close();
                 }
                 else

@@ -170,4 +170,12 @@ public class PeriodoDisponibilita {
     public int hashCode() {
         return Objects.hash(inizioPeriodoDisponibilita, finePeriodoDisponibilita, comune);
     }
+
+    public String toStringComune(){
+        return comune;
+    }
+
+    public String toStringPeriodo(){
+        return inizioPeriodoDisponibilita.getDayOfMonth()+"/"+ inizioPeriodoDisponibilita.getMonth().getValue()+"/"+ inizioPeriodoDisponibilita.getYear()+"-"+finePeriodoDisponibilita.getDayOfMonth()+"/"+ finePeriodoDisponibilita.getMonth().getValue()+"/"+ finePeriodoDisponibilita.getYear();
+    }
 }

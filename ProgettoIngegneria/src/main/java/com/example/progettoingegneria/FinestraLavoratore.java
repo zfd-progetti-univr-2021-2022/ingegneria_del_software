@@ -19,17 +19,18 @@ import java.util.HashSet;
 import java.util.Locale;
 
 public class FinestraLavoratore extends Application{
-    Lavoratore modifica=null;//in caso volessi modificare un lavoratore, questo parametro non sarà null
-    static Collection<EsperienzaLavorativa> esperienzeLavorative=new HashSet<>();
+    Lavoratore lavoratore=null;//in caso volessi modificare un lavoratore, questo parametro non sarà null
+    boolean modifica=false;//mi dice se sono in modalità modifica o meno
+    Collection<EsperienzaLavorativa> esperienzeLavorative=new HashSet<>();
     Collection<Lingua> lingueParlate=new ArrayList<Lingua>();
     Collection<Patente> patenti=new ArrayList<Patente>();
     Collection<PeriodoDisponibilita> periodiDisponibilita=new ArrayList<PeriodoDisponibilita>();
-    static Collection<RecapitoUrgenza> recapitiUrgenze=new ArrayList<RecapitoUrgenza>();
+    Collection<RecapitoUrgenza> recapitiUrgenze=new ArrayList<RecapitoUrgenza>();
     TextField nome,cognome,codice,luogoNascita,giornoNascita,meseNascita,annoNascita,nazionalita,residenza,recapito,mail,comuniDisp,lingue,periodiDisp,patente;
     CheckBox automunito;
 
     public FinestraLavoratore(){super();}
-    public FinestraLavoratore(Lavoratore l){super();modifica=l;}
+    public FinestraLavoratore(Lavoratore l){super();lavoratore=l;modifica=true;}
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
@@ -55,7 +56,8 @@ public class FinestraLavoratore extends Application{
         patente=(TextField) loader.getNamespace().get("inputPatente");
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
 
-        if(modifica!=null)
+        //controllo se ho aperto la finestra in modalità modifica
+        if(modifica==true)
             inizializzaLavoratore();
 
         Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
@@ -63,7 +65,10 @@ public class FinestraLavoratore extends Application{
             @Override
             public void handle(ActionEvent event) {
                 //apro la finestra per aggiungere contatti
-                new FinestraContatto().start(new Stage());
+                if(modifica==false)
+                    new FinestraContatto(recapitiUrgenze).start(new Stage());
+                else
+                    new FinestraContatto(lavoratore.getRecapitiUrgenze()).start(new Stage());
             }
         });
 
@@ -72,7 +77,10 @@ public class FinestraLavoratore extends Application{
             @Override
             public void handle(ActionEvent event) {
                 //apro la finestra per aggiungere contatti
-                new FinestraEsperienzaLavorativa().start(new Stage());
+                if(modifica==false)
+                    new FinestraEsperienzaLavorativa(esperienzeLavorative).start(new Stage());
+                else
+                    new FinestraEsperienzaLavorativa(lavoratore.getEsperienzeLavorative()).start(new Stage());
             }
         });
 
@@ -90,7 +98,11 @@ public class FinestraLavoratore extends Application{
                     try {
                         ManagementSystem ms = ManagementSystem.getInstance();
                         if(p.validate().size()==0){
-                            ms.addLavoratore(p);
+                            if(modifica==false)//sto aggiungendo un nuovo lavoratore, non lo sto modificando
+                                ms.addLavoratore(p);
+                            else
+                                System.out.println(ms.modifyLavoratore(p).getStatus());
+
                             esperienzeLavorative.clear();
                             recapitiUrgenze.clear();
                             stage.close();
@@ -112,15 +124,25 @@ public class FinestraLavoratore extends Application{
             }
         });
 
+        Button visualizzaEsperienze = (Button) loader.getNamespace().get("visualizzaEsperienze");
+        if(modifica==false)
+            visualizzaEsperienze.setVisible(false);
+        visualizzaEsperienze.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new FinestraModificaEsperienze(lavoratore,lavoratore.getEsperienzeLavorative()).start(new Stage());
+            }
+        });
+
         stage.setScene(scene);
         stage.setTitle("Registra Lavoratore");
         stage.setResizable(false);
         stage.show();
     }
+
     //restituisce l'arraylist contenente i contatti, è utilizzato nella finestra del contatto
-    public static Collection<RecapitoUrgenza> getRecapitiUrgenze(){return recapitiUrgenze;}
-    public static Collection<EsperienzaLavorativa> getEsperienze(){return esperienzeLavorative;}
     private void inizializzaLingue(String lingue) {
+        lingueParlate.clear();
         String [] arrLingue=lingue.split(",");
         for(int i=0; i<arrLingue.length; i++)
             try{
@@ -129,6 +151,7 @@ public class FinestraLavoratore extends Application{
             catch(Exception exception){System.out.println("Errore Lingua");}
     }
     private void  inizializzaPatenti(String patente) {
+        patenti.clear();
         String [] arrPatenti=patente.split(",");
         for(int i=0; i<arrPatenti.length; i++){
             try{
@@ -139,6 +162,7 @@ public class FinestraLavoratore extends Application{
         }
     }
     private void  inizializzaPeriodi() {
+        periodiDisponibilita.clear();
         String [] comuni=comuniDisp.getText().split(",");
         String [] periodi=periodiDisp.getText().split(",");
         String [] singoloPeriodo,inizio,fine;
@@ -158,21 +182,44 @@ public class FinestraLavoratore extends Application{
         }
     }
     private void inizializzaLavoratore() {
-        nome.setText(modifica.getNome());
-        cognome.setText(modifica.getCognome());
-        codice.setText(modifica.getCodiceFiscale());
-        luogoNascita.setText(modifica.getLuogoNascita());
-        giornoNascita.setText(modifica.getNome());
-        meseNascita.setText(modifica.getNome());
-        annoNascita.setText(modifica.getNome());
-        nazionalita.setText(modifica.getNazionalita());
-        residenza.setText(modifica.getIndirizzoResidenza());
-        recapito.setText(modifica.getNumeroTelefono());
-        mail.setText(modifica.getIndirizzoEmail());
-        lingue.setText(modifica.getNome());
-        comuniDisp.setText(modifica.getNome());
-        periodiDisp.setText(modifica.getNome());
-        patente.setText(modifica.getNome());
-        automunito.setSelected(modifica.getAutomunito());
+        nome.setText(lavoratore.getNome());
+        cognome.setText(lavoratore.getCognome());
+        codice.setText(lavoratore.getCodiceFiscale());
+        luogoNascita.setText(lavoratore.getLuogoNascita());
+        giornoNascita.setText(""+lavoratore.getDataNascita().getDayOfMonth());
+        meseNascita.setText(""+lavoratore.getDataNascita().getMonth().getValue());
+        annoNascita.setText(""+lavoratore.getDataNascita().getYear());
+
+        nazionalita.setText(lavoratore.getNazionalita());
+        residenza.setText(lavoratore.getIndirizzoResidenza());
+        recapito.setText(lavoratore.getNumeroTelefono());
+        mail.setText(lavoratore.getIndirizzoEmail());
+
+        lingueParlate=lavoratore.getLingueParlate();
+        String ling="";
+        for (Lingua l:lingueParlate)
+            ling=ling+l.toString()+",";
+        lingue.setText(ling.substring(0,ling.length()-1));//elimino l'ultima virgola
+
+        periodiDisponibilita=lavoratore.getPeriodiDisponibilita();
+        String com="";
+        for (PeriodoDisponibilita p:periodiDisponibilita)
+            com=com+p.toStringComune()+",";
+        comuniDisp.setText(com.substring(0,com.length()-1));
+        String per="";
+        for (PeriodoDisponibilita p:periodiDisponibilita)
+            per=per+p.toStringPeriodo()+",";
+        periodiDisp.setText(per.substring(0,per.length()-1));
+
+        patenti=lavoratore.getPatenti();
+        String pat="";
+        for (Patente p:patenti)
+            pat=pat+p.toString()+",";
+        patente.setText(pat.substring(0,pat.length()-1));
+
+        automunito.setSelected(lavoratore.getAutomunito());
+
+        //inizializzo i contatti e le esperienzew lavorative
+        recapitiUrgenze=lavoratore.getRecapitiUrgenze();
     }
 }

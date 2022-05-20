@@ -11,11 +11,24 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class FinestraEsperienzaLavorativa extends Application{
+    Collection<EsperienzaLavorativa> esperienze=new ArrayList<EsperienzaLavorativa>();
+    Lavoratore lavoratore=null;
+    EsperienzaLavorativa esperienza=null;
+    boolean modifica=false;
+    ManagementSystem ms;
+    TextField nome, ubicazione, mansioni, giornoInizio, meseInizio, annoInizio, giornoFine, meseFine, annoFine, retribuzione;
+
+    public FinestraEsperienzaLavorativa(Lavoratore l, EsperienzaLavorativa e){super();lavoratore=l;esperienza=e;modifica=true;}
+
+    public FinestraEsperienzaLavorativa(Collection<EsperienzaLavorativa> c){super();esperienze=c;}
+
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraEsperienzaLavorativa.fxml"));
@@ -23,16 +36,23 @@ public class FinestraEsperienzaLavorativa extends Application{
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
 
-        TextField nome= (TextField) loader.getNamespace().get("inputNome");
-        TextField ubicazione= (TextField) loader.getNamespace().get("inputUbicazione");
-        TextField mansioni= (TextField) loader.getNamespace().get("inputMansioni");
-        TextField giornoInizio= (TextField) loader.getNamespace().get("giornoInizio");
-        TextField meseInizio= (TextField) loader.getNamespace().get("meseInizio");
-        TextField annoInizio= (TextField) loader.getNamespace().get("annoInizio");
-        TextField giornoFine= (TextField) loader.getNamespace().get("giornoFine");
-        TextField meseFine= (TextField) loader.getNamespace().get("meseFine");
-        TextField annoFine= (TextField) loader.getNamespace().get("annoFine");
-        TextField retribuzione= (TextField) loader.getNamespace().get("inputRetribuzione");
+        nome= (TextField) loader.getNamespace().get("inputNome");
+        ubicazione= (TextField) loader.getNamespace().get("inputUbicazione");
+        mansioni= (TextField) loader.getNamespace().get("inputMansioni");
+        giornoInizio= (TextField) loader.getNamespace().get("giornoInizio");
+        meseInizio= (TextField) loader.getNamespace().get("meseInizio");
+        annoInizio= (TextField) loader.getNamespace().get("annoInizio");
+        giornoFine= (TextField) loader.getNamespace().get("giornoFine");
+        meseFine= (TextField) loader.getNamespace().get("meseFine");
+        annoFine= (TextField) loader.getNamespace().get("annoFine");
+        retribuzione= (TextField) loader.getNamespace().get("inputRetribuzione");
+
+        try {ms = ManagementSystem.getInstance();}
+        catch (IOException e){System.out.println(e);}
+        catch (URISyntaxException e){System.out.println(e);}
+
+        if(modifica==true)
+            inizializzaEsperienza();
 
         Button aggiungi= (Button) loader.getNamespace().get("AggiungiEsperienza");
         aggiungi.setOnAction(new EventHandler<ActionEvent>() {
@@ -45,8 +65,13 @@ public class FinestraEsperienzaLavorativa extends Application{
                 if(adesso.isAfter(LocalDate.of(Integer.parseInt(annoFine.getText())+5,Integer.parseInt(meseFine.getText()),Integer.parseInt(giornoFine.getText()))) || adesso.isAfter(LocalDate.of(Integer.parseInt(annoInizio.getText())+5,Integer.parseInt(meseInizio.getText()),Integer.parseInt(giornoInizio.getText()))))
                     JOptionPane.showMessageDialog(null, "L'ESPERIENZA NON DEVE ESSERE ANTECEDENT£E A 5 ANNI FA", "ERRORE", JOptionPane.ERROR_MESSAGE);
                 else{
-                    EsperienzaLavorativa esperienza=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Integer.parseInt(retribuzione.getText()));
-                    FinestraLavoratore.getEsperienze().add(esperienza);
+                    EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Integer.parseInt(retribuzione.getText()));
+                    if(modifica==false)
+                        esperienze.add(esp);
+                    else{
+                        try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
+                        catch(Exception e){System.out.println("Inserimento fallito");}
+                    }
                     stage.close();
                 }
             }
@@ -56,5 +81,26 @@ public class FinestraEsperienzaLavorativa extends Application{
         stage.setTitle("Aggiungi Esperienza");
         stage.setResizable(false);
         stage.show();
+    }
+
+    private void inizializzaEsperienza() {
+
+        nome.setText(esperienza.getNomeAzienda());
+        ubicazione.setText(esperienza.getLuogoLavoro());
+
+        String mans="";
+        for(String s:esperienza.getMansioniSvolte())
+            mans=mans+s+",";
+        mansioni.setText(mans.substring(0,mans.length()-1));
+
+        giornoInizio.setText(""+esperienza.getInizioPeriodoLavorativo().getDayOfMonth());
+        meseInizio.setText(""+esperienza.getInizioPeriodoLavorativo().getMonth().getValue());
+        annoInizio.setText(""+esperienza.getInizioPeriodoLavorativo().getYear());
+
+        giornoFine.setText(""+esperienza.getFinePeriodoLavorativo().getDayOfMonth());
+        meseFine.setText(""+esperienza.getFinePeriodoLavorativo().getMonth().getValue());
+        annoFine.setText(""+esperienza.getFinePeriodoLavorativo().getYear());
+
+        retribuzione.setText(""+esperienza.getRetribuzioneLordaGiornaliera());
     }
 }
