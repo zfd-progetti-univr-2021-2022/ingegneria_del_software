@@ -48,10 +48,8 @@
       "numeroTelefono" : "098345098",
       "indirizzoEmail" : "nome@example.com"
     } ],
-    "uniqueEsperienzaLavorativaId" : 3,
     "admin" : false,
-    "dipendente" : false,
-    "mansioni" : [ "Architetto", "guardia" ]
+    "dipendente" : false
   },
     {
         "nome" : "Vincent",
@@ -103,12 +101,9 @@
             "numeroTelefono" : "098345098",
             "indirizzoEmail" : "nome@example.com"
         } ],
-        "uniqueEsperienzaLavorativaId" : 3,
         "admin" : false,
-        "dipendente" : false,
-        "mansioni" : [ "Architetto", "guardia" ]
+        "dipendente" : false
     },
-
     {
         "nome" : "Marco",
         "cognome" : "Goulette",
@@ -159,9 +154,7 @@
             "numeroTelefono" : "098345098",
             "indirizzoEmail" : "nome@example.com"
         } ],
-        "uniqueEsperienzaLavorativaId" : 3,
         "admin" : false,
-        "dipendente" : false,
-        "mansioni" : [ "Architetto", "guardia" ]
+        "dipendente" : false
     }
 ]
