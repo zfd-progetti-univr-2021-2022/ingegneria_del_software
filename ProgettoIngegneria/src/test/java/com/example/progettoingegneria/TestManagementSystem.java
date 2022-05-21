@@ -32,11 +32,13 @@ public class TestManagementSystem {
     File dipendentiFile = Paths.get(resourcePath, "dipendenti.json").toFile();
     File lavoratoriFile = Paths.get(resourcePath, "lavoratori.json").toFile();
     File adminFile = Paths.get(resourcePath, "admin.json").toFile();
+    String defaultAdminUsername = "mario";
+    String defaultAdminPassword = "secret";
 
     /**
      * Dopo l'inizio e la fine di ogni test resetta i file JSON e il management system.
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @BeforeEach
     @AfterEach
@@ -53,8 +55,8 @@ public class TestManagementSystem {
             "    \"indirizzoEmail\":\"nome@example.com\",",
             "    \"numeroTelefono\":\"045045045\",",
             "    \"tipo\":\"admin\",",
-            "    \"username\":\"mario\",",
-            "    \"password\":\"secret\",",
+            "    \"username\":\"" + defaultAdminUsername + "\",",
+            "    \"password\":\"" + defaultAdminPassword + "\",",
             "    \"codiceFiscale\":\"ABCD\"",
             "    }",
             "]"
@@ -146,9 +148,202 @@ public class TestManagementSystem {
     }
 
     /**
+     * Genera un lavoratore con dati casuali.
+     * @param validData true se i dati devono essere validi, false altrimenti
+     * @return Lavoratore con dati casuali
+     */
+    private Lavoratore generateLavoratore(boolean validData){
+
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Lavoratore lavoratore;
+
+        if (validData) {
+            lavoratore = Lavoratore.of(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.address().streetAddress(),
+                faker.date().past(365 * 10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                faker.internet().emailAddress(),
+                generateTelephoneNumber(),
+                faker.address().streetAddress(),
+                List.of(),
+                List.of(),
+                List.of(),
+                false,
+                List.of(),
+                List.of(
+                    RecapitoUrgenza.of(
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        generateTelephoneNumber(),
+                        faker.internet().emailAddress()
+                    )
+                ),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            lavoratore = Lavoratore.of(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                faker.internet().emailAddress(),
+                generateTelephoneNumber(),
+                faker.address().streetAddress(),
+                List.of(),
+                List.of(),
+                List.of(),
+                false,
+                List.of(),
+                List.of(),
+                generateCodiceFiscale()
+            );
+        }
+
+        return lavoratore;
+    }
+
+    /**
+     * Genera un dipendente con dati casuali.
+     * @param validData true se i dati devono essere validi, false altrimenti
+     * @return Dipendente con dati casuali
+     */
+    private Dipendente generateDipendente(boolean validData){
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Dipendente dipendente;
+        String nome = faker.name().firstName();
+        String cognome = faker.name().lastName();
+        String username = nome.charAt(0) + cognome;
+        String email = username + "@" + faker.internet().domainName() + ".com";
+
+        if (validData) {
+            dipendente = Dipendente.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().past(365 * 10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                generateStrongPassword(),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            dipendente = Dipendente.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                "pwdinsicura",
+                generateCodiceFiscale()
+            );
+        }
+        return dipendente;
+    }
+
+    /**
+     * Genera un admin con dati casuali.
+     * @param validData true se i dati devono essere validi, false altrimenti
+     * @return Admin con dati casuali
+     */
+    private Admin generateAdmin(boolean validData){
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Admin admin;
+        String nome = faker.name().firstName();
+        String cognome = faker.name().lastName();
+        String username = nome.charAt(0) + cognome;
+        String email = username + "@" + faker.internet().domainName() + ".com";
+
+        if (validData){
+            admin = Admin.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                generateStrongPassword(),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            admin = Admin.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                "pwdinsicura",
+                generateCodiceFiscale()
+            );
+        }
+        return admin;
+    }
+
+    /**
+     * Genera una esperienza lavorativa con dati casuali.
+     * @param validData true se i dati devono essere validi, false altrimenti
+     * @return Esperienza lavorativa con dati casuali
+     */
+    private EsperienzaLavorativa generateEsperienzaLavorativa(boolean validData){
+
+        HashSet<String> mansioniSvolte = new HashSet<>();
+        for (int i = 0; i < faker.number().numberBetween(1, 10); i++){
+            mansioniSvolte.add(faker.job().title());
+        }
+
+        EsperienzaLavorativa esperienzaLavorativa;
+
+        if (validData){
+            esperienzaLavorativa = EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
+                faker.company().name(),
+                mansioniSvolte,
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            );
+        }
+        else{
+            esperienzaLavorativa = EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
+                "",
+                mansioniSvolte,
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            );
+        }
+        return esperienzaLavorativa;
+    }
+
+    /**
      * Si assicura che il sistema crei un solo management system
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void testOneInstance() throws IOException, URISyntaxException {
@@ -160,8 +355,8 @@ public class TestManagementSystem {
 
     /**
      * Effettua test di login e logout
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void testLoginAndLogout() throws IOException, URISyntaxException {
@@ -181,11 +376,11 @@ public class TestManagementSystem {
         assertNull(ms.getLoggedInUser());
 
         // provo a entrare con password errata: non dovrei riuscire ad accedere
-        assertFalse(ms.login("mario", ""));
+        assertFalse(ms.login(defaultAdminUsername, ""));
         assertNull(ms.getLoggedInUser());
 
         // provo a inserire username e password di un utente esistente: dovrei essere in grado di entrare
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // provo a fare il logout: non dovrebbe essere piu' autenticato nessuno
@@ -195,60 +390,16 @@ public class TestManagementSystem {
 
     /**
      * Prova ad aggiungere e togliere lavoratori dal sistema
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void testAddAndRemoveLavoratori() throws IOException, URISyntaxException {
 
         ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
 
-        Lavoratore invalidData = Lavoratore.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            faker.address().streetAddress(),
-            List.of(),
-            List.of(),
-            List.of(),
-            false,
-            List.of(),
-            List.of(),
-            generateCodiceFiscale()
-        );
-
-        // crea data attuale e sottraici 20 anni
-        Date twentyYearsAgo = new Date();
-        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
-
-        Lavoratore validData = Lavoratore.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            faker.address().streetAddress(),
-            List.of(),
-            List.of(),
-            List.of(),
-            false,
-            List.of(),
-            List.of(
-                RecapitoUrgenza.of(
-                    faker.name().firstName(),
-                    faker.name().lastName(),
-                    generateTelephoneNumber(),
-                    faker.internet().emailAddress()
-                )
-            ),
-            generateCodiceFiscale()
-        );
+        Lavoratore invalidData = generateLavoratore(false);
+        Lavoratore validData = generateLavoratore(true);
 
         // all'inizio non dovrebbe esserci nessun lavoratore
         assertEquals(0, ms.getLavoratori().size());
@@ -264,7 +415,7 @@ public class TestManagementSystem {
 
         // effettuo il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // aggiungo un lavoratore con dati non validi: non dovrebbe essere inserito
@@ -299,7 +450,7 @@ public class TestManagementSystem {
 
         // rifaccio il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // rimuovo un lavoratore che non esiste: dovrebbe fallire
@@ -320,55 +471,16 @@ public class TestManagementSystem {
 
     /**
      * Prova ad aggiungere e rimuovere dipendenti
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void testAddAndRemoveDipendenti() throws IOException, URISyntaxException {
         ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
 
-        Dipendente invalidData = Dipendente.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente1",
-            "pwdinsicura",
-            generateCodiceFiscale()
-        );
-
-        // crea data attuale e sottraici 20 anni
-        Date twentyYearsAgo = new Date();
-        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
-
-        Dipendente validData = Dipendente.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente2",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
-
-        Dipendente validData2 = Dipendente.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente3",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
+        Dipendente invalidData = generateDipendente(false);
+        Dipendente validData = generateDipendente(true);
+        Dipendente validData2 = generateDipendente(true);
 
         // all'inizio non dovrebbe esserci nessun dipendente
         assertEquals(0, ms.getDipendenti().size());
@@ -384,7 +496,7 @@ public class TestManagementSystem {
 
         // effettuo il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // aggiungo un dipendente con dati non validi: non dovrebbe essere inserito
@@ -419,7 +531,7 @@ public class TestManagementSystem {
 
         // rifaccio il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // rimuovo un dipendente che non esiste: dovrebbe fallire
@@ -460,68 +572,17 @@ public class TestManagementSystem {
 
     /**
      * Prova ad aggiungere o rimuovere admin dal sistema
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura  file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void testAddAndRemoveAdmin() throws IOException, URISyntaxException {
         ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
 
-        Admin invalidData = Admin.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().future(10, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "admin1",
-            "pwdinsicura",
-            generateCodiceFiscale()
-        );
-
-        // crea data attuale e sottraici 20 anni
-        Date twentyYearsAgo = new Date();
-        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
-
-        Admin validData = Admin.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente2",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
-
-        Admin validData2 = Admin.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente4",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
-
-        Dipendente validDataDipendente = Dipendente.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente3",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
+        Admin invalidData = generateAdmin(false);
+        Admin validData = generateAdmin(true);
+        Admin validData2 = generateAdmin(true);
+        Dipendente validDataDipendente = generateDipendente(true);
 
         // all'inizio dovrebbe esserci un solo admin
         assertEquals(1, ms.getAdmins().size());
@@ -544,7 +605,7 @@ public class TestManagementSystem {
 
         // effettuo il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // aggiungo un admin con dati non validi: non dovrebbe essere inserito
@@ -580,7 +641,7 @@ public class TestManagementSystem {
 
         // rifaccio il login
         assertNull(ms.getLoggedInUser());
-        assertTrue(ms.login("mario", "secret"));
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
         assertNotNull(ms.getLoggedInUser());
 
         // rimuovo un admin che non esiste: dovrebbe fallire
@@ -640,70 +701,20 @@ public class TestManagementSystem {
      *
      * TODO: migliora i test e aggiungi i casi mancanti
      *
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura  file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
+    @Test
     void testAddAndRemoveEsperienzeLavorative() throws IOException, URISyntaxException {
 
         ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
 
-        // crea data attuale e sottraici 20 anni
-        Date twentyYearsAgo = new Date();
-        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
-
-        Admin admin = Admin.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "admin",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
-
-        Dipendente dipendente = Dipendente.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            "dipendente1",
-            generateStrongPassword(),
-            generateCodiceFiscale()
-        );
-
-        Lavoratore lavoratore = Lavoratore.of(
-            faker.name().firstName(),
-            faker.name().lastName(),
-            faker.address().streetAddress(),
-            faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-            faker.address().country(),
-            faker.internet().emailAddress(),
-            generateTelephoneNumber(),
-            faker.address().streetAddress(),
-            List.of(),
-            List.of(),
-            List.of(),
-            false,
-            List.of(),
-            List.of(
-                RecapitoUrgenza.of(
-                    faker.name().firstName(),
-                    faker.name().lastName(),
-                    generateTelephoneNumber(),
-                    faker.internet().emailAddress()
-                )
-            ),
-            generateCodiceFiscale()
-        );
+        Admin admin = generateAdmin(true);
+        Dipendente dipendente = generateDipendente(true);
+        Lavoratore lavoratore = generateLavoratore(true);
 
         // accedi con l'admin di default e crea un admin
-        ms.login("mario", "secret");
+        ms.login(defaultAdminUsername, defaultAdminPassword);
         ms.addAdmin(admin);
         ms.logout();
 
@@ -723,14 +734,7 @@ public class TestManagementSystem {
 
         // prova ad aggiungere una esperienza lavorativa con dati non validi
         ManagementSystemResponse response = ms.addEsperienzaLavorativa(lavoratore.getCodiceFiscale(),
-            EsperienzaLavorativa.of(
-                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
-                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
-                "",
-                List.of(""),
-                "",
-                200
-            )
+            generateEsperienzaLavorativa(false)
         );
         assertEquals(ManagementSystemStatus.INVALID_INPUT, response.getStatus());
         Lavoratore msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
@@ -738,14 +742,7 @@ public class TestManagementSystem {
 
         // aggiungi una esperienza lavorativa
         response = ms.addEsperienzaLavorativa(lavoratore.getCodiceFiscale(),
-            EsperienzaLavorativa.of(
-                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
-                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
-                faker.company().name(),
-                List.of(faker.job().title()),
-                faker.address().streetAddress(),
-                faker.number().numberBetween(50, 200)
-            )
+            generateEsperienzaLavorativa(true)
         );
         assertEquals(ManagementSystemStatus.OK, response.getStatus());
         msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
@@ -756,14 +753,7 @@ public class TestManagementSystem {
         response = ms.modifyEsperienzaLavorativa(
             lavoratore.getCodiceFiscale(),
             msLavoratoreEsperienzaLavorativa.getId(),
-            EsperienzaLavorativa.of(
-                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1), new Date(2000, Calendar.DECEMBER, 31))),
-                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1), new Date(2001, Calendar.DECEMBER, 31))),
-                faker.company().name(),
-                List.of(faker.job().title()),
-                faker.address().streetAddress(),
-                faker.number().numberBetween(50, 200)
-            )
+            generateEsperienzaLavorativa(true)
         );
         assertEquals(ManagementSystemStatus.OK, response.getStatus());
         msLavoratore = (Lavoratore) ms.getLavoratori().toArray()[0];
@@ -780,13 +770,13 @@ public class TestManagementSystem {
     /**
      * Prova ad eseguire ricerche in and dei lavoratori.
      *
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Errore lettura/scrittura  file JSON
+     * @throws URISyntaxException Errore di creazione del percorso dei file JSON
      */
     @Test
     void searchLavoratoreAnd() throws IOException, URISyntaxException {
         ManagementSystem ms = ManagementSystem.getInstance(resourcePath + "/search_tests");
-        ms.login("mario", "secret");
+        ms.login(defaultAdminUsername, defaultAdminPassword);
 
         // non specificare nessun filtro: mi aspetto di restituire tutti i lavoratori
         assertEquals(
