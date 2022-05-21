@@ -29,13 +29,25 @@ public class FinestraLavoratore extends Application{
     TextField nome,cognome,codice,luogoNascita,giornoNascita,meseNascita,annoNascita,nazionalita,residenza,recapito,mail,comuniDisp,lingue,periodiDisp,patente;
     CheckBox automunito;
 
-    public FinestraLavoratore(){super();}
-    public FinestraLavoratore(Lavoratore l){super();lavoratore=l;modifica=true;}
+    public FinestraLavoratore(){
+        super();
+    }
+
+    public FinestraLavoratore(Lavoratore l){
+        super();
+        lavoratore = l;
+        modifica = true;
+    }
+
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
-        try { scene = new Scene(loader.load()); }
-        catch (IOException exception) {throw new RuntimeException(exception);}
+        try {
+            scene = new Scene(loader.load());
+        }
+        catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
 
         nome= (TextField) loader.getNamespace().get("inputNome");
         cognome= (TextField) loader.getNamespace().get("inputCognome");
@@ -103,15 +115,17 @@ public class FinestraLavoratore extends Application{
                             else
                                 System.out.println(ms.modifyLavoratore(p).getStatus());
 
-                            esperienzeLavorative.clear();
-                            recapitiUrgenze.clear();
                             stage.close();
                         }
                         else
                             JOptionPane.showMessageDialog(null, p.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
                     }
-                    catch (IOException e){System.out.println(e);}
-                    catch (URISyntaxException e){System.out.println(e);}
+                    catch (IOException e){
+                        System.out.println("Errore IOException:" + e);
+                    }
+                    catch (URISyntaxException e){
+                        System.out.println("Errore URISyntaxException: " + e);
+                    }
                 }
                 else{
                     if(recapitiUrgenze.size()==0)
