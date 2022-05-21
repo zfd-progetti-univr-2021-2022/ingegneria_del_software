@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -22,7 +23,11 @@ public class FinestraModificaEsperienze extends Application {
     TableView tabella;
     ManagementSystem ms;
 
-    FinestraModificaEsperienze(Lavoratore l,Collection<EsperienzaLavorativa> c){super();lavoratore=l;esperienze=c;}
+    FinestraModificaEsperienze(Lavoratore l){
+        super();
+        lavoratore=l;
+        esperienze=l.getEsperienzeLavorative();
+    }
 
     public void start(Stage stage) {
         Scene scene;
@@ -31,9 +36,7 @@ public class FinestraModificaEsperienze extends Application {
         try { scene = new Scene(loader.load()); }
         catch (IOException exception) {throw new RuntimeException(exception);}
 
-        try {
-            ms = ManagementSystem.getInstance();
-        }
+        try {ms = ManagementSystem.getInstance();}
         catch (IOException e){System.out.println(e);}
         catch (URISyntaxException e){System.out.println(e);}
 
@@ -41,7 +44,7 @@ public class FinestraModificaEsperienze extends Application {
         instanziaTabella();
 
         for(EsperienzaLavorativa e : esperienze)
-            tabella.getItems().add(e);
+                tabella.getItems().add(e);
 
         Button aggiorna= (Button) loader.getNamespace().get("aggiorna");
         aggiorna.setOnAction(new EventHandler<ActionEvent>() {
@@ -51,8 +54,8 @@ public class FinestraModificaEsperienze extends Application {
                 for ( int i = 0; i<tabella.getItems().size(); i++)
                     tabella.getItems().clear();
 
-                for(EsperienzaLavorativa e : lavoratore.getEsperienzeLavorative())
-                    tabella.getItems().add(e);
+                for(EsperienzaLavorativa e : esperienze)
+                        tabella.getItems().add(e);
             }
         });
 
@@ -89,7 +92,14 @@ public class FinestraModificaEsperienze extends Application {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     EsperienzaLavorativa rowData = row.getItem();
-                    new FinestraEsperienzaLavorativa(lavoratore,rowData).start(new Stage());
+
+                    LocalDate adesso = LocalDate.now();
+                    LocalDate confronto = adesso.minus(5, ChronoUnit.YEARS);
+
+                    if(rowData.getInizioPeriodoLavorativo().isAfter(confronto) && rowData.getFinePeriodoLavorativo().isAfter(confronto))
+                        new FinestraEsperienzaLavorativa(lavoratore,rowData).start(new Stage());
+                    else
+                        JOptionPane.showMessageDialog(null, "ESPERIENZA NON PIU' MODIFICABILE", "ERRORE", JOptionPane.ERROR_MESSAGE);
                 }
             });
             return row ;

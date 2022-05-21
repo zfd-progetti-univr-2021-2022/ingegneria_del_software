@@ -51,7 +51,7 @@ public class FinestraEsperienzaLavorativa extends Application{
         catch (IOException e){System.out.println(e);}
         catch (URISyntaxException e){System.out.println(e);}
 
-        if(modifica==true)
+        if(modifica)
             inizializzaEsperienza();
 
         Button aggiungi= (Button) loader.getNamespace().get("AggiungiEsperienza");
@@ -60,20 +60,15 @@ public class FinestraEsperienzaLavorativa extends Application{
             public void handle(ActionEvent event) {
                 LocalDate inizioPeriodoLavorativo=LocalDate.of(Integer.parseInt(annoInizio.getText()),Integer.parseInt(meseInizio.getText()),Integer.parseInt(giornoInizio.getText()));
                 LocalDate finePeriodoLavorativo=LocalDate.of(Integer.parseInt(annoFine.getText()),Integer.parseInt(meseFine.getText()),Integer.parseInt(giornoFine.getText()));
-                LocalDate adesso = LocalDate.now();
+                EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Integer.parseInt(retribuzione.getText()));
 
-                if(adesso.isAfter(LocalDate.of(Integer.parseInt(annoFine.getText())+5,Integer.parseInt(meseFine.getText()),Integer.parseInt(giornoFine.getText()))) || adesso.isAfter(LocalDate.of(Integer.parseInt(annoInizio.getText())+5,Integer.parseInt(meseInizio.getText()),Integer.parseInt(giornoInizio.getText()))))
-                    JOptionPane.showMessageDialog(null, "L'ESPERIENZA NON DEVE ESSERE ANTECEDENT£E A 5 ANNI FA", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                if(modifica==false)
+                    esperienze.add(esp);
                 else{
-                    EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Integer.parseInt(retribuzione.getText()));
-                    if(modifica==false)
-                        esperienze.add(esp);
-                    else{
-                        try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
-                        catch(Exception e){System.out.println("Inserimento fallito");}
-                    }
-                    stage.close();
+                    try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
+                    catch(Exception e){System.out.println("Inserimento fallito");}
                 }
+                stage.close();
             }
         });
 

@@ -54,6 +54,13 @@ public class FinestraRicerca extends Application {
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
         checkAutomunito=(CheckBox) loader.getNamespace().get("checkAutomunito");
 
+        try {ms = ManagementSystem.getInstance();}
+        catch (IOException e){System.out.println(e);}
+        catch (URISyntaxException e){System.out.println(e);}
+
+        tabella =(TableView) loader.getNamespace().get("tabella");
+        instanziaTabella();
+
         Button aggiungiLavoratore= (Button) loader.getNamespace().get("aggiungiLavoratore");
         aggiungiLavoratore.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -64,14 +71,8 @@ public class FinestraRicerca extends Application {
         });
 
         Button aggiungiDipendente= (Button) loader.getNamespace().get("aggiungiDipendente");
-        try {
-            ms = ManagementSystem.getInstance();
-            //se non sei amministratore non do la possibilità di aggiungere dipendenti
-            if(!(ms.getLoggedInUser().isAdmin()))
-                aggiungiDipendente.setVisible(false);
-        }
-        catch (IOException e){System.out.println(e);}
-        catch (URISyntaxException e){System.out.println(e);}
+        //se non sei amministratore non do la possibilità di aggiungere dipendenti
+        aggiungiDipendente.setVisible(ms.getLoggedInUser().isAdmin());
         aggiungiDipendente.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -79,9 +80,6 @@ public class FinestraRicerca extends Application {
                 new FinestraDipendente().start(new Stage());
             }
         });
-
-        tabella =(TableView) loader.getNamespace().get("tabella");
-        instanziaTabella();
 
         Button cerca= (Button) loader.getNamespace().get("cerca");
         cerca.setOnAction(new EventHandler<ActionEvent>() {
@@ -117,11 +115,8 @@ public class FinestraRicerca extends Application {
                 for ( int i = 0; i<tabella.getItems().size(); i++)
                     tabella.getItems().clear();
 
-                lavoratori.addAll(ms.getLavoratori());
-
-                for(Lavoratore l : lavoratori)
+                for(Lavoratore l : ms.getLavoratori())
                     tabella.getItems().add(l);
-                lavoratori.clear();
             }
         });
 
@@ -158,7 +153,7 @@ public class FinestraRicerca extends Application {
     }
 
     //metodo per creare l'intestazione della tabella
-    private void instanziaTabella() {
+    public  void instanziaTabella() {
         TableColumn nomeTab = new TableColumn("Nome");
         nomeTab.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
@@ -168,7 +163,7 @@ public class FinestraRicerca extends Application {
         TableColumn luogoNascitaTab = new TableColumn("Nato a");
         luogoNascitaTab.setCellValueFactory(new PropertyValueFactory<>("luogoNascita"));
 
-        TableColumn dataNascitaTab = new TableColumn("Data");
+        TableColumn dataNascitaTab = new TableColumn("Data di nascita");
         dataNascitaTab.setCellValueFactory(new PropertyValueFactory<>("dataNascita"));
 
         TableColumn nazionalita = new TableColumn("Nazionalità");
@@ -187,23 +182,14 @@ public class FinestraRicerca extends Application {
 
         tabella.getColumns().addAll(nomeTab,cognomeTab,luogoNascitaTab,dataNascitaTab,nazionalita,indirizzoEmail,numero,codiceTab);
 
+        for(Lavoratore l : ms.getLavoratori())
+            tabella.getItems().add(l);
+
         tabella.setRowFactory( tv -> {
             TableRow<Lavoratore> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Lavoratore rowData = row.getItem();
-                    System.out.println(rowData.getCodiceFiscale());
-
-                    lavoratori.addAll(ms.getLavoratori());
-
-                    for(Lavoratore l:lavoratori){
-                        if(rowData.getCodiceFiscale().equals(l.getCodiceFiscale())){
-                            rowData=l;
-                            System.out.println(l.getEsperienzeLavorative());
-                            break;
-                        }
-                    }
-
                     new FinestraLavoratore(rowData).start(new Stage());
                 }
             });

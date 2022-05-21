@@ -69,18 +69,14 @@ public class FinestraLavoratore extends Application{
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
 
         //controllo se ho aperto la finestra in modalità modifica
-        if(modifica==true)
+        if(modifica)
             inizializzaLavoratore();
 
         Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
         aggiungiContatto.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //apro la finestra per aggiungere contatti
-                if(modifica==false)
-                    new FinestraContatto(recapitiUrgenze).start(new Stage());
-                else
-                    new FinestraContatto(lavoratore.getRecapitiUrgenze()).start(new Stage());
+                new FinestraContatto(recapitiUrgenze).start(new Stage());
             }
         });
 
@@ -88,11 +84,7 @@ public class FinestraLavoratore extends Application{
         aggiungiEsperienza.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //apro la finestra per aggiungere contatti
-                if(modifica==false)
-                    new FinestraEsperienzaLavorativa(esperienzeLavorative).start(new Stage());
-                else
-                    new FinestraEsperienzaLavorativa(lavoratore.getEsperienzeLavorative()).start(new Stage());
+                new FinestraEsperienzaLavorativa(esperienzeLavorative).start(new Stage());
             }
         });
 
@@ -139,12 +131,11 @@ public class FinestraLavoratore extends Application{
         });
 
         Button visualizzaEsperienze = (Button) loader.getNamespace().get("visualizzaEsperienze");
-        if(modifica==false)
-            visualizzaEsperienze.setVisible(false);
+        visualizzaEsperienze.setVisible(modifica);
         visualizzaEsperienze.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                new FinestraModificaEsperienze(lavoratore,lavoratore.getEsperienzeLavorative()).start(new Stage());
+                new FinestraModificaEsperienze(lavoratore).start(new Stage());
             }
         });
 
@@ -212,7 +203,7 @@ public class FinestraLavoratore extends Application{
         lingueParlate=lavoratore.getLingueParlate();
         String ling="";
         for (Lingua l:lingueParlate)
-            ling=ling+l.toString()+",";
+                ling=ling+l.toString()+",";
         lingue.setText(ling.substring(0,ling.length()-1));//elimino l'ultima virgola
 
         periodiDisponibilita=lavoratore.getPeriodiDisponibilita();
@@ -227,13 +218,17 @@ public class FinestraLavoratore extends Application{
 
         patenti=lavoratore.getPatenti();
         String pat="";
-        for (Patente p:patenti)
-            pat=pat+p.toString()+",";
-        patente.setText(pat.substring(0,pat.length()-1));
+        //potrebbe essere senza patente
+        if(patenti.size()>0){
+            for (Patente p:patenti)
+                pat=pat+p.toString()+",";
+            patente.setText(pat.substring(0,pat.length()-1));
+        }
 
         automunito.setSelected(lavoratore.getAutomunito());
 
         //inizializzo i contatti e le esperienzew lavorative
+        esperienzeLavorative=lavoratore.getEsperienzeLavorative();
         recapitiUrgenze=lavoratore.getRecapitiUrgenze();
     }
 }
