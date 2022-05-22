@@ -7,6 +7,7 @@ package com.example.progettoingegneria;
 import am.ik.yavi.builder.ValidatorBuilder;
 import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Classe che rappresenta un lavoratore.
  */
-@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente", "uniqueEsperienzaLavorativaId"}, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
+@JsonIgnoreProperties(value={ "tipo", "isAdmin", "admin", "dipendente"}, allowGetters=true)  // ignora "tipo" quando si converte JSON in oggetto
 public class Lavoratore extends Persona{
     /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "lavoratore";
@@ -39,6 +40,7 @@ public class Lavoratore extends Persona{
     private Collection<RecapitoUrgenza> recapitiUrgenze;
 
     /** Identificativo univoco esperienza lavorativa */
+    @JsonIgnore
     private int uniqueEsperienzaLavorativaId = 0;
 
     /** Validatore dati di un lavoratore */
@@ -98,7 +100,7 @@ public class Lavoratore extends Persona{
         }
 
         this.indirizzoResidenza = indirizzoResidenza;
-        this.esperienzeLavorative = esperienzeLavorative;
+        this.setEsperienzeLavorative(esperienzeLavorative);
         this.lingueParlate = lingueParlate;
         this.patenti = patenti;
         this.automunito = automunito;
@@ -239,6 +241,7 @@ public class Lavoratore extends Persona{
      * Restituisce una lista di tutte le mansioni univoche svolte dal lavoratore.
      * @return Lista di tutte le mansioni univoche svolte dal lavoratore.
      */
+    @JsonIgnore
     public Collection<String> getMansioni(){
         HashSet<String> mansioni = new HashSet<>();
         for (EsperienzaLavorativa esperienzaLavorativa: esperienzeLavorative){

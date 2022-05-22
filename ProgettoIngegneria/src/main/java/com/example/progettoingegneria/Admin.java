@@ -1,11 +1,14 @@
 package com.example.progettoingegneria;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 
 public class Admin extends Dipendente{
     /** Tipo di persona nel sistema: utile per l'output JSON */
     private final String tipo = "admin";
     /** Booleano che indica se e' admin **/
+    @JsonIgnore
     private final boolean isAdmin = true;
 
     /**
@@ -17,7 +20,7 @@ public class Admin extends Dipendente{
      * @param dataNascita Data nascita dipendente
      * @param nazionalita Nazionalita' dipendente
      * @param indirizzoEmail Indirizzo email
-     * @param numeroTelefono NUmero telefono
+     * @param numeroTelefono Numero telefono
      * @param username Username
      * @param password Password
      * @param codiceFiscale Codice fiscale

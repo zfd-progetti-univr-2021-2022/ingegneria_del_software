@@ -138,7 +138,7 @@ public class EsperienzaLavorativa {
      * Restituisce data inizio periodo lavorativo
      * @return Data Inizio periodo lavorativo
      */
-    protected LocalDate getInizioPeriodoLavorativo(){
+    public LocalDate getInizioPeriodoLavorativo(){
         return this.inizioPeriodoLavorativo;
     }
 
@@ -156,7 +156,7 @@ public class EsperienzaLavorativa {
      * Restituisce data fine periodo lavorativo
      * @return data Fine periodo lavorativo
      */
-    protected LocalDate getFinePeriodoLavorativo(){
+    public LocalDate getFinePeriodoLavorativo(){
         return this.finePeriodoLavorativo;
     }
 
@@ -174,7 +174,7 @@ public class EsperienzaLavorativa {
      * Restituisce nome azienda.
      * @return Nome azienda
      */
-    protected String getNomeAzienda(){
+    public String getNomeAzienda(){
         return this.nomeAzienda;
     }
 
@@ -237,7 +237,7 @@ public class EsperienzaLavorativa {
      * Restituisce luogo di lavoro.
      * @return Luogo di lavoro
      */
-    protected String getLuogoLavoro(){
+    public String getLuogoLavoro(){
         return this.luogoLavoro;
     }
 
@@ -255,7 +255,7 @@ public class EsperienzaLavorativa {
      * Restituisce retribuzione lorda giornaliera.
      * @return Retribuzione lorda giornaliera
      */
-    protected int getRetribuzioneLordaGiornaliera(){
+    public int getRetribuzioneLordaGiornaliera(){
         return this.retribuzioneLordaGiornaliera;
     }
 
@@ -271,7 +271,7 @@ public class EsperienzaLavorativa {
      * Restituisce identificativo dell'esperienza di lavoro del lavoratore
      * @return ID esperienza lavorativa
      */
-    protected int getId(){
+    public int getId(){
         return this.id;
     }
 

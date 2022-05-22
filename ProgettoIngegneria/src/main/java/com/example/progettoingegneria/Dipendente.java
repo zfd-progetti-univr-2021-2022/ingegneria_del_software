@@ -6,6 +6,7 @@ package com.example.progettoingegneria;
 import am.ik.yavi.builder.ValidatorBuilder;
 import am.ik.yavi.core.ConstraintViolations;
 import am.ik.yavi.core.Validator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class Dipendente extends Persona{
     /** Password del dipendente */
     private String password;
     /** Booleano che indica se e' admin **/
+    @JsonIgnore
     private final boolean isAdmin = false;
 
     /** Validatore per il dipendente */

@@ -10,7 +10,6 @@
     "tipo" : "dipendente",
     "username" : "mcurley",
     "password" : "DL//9=(cd&={xX.",
-    "isAdmin" : false,
     "admin" : false,
     "dipendente" : true
   } ]

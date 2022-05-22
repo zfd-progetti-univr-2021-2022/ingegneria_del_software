@@ -124,7 +124,7 @@ public class PeriodoDisponibilita {
      * Restituisce il comune per cui il lavoratore e' disponibile
      * @return Comune per cui il lavoratore e' disponibile
      */
-    protected String getComune(){
+    public String getComune(){
         return this.comune;
     }
 
@@ -169,5 +169,10 @@ public class PeriodoDisponibilita {
     @Override
     public int hashCode() {
         return Objects.hash(inizioPeriodoDisponibilita, finePeriodoDisponibilita, comune);
+    }
+
+    @Override
+    public String toString(){
+        return inizioPeriodoDisponibilita.getDayOfMonth()+"/"+ inizioPeriodoDisponibilita.getMonth().getValue()+"/"+ inizioPeriodoDisponibilita.getYear()+"-"+finePeriodoDisponibilita.getDayOfMonth()+"/"+ finePeriodoDisponibilita.getMonth().getValue()+"/"+ finePeriodoDisponibilita.getYear();
     }
 }
