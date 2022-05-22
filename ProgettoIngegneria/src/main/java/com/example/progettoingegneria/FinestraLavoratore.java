@@ -209,11 +209,11 @@ public class FinestraLavoratore extends Application{
         periodiDisponibilita=lavoratore.getPeriodiDisponibilita();
         String com="";
         for (PeriodoDisponibilita p:periodiDisponibilita)
-            com=com+p.toStringComune()+",";
+            com=com+p.getComune()+",";
         comuniDisp.setText(com.substring(0,com.length()-1));
         String per="";
         for (PeriodoDisponibilita p:periodiDisponibilita)
-            per=per+p.toStringPeriodo()+",";
+            per=per+p.toString()+",";
         periodiDisp.setText(per.substring(0,per.length()-1));
 
         patenti=lavoratore.getPatenti();
