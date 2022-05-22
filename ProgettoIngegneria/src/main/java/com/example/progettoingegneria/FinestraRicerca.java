@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.awt.event.*;
 import java.time.LocalDate;
@@ -148,6 +149,7 @@ public class FinestraRicerca extends Application {
         });
 
         stage.setScene(scene);
+        stage.setTitle("SELEZIONARE LE CASELLE A DESTRA DI OGNI CAMPO COMPILATO PER EFFETTUARE RICERCHE IN CONGIUNZIONE");
         stage.setResizable(false);
         stage.show();
     }
@@ -199,12 +201,20 @@ public class FinestraRicerca extends Application {
 
     //metodo per la ricerca in and dei lavoratori
     private Collection<Lavoratore> addAnd(){
-        String name=null;String surname=null;String luogoResidenza=null;
+        String name=null;
+        String surname=null;
+        String luogoResidenza=null;
         Collection<Lingua> languages =null;
         Collection<PeriodoDisponibilita> periodiDisponibilita=null;
         Collection<String> job=null;
-        Boolean auto= null;
         Collection<Patente> patenti=null;
+        Boolean auto= null;
+
+        if(!lingue.getText().equals(""))
+            languages =new ArrayList<>();
+
+        if(!disponibilita.getText().equals(""))
+            periodiDisponibilita =new ArrayList<>();
 
         if(checkNome.isSelected())
             name=nome.getText();
@@ -241,11 +251,18 @@ public class FinestraRicerca extends Application {
         if(checkResidenza.isSelected())
             luogoResidenza=residenza.getText();
 
+        //se ciò non è verificato verrà passato una collection di patenti vuota
+        if(checkPatente.isSelected() && patente.isSelected()){
+            patenti =new ArrayList<>();
+            patenti.add(Patente.valueOf("B"));//aggiungo una patente per far capire che voglio i lavoratori con almeno una patente
+        }
+
         if(checkAutomunito.isSelected() && automunito.isSelected())
             auto=Boolean.valueOf(true);
 
-        if(checkPatente.isSelected() && patente.isSelected())
-            patenti.add(Patente.valueOf("B"));//aggiungo una patente per far capire che voglio i lavoratori con almeno una patente
+        if(checkAutomunito.isSelected() && !(automunito.isSelected()))
+            auto=Boolean.valueOf(false);
+
 
         //creo il management system
         try {ms = ManagementSystem.getInstance();}
@@ -308,11 +325,11 @@ public class FinestraRicerca extends Application {
             catch(Exception exception){System.out.println("Errore disponibilità");}
         }
 
-        //controllo che abbia almeno una patente
+        //controllo che abbia almeno una patente,(ignoro il caso in cui nessuna delle due caselle è selezionata)
         if(!(checkPatente.isSelected()) && patente.isSelected() && a.getPatenti().size()!=0)
             supporto.add(a);
 
-        //controllo che sia automunito
+        //controllo che sia automunito, (ignoro il caso in cui nessuna delle due caselle è selezionata)
         if(!(checkAutomunito.isSelected()) && checkAutomunito.isSelected() && a.getAutomunito())
             supporto.add(a);
     }
