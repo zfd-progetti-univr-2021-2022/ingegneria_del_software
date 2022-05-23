@@ -139,6 +139,14 @@ public class FinestraLavoratore extends Application{
             }
         });
 
+        Button visualizzaContatti = (Button) loader.getNamespace().get("visualizzaContatti");
+        visualizzaContatti.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new FinestraVisualizzaContatti(recapitiUrgenze).start(new Stage());
+            }
+        });
+
         stage.setScene(scene);
         stage.setTitle("Registra Lavoratore");
         stage.setResizable(false);
