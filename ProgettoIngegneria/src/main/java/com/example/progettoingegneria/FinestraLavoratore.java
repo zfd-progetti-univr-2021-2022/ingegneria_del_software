@@ -159,7 +159,7 @@ public class FinestraLavoratore extends Application{
         String [] arrLingue=lingue.split(",");
         for(int i=0; i<arrLingue.length; i++)
             try{
-                lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase()));
+                lingueParlate.add(Lingua.valueOf(arrLingue[i].toUpperCase().replaceAll(" ","")));
             }
             catch(Exception exception){System.out.println("Errore Lingua");}
     }
