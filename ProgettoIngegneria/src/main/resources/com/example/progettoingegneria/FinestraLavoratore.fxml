@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 
-<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="600" prefWidth="490" >
+<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="600" prefWidth="470" >
 
     <GridPane layoutX="40" layoutY="40" hgap="7" vgap="10">
         <Text text="Nome" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
@@ -28,7 +28,7 @@
         <TextField fx:id="inputNazionalita" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
         <Text text="Residenza" GridPane.columnIndex="0" GridPane.rowIndex="6"  />
         <TextField fx:id="inputResidenza" GridPane.columnIndex="1" GridPane.rowIndex="6"  />
-        <Text text="Recapito" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
+        <Text text="Telefono" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
         <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
         <Text text="Mail" GridPane.columnIndex="0" GridPane.rowIndex="8"  />
         <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="8"  />

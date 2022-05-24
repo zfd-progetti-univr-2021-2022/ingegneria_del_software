@@ -14,7 +14,7 @@
         <TextField fx:id="inputCognome" GridPane.columnIndex="1" GridPane.rowIndex="1"  />
         <Text text="Mail" GridPane.columnIndex="0" GridPane.rowIndex="2"  />
         <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="2"  />
-        <Text text="Recapito" GridPane.columnIndex="0" GridPane.rowIndex="3"  />
+        <Text text="Telefono" GridPane.columnIndex="0" GridPane.rowIndex="3"  />
         <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="3"  />
         <Button fx:id="AggiungiContatto" text="Aggiungi" GridPane.columnIndex="3" GridPane.rowIndex="4" />
     </GridPane>
