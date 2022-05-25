@@ -28,7 +28,7 @@
         <TextField fx:id="inputNazionalita" GridPane.columnIndex="1" GridPane.rowIndex="5"  />
         <Text text="E-mail" GridPane.columnIndex="0" GridPane.rowIndex="6"  />
         <TextField fx:id="inputMail" GridPane.columnIndex="1" GridPane.rowIndex="6"  />
-        <Text text="Recapito" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
+        <Text text="Telefono" GridPane.columnIndex="0" GridPane.rowIndex="7"  />
         <TextField fx:id="inputRecapito" GridPane.columnIndex="1" GridPane.rowIndex="7"  />
         <Text text="Nome Utente" GridPane.columnIndex="0" GridPane.rowIndex="8"  />
         <TextField fx:id="inputUtente" GridPane.columnIndex="1" GridPane.rowIndex="8"  />

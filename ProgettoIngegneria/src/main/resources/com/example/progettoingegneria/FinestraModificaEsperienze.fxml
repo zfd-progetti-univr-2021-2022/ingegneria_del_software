@@ -5,9 +5,7 @@
 
 <Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefWidth="750" prefHeight="600">
     <GridPane layoutX="40" layoutY="40" hgap="20" vgap="10">
-        <ScrollPane  GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <TableView fx:id="tabella" prefWidth="650" prefHeight="500"/>
-        </ScrollPane>
+        <TableView fx:id="tabella" prefWidth="650" prefHeight="500" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         <Button fx:id="aggiorna" text="Aggiorna" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     </GridPane>
 </Pane>

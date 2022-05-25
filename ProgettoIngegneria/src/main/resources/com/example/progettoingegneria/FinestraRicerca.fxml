@@ -39,10 +39,8 @@
             <Button fx:id="tutti" text="Visualizza Tutti" GridPane.columnIndex="7" GridPane.rowIndex="7" />
             <Button fx:id="pulisci" text="Pulisci" GridPane.columnIndex="8" GridPane.rowIndex="7" />
         </GridPane>
-        <ScrollPane  GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <TableView fx:id="tabella" prefWidth="735"/>
-        </ScrollPane>
-        <Button fx:id="aggiungiLavoratore" text="Aggiungi Lavoratore" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Button fx:id="aggiungiDipendente" text="Aggiungi Dipendente" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TableView fx:id="tabella" prefWidth="735" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Button fx:id="aggiungiLavoratore" text="Nuovo Lavoratore" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Button fx:id="aggiungiDipendente" text="Nuovo Dipendente" GridPane.columnIndex="0" GridPane.rowIndex="3" />
     </GridPane>
 </Pane>

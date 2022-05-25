@@ -99,7 +99,7 @@ public class RecapitoUrgenza {
      * Restituisce nome.
      * @return Stringa con nome
      */
-    protected String getNome(){
+    public String getNome(){
         return this.nome;
     }
 
@@ -117,7 +117,7 @@ public class RecapitoUrgenza {
      * Restituisce cognome.
      * @return Stringa con cognome
      */
-    protected String getCognome(){
+    public String getCognome(){
         return this.cognome;
     }
 
@@ -135,7 +135,7 @@ public class RecapitoUrgenza {
      * Restituisce numero di telefono
      * @return Stringa con numero di telefono
      */
-    protected String getNumeroTelefono(){
+    public String getNumeroTelefono(){
         return this.numeroTelefono;
     }
 
@@ -153,7 +153,7 @@ public class RecapitoUrgenza {
      * Restituisce indirizzo email.
      * @return Stringa con indirizzo email
      */
-    protected String getIndirizzoEmail(){
+    public String getIndirizzoEmail(){
         return this.indirizzoEmail;
     }
 
