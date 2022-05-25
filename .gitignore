@@ -6,3 +6,6 @@ log.txt
 
 # ignora cartella .idea
 .idea
+
+# ignora output compilazione LaTeX
+relazione/out/
