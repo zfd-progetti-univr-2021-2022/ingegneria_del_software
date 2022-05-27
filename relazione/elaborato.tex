@@ -8,7 +8,7 @@
 
 \title{Progetto Lavoratori Stagionali}
 
-\author{Christian Farina \\  Stefano Zenaro}
+\author{Christian Farina,  Stefano Zenaro}
 \date{anno 2021/2022}
 
 \begin{document}
@@ -18,19 +18,51 @@
 
 \mainmatter
 \chapter{Introduzione}
-Riassunto del progetto
+Si vuole progettare un sistema informatico di una agenzia che fornisce servizi di supporto alla ricerca di lavoro stagionale. I lavoratori interessati possono iscriversi al servizio, rivolgendosi agli sportelli dell’agenzia. Il sistema deve permettere la gestione delle anagrafiche e la ricerca di lavoratori
+stagionali, nei settori dell’agricoltura e del turismo. I responsabili del servizio, dipendenti dell’agenzia, inseriscono i dati dei lavoratori. 
+Per ogni lavoratore vengono memorizzati i dati anagrafici (nome, cognome, luogo e data di nascita, nazionalità), indirizzo, recapito telefonico personale (se presente), email, le eventuali
+specializzazioni/esperienze precedenti (bagnino, barman, istruttore di nuoto, viticultore,floricultore), lingue parlate, il tipo di patente di guida e se automunito. Sono inoltre memorizzati i periodi e le zone (comuni), per i quali il lavoratore è disponibile. Di ogni lavoratore si memorizzano anche le informazioni di almeno una persona da avvisare in caso di urgenza: nome, cognome, telefono, indirizzo email. I dipendenti dell’agenzia devono autenticarsi per poter accedere al sistema e inserire i dati dei lavoratori. Il sistema permette ai dipendenti dell’agenzia di aggiornare le anagrafiche con tutti ilavori che i lavoratori stagionali hanno svolto negli ultimi 5 anni. 
+Per ogni lavoro svolto vanno registrati: periodo, nome dell’azienda, mansioni svolte, luogo di lavoro, retribuzione lorda giornaliera. Per i dipendenti dell’agenzia si memorizzano i dati anagrafici, l’indirizzo email, il telefono e le credenziali di accesso (login e password).
+Una volta registrate le informazioni sui lavoratori, il personale dell’agenzia può effettuare ricercherispetto a possibili profili richiesti.
+In particolare, il sistema deve permettere ai dipendenti di effettuare ricerche per lavoratore, per lingue parlate, periodo di disponibilità, mansioni indicate, luogo di residenza, disponibilità di auto/patente di guida. Il sistema deve permettere di effettuare ricerche complesse, attraverso la specifica di differenti condizioni di ricerca (sia in AND che in OR).
  
 \chapter{Struttura del progetto}%in questa parte metteremo i vari schemi
+In questo capitolo sarà descritta la struttura generale del progetto e come esso si presenta all'utente finale. Verranno poi mostrati alcuni esempi di casi d'uso principali con relativi diagrammi di sequenza, per concludere sarà mostrato un diagramma riassuntivo delle attività generali.
+
 \section{Casi d'uso principali}
+Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\
+\textbf{Precondizioni}: l'utente o l'amministratore interessato deve essere autenticato\\
+\textbf{Attore}: Amministratore (funge anche da dipendente quindi può effettuare tuttte le operazioni di un normale dipendente )\\
+\textbf{Passi}:
+\begin{enumerate}
+\item Il dipendente registra un nuovo lavoratore
+\item Il dipendente cerca il lavoratore appena creato, apre la sua pagina di modifica e cambia un parametro 
+\item Aggiunge una nuova esperienza lavorativa tramite la pagina di modifica del lavoratore
+\item Sempre tramite la pagina di modifica del lavoratore apre la lista delle sue esperienze e modifica l'esperienza appena aggiunta
+\item Salva le modifica del lavoratore
+\item Apre la pagina per registrare un nuovo dipendente e ne crea uno
+\end{enumerate}
+\textbf{Postcondizioni}: un nuovo lavoratore e un nuovo dipendente sono inseriti\\
+
 \includegraphics[width=180mm]{casi.jpg}
-\section{Diagrammi di sequenza}
+\section{Diagrammi di sequenza dei casi d'uso}
+Qui di sotto sono raffigurati i diagrammi di sequenza del caso d'uso spiegato in precedenza, è stato scelto di dividere il diagramma in due parti a seconda dell'attore interessato al fine di garantire una maggiore leggibilità. La prima immagine raffigura i passaggi per la creazione e modifica di un lavoratore, la seconda i passi per creare un nuovo dipendente.
 \subsection{Creazione e modifica di un lavoratore}
 \includegraphics[width=180mm]{seq.png}
 \subsection{Creazione di un dipendente}
 \includegraphics[width=180mm]{seq2.png}
+\section{Diagramma delle attività}
+\includegraphics[width=185mm]{attivita.png}
 
 
 \chapter{Implementazione}%in questa parte spiegheremo le robe di programmazione (pattern robe di progetto e minchiate varie)
+In questo capitolo verrà trattato tutto ciò che è strettamente legato ai metodi implementativi usati per la realizzazione di questa applicazione. Verranno inoltre descritti i pattern architetturali e di design utilizzati.
+\section{Diagramma delle classi}
+\includegraphics[width=185mm]{classi.png}
+Nota: la parte di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system è stata omessa poichè non fondamentale per capire l'organizzazione dell'applicazione.
+\section{Diagramma di sequenza del software}
+altri diagrammi di sequenza
+
 
 \section{Pattern architetturale: MVC}
 Per scrivere l'applicazione si e' deciso di implementare il pattern architetturale Model~View~Controller (MVC).
