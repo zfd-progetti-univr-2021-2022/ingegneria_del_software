@@ -26,7 +26,7 @@ Per ogni lavoro svolto vanno registrati: periodo, nome dell’azienda, mansioni 
 Una volta registrate le informazioni sui lavoratori, il personale dell’agenzia può effettuare ricercherispetto a possibili profili richiesti.
 In particolare, il sistema deve permettere ai dipendenti di effettuare ricerche per lavoratore, per lingue parlate, periodo di disponibilità, mansioni indicate, luogo di residenza, disponibilità di auto/patente di guida. Il sistema deve permettere di effettuare ricerche complesse, attraverso la specifica di differenti condizioni di ricerca (sia in AND che in OR).
  
-\chapter{Struttura del progetto}%in questa parte metteremo i vari schemi
+\chapter{Struttura del progetto}
 In questo capitolo sarà descritta la struttura generale del progetto e come esso si presenta all'utente finale. Verranno poi mostrati alcuni esempi di casi d'uso principali con relativi diagrammi di sequenza, per concludere sarà mostrato un diagramma riassuntivo delle attività generali.
 
 \section{Casi d'uso principali}
@@ -46,7 +46,7 @@ Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per ut
 
 \includegraphics[width=180mm]{casi.jpg}
 \section{Diagrammi di sequenza dei casi d'uso}
-Qui di sotto sono raffigurati i diagrammi di sequenza del caso d'uso spiegato in precedenza, è stato scelto di dividere il diagramma in due parti a seconda dell'attore interessato al fine di garantire una maggiore leggibilità. La prima immagine raffigura i passaggi per la creazione e modifica di un lavoratore, la seconda i passi per creare un nuovo dipendente.
+Qui di sotto sono raffigurati i diagrammi di sequenza dei casi d'uso spiegati in precedenza, è stato scelto di dividere il diagramma in due parti a seconda dell'attore interessato al fine di garantire una maggiore leggibilità. La prima immagine raffigura i passaggi per la creazione e modifica di un lavoratore, la seconda i passi per creare un nuovo dipendente.
 \subsection{Creazione e modifica di un lavoratore}
 \includegraphics[width=180mm]{seq.png}
 \subsection{Creazione di un dipendente}
@@ -55,13 +55,17 @@ Qui di sotto sono raffigurati i diagrammi di sequenza del caso d'uso spiegato in
 \includegraphics[width=185mm]{attivita.png}
 
 
-\chapter{Implementazione}%in questa parte spiegheremo le robe di programmazione (pattern robe di progetto e minchiate varie)
+\chapter{Implementazione}
 In questo capitolo verrà trattato tutto ciò che è strettamente legato ai metodi implementativi usati per la realizzazione di questa applicazione. Verranno inoltre descritti i pattern architetturali e di design utilizzati.
 \section{Diagramma delle classi}
 \includegraphics[width=185mm]{classi.png}
-Nota: la parte di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system è stata omessa poichè non fondamentale per capire l'organizzazione dell'applicazione.
+Nota: le parte di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system sono state omesse poichè non fondamentali per capire l'organizzazione dell'applicazione.
 \section{Diagramma di sequenza del software}
-altri diagrammi di sequenza
+In questa sezione verranno mostrati i diagrammi di sequenza visti in precedenza, dal punto di vista del software progettato. Sono state omesse le parti di registrazione dell'utente per garantire una migliore leggibilità. Le linee di vita sono quelle dei vari componenti che costituiscono l'applicazione, saranno quindi mostrate più in dettaglio le interazioni delle singole parti.
+\subsection{Creazione e modifica di un lavoratore}
+\includegraphics[width=180mm]{softwareseq.png}
+\subsection{Creazione di un dipendente}
+\includegraphics[width=180mm]{softwareseq2.png}
 
 
 \section{Pattern architetturale: MVC}
