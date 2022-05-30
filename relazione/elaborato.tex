@@ -30,9 +30,9 @@ In particolare, il sistema deve permettere ai dipendenti di effettuare ricerche 
 In questo capitolo sarà descritta la struttura generale del progetto e come esso si presenta all'utente finale. Verranno poi mostrati alcuni esempi di casi d'uso principali con relativi diagrammi di sequenza, per concludere sarà mostrato un diagramma riassuntivo delle attività generali.
 
 \section{Casi d'uso principali}
-Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\
+Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\\\
 \textbf{Precondizioni}: l'utente o l'amministratore interessato deve essere autenticato\\
-\textbf{Attore}: Amministratore (funge anche da dipendente quindi può effettuare tuttte le operazioni di un normale dipendente )\\
+\textbf{Attore}: Amministratore (funge anche da dipendente)\\
 \textbf{Passi}:
 \begin{enumerate}
 \item Il dipendente registra un nuovo lavoratore
@@ -87,5 +87,7 @@ Il vantaggio del pattern singleton applicato a questo approccio e' che permette 
 
 \chapter{Test}
 Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello.
+\section{Test con utente generico}
+Il software è stato presentato ad utenti esterni non a conoscenza della struttura implementativa dell'applicazione, non è stata fornita loro alcun tipo di guida di modo da poter verificare, oltre che la corretta esecuzione del programma, anche l'intuitività dell'interfaccia grafica. Per quanto riguarda la parte funzionale, non sono stati riscontrati problemi rilevanti, è però stato necessario rendere la view del progetto più chiara ed esaustiva, poichè alcune etichette poste sui pulsanti traevano in inganno l'utente inducendolo a pensare ad un'errata funzione che il pulsante avrebbe dovuto eseguire. Grazie a questo tipo di test abbiamo inoltre compreso come rendere il sistema più "tollerante" agli inserimenti errati degli utenti permettendo di digitare gli spazi in alcune TextField che mandavano il programma in errore se l'input non era inserito correttamente. Dopo queste correzioni è stata riproposta la possibilità all'utente generico di riutilizzare e quindi rivalutare l'applicazione, nella seconda fase di test il tempo di utilizzo da parte di quest'ultimo si è ridotto notevolmente testimoniando il fatto di un miglioramento della struttura grafica.
 
 \end {document}
