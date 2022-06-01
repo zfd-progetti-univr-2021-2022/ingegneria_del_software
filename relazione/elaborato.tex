@@ -7,7 +7,6 @@
 
 
 \title{Progetto Lavoratori Stagionali}
-
 \author{Christian Farina,  Stefano Zenaro}
 \date{anno 2021/2022}
 
@@ -31,19 +30,18 @@ In questo capitolo sarà descritta la struttura generale del progetto e come ess
 
 \section{Casi d'uso principali}
 Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\\\
-\textbf{Precondizioni}: l'utente o l'amministratore interessato deve essere autenticato\\
+\textbf{Precondizioni}: l'utente deve essere autenticato\\
 \textbf{Attore}: Amministratore (funge anche da dipendente)\\
 \textbf{Passi}:
 \begin{enumerate}
 \item Il dipendente registra un nuovo lavoratore
 \item Il dipendente cerca il lavoratore appena creato, apre la sua pagina di modifica e cambia un parametro 
 \item Aggiunge una nuova esperienza lavorativa tramite la pagina di modifica del lavoratore
-\item Sempre tramite la pagina di modifica del lavoratore apre la lista delle sue esperienze e modifica l'esperienza appena aggiunta
-\item Salva le modifica del lavoratore
+\item Sempre tramite la pagina di modifica del lavoratore apre la lista delle sue esperienze e modifica l'esperienza appena aggiunta e la salva
 \item Apre la pagina per registrare un nuovo dipendente e ne crea uno
 \end{enumerate}
 \textbf{Postcondizioni}: un nuovo lavoratore e un nuovo dipendente sono inseriti\\
-
+\advance\leftskip-0.5cm
 \includegraphics[width=180mm]{casi.jpg}
 \section{Diagrammi di sequenza dei casi d'uso}
 Qui di sotto sono raffigurati i diagrammi di sequenza dei casi d'uso spiegati in precedenza, è stato scelto di dividere il diagramma in due parti a seconda dell'attore interessato al fine di garantire una maggiore leggibilità. La prima immagine raffigura i passaggi per la creazione e modifica di un lavoratore, la seconda i passi per creare un nuovo dipendente.
@@ -54,9 +52,9 @@ Qui di sotto sono raffigurati i diagrammi di sequenza dei casi d'uso spiegati in
 \section{Diagramma delle attività}
 \includegraphics[width=185mm]{attivita.png}
 
-
 \chapter{Implementazione}
 In questo capitolo verrà trattato tutto ciò che è strettamente legato ai metodi implementativi usati per la realizzazione di questa applicazione. Verranno inoltre descritti i pattern architetturali e di design utilizzati.
+
 \section{Diagramma delle classi}
 \includegraphics[width=185mm]{classi.png}
 Nota: le parte di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system sono state omesse poichè non fondamentali per capire l'organizzazione dell'applicazione.
@@ -67,10 +65,8 @@ In questa sezione verranno mostrati i diagrammi di sequenza visti in precedenza,
 \subsection{Creazione di un dipendente}
 \includegraphics[width=180mm]{softwareseq2.png}
 
-
 \section{Pattern architetturale: MVC}
 Per scrivere l'applicazione si e' deciso di implementare il pattern architetturale Model~View~Controller (MVC).
-
 E' stato utilizzato il pattern MVC perche' permettere di separare le responsabilita' dell'applicazione in tre parti:
 \begin{itemize}
     \item Model: il modello e' la logica interna della applicazione. Questa parte gestisce il login, l'inserimento, la ricerca e l'eliminazione dei dati, la lettura e la scrittura dei dati in modo permanente su disco.
@@ -83,7 +79,8 @@ Per gestire creazione, elaborazione ed eliminazione dei dati e' stata creata una
 Il pattern Singleton garantisce che all'interno della applicazione venga creata una sola istanza di questa classe.
 
 Quando la classe viene istanziata viene eseguita la lettura dei file JSON e ad ogni inserimento o modifica dei dati questi vengono scritti su file.
-Il vantaggio del pattern singleton applicato a questo approccio e' che permette di poter richiedere facilmente l'istanza all'interno di un qualsiasi controller garantendo che non sara' mai possibile avere stati indeterminati o multipli del sistema: e' sempre presente un unico stato che evolve nel tempo con la sua copia memorizzata su disco in formato JSON.
+Il vantaggio del pattern singleton applicato a questo approccio è che permette di poter richiedere facilmente l'istanza all'interno di un qualsiasi controller garantendo che non sarà mai possibile avere stati indeterminati o multipli del sistema: è sempre presente un unico stato che evolve nel tempo con la sua copia memorizzata su disco in formato JSON.
+Il motivo per cui è stato deciso di utilizzare questo tipo di pattern è la possibilità di trattare il ManagementSystem come una vera e propria base di dati, tutte le volte che viene richiesto un servizio al model, quest'ultimo viene infatti "interrogato". Possiamo quindi vedere i metodi del MS come una sorta di query già pronte che all'occorrenza forniscono i dati richiesti. Grazie a tale pattern è stato inoltre possibile implementare la visualizzazione in forma tabulare dei lavoratori e il rispettivo sistema di ricerca, tramite interfaccia grafica è infatti possibile eseguire ricerche in and e or gestite quasi totalmente da due metodi del MS.
 
 \chapter{Test}
 Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello.
