@@ -18,18 +18,23 @@
 \mainmatter
 \chapter{Introduzione}
 Si vuole progettare un sistema informatico di una agenzia che fornisce servizi di supporto alla ricerca di lavoro stagionale. I lavoratori interessati possono iscriversi al servizio, rivolgendosi agli sportelli dell’agenzia. Il sistema deve permettere la gestione delle anagrafiche e la ricerca di lavoratori
-stagionali, nei settori dell’agricoltura e del turismo. I responsabili del servizio, dipendenti dell’agenzia, inseriscono i dati dei lavoratori. 
+stagionali, nei settori dell’agricoltura e del turismo. 
+
+I responsabili del servizio, dipendenti dell’agenzia, inseriscono i dati dei lavoratori. 
 Per ogni lavoratore vengono memorizzati i dati anagrafici (nome, cognome, luogo e data di nascita, nazionalità), indirizzo, recapito telefonico personale (se presente), email, le eventuali
-specializzazioni/esperienze precedenti (bagnino, barman, istruttore di nuoto, viticultore,floricultore), lingue parlate, il tipo di patente di guida e se automunito. Sono inoltre memorizzati i periodi e le zone (comuni), per i quali il lavoratore è disponibile. Di ogni lavoratore si memorizzano anche le informazioni di almeno una persona da avvisare in caso di urgenza: nome, cognome, telefono, indirizzo email. I dipendenti dell’agenzia devono autenticarsi per poter accedere al sistema e inserire i dati dei lavoratori. Il sistema permette ai dipendenti dell’agenzia di aggiornare le anagrafiche con tutti ilavori che i lavoratori stagionali hanno svolto negli ultimi 5 anni. 
+specializzazioni/esperienze precedenti (bagnino, barman, istruttore di nuoto, viticultore,floricultore), lingue parlate, il tipo di patente di guida e se automunito. Sono inoltre memorizzati i periodi e le zone (comuni), per i quali il lavoratore è disponibile. Di ogni lavoratore si memorizzano anche le informazioni di almeno una persona da avvisare in caso di urgenza: nome, cognome, telefono, indirizzo email. 
+
+I dipendenti dell’agenzia devono autenticarsi per poter accedere al sistema e inserire i dati dei lavoratori. Il sistema permette ai dipendenti dell’agenzia di aggiornare le anagrafiche con tutti ilavori che i lavoratori stagionali hanno svolto negli ultimi 5 anni. 
 Per ogni lavoro svolto vanno registrati: periodo, nome dell’azienda, mansioni svolte, luogo di lavoro, retribuzione lorda giornaliera. Per i dipendenti dell’agenzia si memorizzano i dati anagrafici, l’indirizzo email, il telefono e le credenziali di accesso (login e password).
-Una volta registrate le informazioni sui lavoratori, il personale dell’agenzia può effettuare ricercherispetto a possibili profili richiesti.
+
+Una volta registrate le informazioni sui lavoratori, il personale dell’agenzia può effettuare ricerche rispetto a possibili profili richiesti.
 In particolare, il sistema deve permettere ai dipendenti di effettuare ricerche per lavoratore, per lingue parlate, periodo di disponibilità, mansioni indicate, luogo di residenza, disponibilità di auto/patente di guida. Il sistema deve permettere di effettuare ricerche complesse, attraverso la specifica di differenti condizioni di ricerca (sia in AND che in OR).
  
 \chapter{Struttura del progetto}
 In questo capitolo sarà descritta la struttura generale del progetto e come esso si presenta all'utente finale. Verranno poi mostrati alcuni esempi di casi d'uso principali con relativi diagrammi di sequenza, per concludere sarà mostrato un diagramma riassuntivo delle attività generali.
 
 \section{Casi d'uso principali}
-Il diagramma dei casi duso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\\\
+Il diagramma dei casi d'uso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\\\
 \textbf{Precondizioni}: l'utente deve essere autenticato\\
 \textbf{Attore}: Amministratore (funge anche da dipendente)\\
 \textbf{Passi}:
@@ -57,7 +62,7 @@ In questo capitolo verrà trattato tutto ciò che è strettamente legato ai meto
 
 \section{Diagramma delle classi}
 \includegraphics[width=185mm]{classi.png}
-Nota: le parte di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system sono state omesse poichè non fondamentali per capire l'organizzazione dell'applicazione.
+Nota: le parti di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system sono state omesse poichè non fondamentali per capire l'organizzazione dell'applicazione.
 \section{Diagrammi di sequenza del software}
 In questa sezione verranno mostrati i diagrammi di sequenza visti in precedenza, dal punto di vista del software progettato. Sono state omesse le parti di registrazione dell'utente per garantire una migliore leggibilità. Le linee di vita sono quelle dei vari componenti che costituiscono l'applicazione, saranno quindi mostrate più in dettaglio le interazioni delle singole parti.
 \subsection{Creazione e modifica di un lavoratore}
@@ -83,7 +88,11 @@ Il pattern Singleton garantisce che all'interno della applicazione venga creata 
 
 Quando la classe viene istanziata viene eseguita la lettura dei file JSON e ad ogni inserimento o modifica dei dati questi vengono scritti su file.
 Il vantaggio del pattern singleton applicato a questo approccio è che permette di poter richiedere facilmente l'istanza all'interno di un qualsiasi controller garantendo che non sarà mai possibile avere stati indeterminati o multipli del sistema: è sempre presente un unico stato che evolve nel tempo con la sua copia memorizzata su disco in formato JSON.
-Il motivo per cui è stato deciso di utilizzare questo tipo di pattern è la possibilità di trattare il ManagementSystem come una vera e propria base di dati, tutte le volte che viene richiesto un servizio al model, quest'ultimo viene infatti "interrogato". Possiamo quindi vedere i metodi del MS come una sorta di query già pronte che all'occorrenza forniscono i dati richiesti. Grazie a tale pattern è stato inoltre possibile implementare la visualizzazione in forma tabulare dei lavoratori e il rispettivo sistema di ricerca, tramite interfaccia grafica è infatti possibile eseguire ricerche in and e or gestite quasi totalmente da due metodi del MS.
+
+Il motivo per cui è stato deciso di utilizzare questo tipo di pattern è la possibilità di trattare il ManagementSystem come una vera e propria base di dati, tutte le volte che viene richiesto un servizio al model, quest'ultimo viene infatti "interrogato". Possiamo quindi vedere i metodi del MS come una sorta di query già pronte che all'occorrenza forniscono i dati richiesti. 
+
+Grazie a tale pattern è stato inoltre possibile implementare la visualizzazione in forma tabulare dei lavoratori e il rispettivo sistema di ricerca, tramite interfaccia grafica è infatti possibile eseguire ricerche in and e or gestite quasi totalmente da due metodi del MS.
+
 L'organizzazione delle classi potrebbe anche essere vista come un Data Access Object pattern, in questo pattern solo alcuni oggetti possono accedere ai dati mantenendo così una netta separazione tra chi si occupa dell'interfaccia e chi si occupa della parte statica.
 La differenza fondamentale che distingue la struttura di questo progetto da un vero e proprio pattern DAO è che gli oggetti interessati non interagiscono con un database e non abbiamo quindi un oggetto DAO per ogni tabella (come invece dovrebbe essere); è comunque mantenuta la separazione tra classi che possono accedere ai dati e classi che usufruiscono solo di quest'ultimi. 
 
@@ -125,8 +134,10 @@ private EsperienzaLavorativa generateEsperienzaLavorativa(boolean validData){
 	return esperienzaLavorativa;
 }
 \end{lstlisting}
-Per tutta la parte relativa al test dell'interfaccia grafica sono state eseguite numerose prove manuali che hanno portato ad un miglioramento dell'interfaccia grafica e specialemnte ad una maggiore attenzione nei controlli dei dati inseriti tramite TextField. Tali controlli sono stati gestiti a livello della vista poichè non correlati alla validazione dell'input.
+Per tutta la parte relativa al test dell'interfaccia grafica sono state eseguite numerose prove manuali che hanno portato ad un miglioramento dell'interfaccia grafica e specialmente ad una maggiore attenzione nei controlli dei dati inseriti tramite TextField. Tali controlli sono stati gestiti a livello della vista poichè non correlati alla validazione dell'input.
 \section{Test con utente generico}
-Il software è stato presentato ad utenti esterni non a conoscenza della struttura implementativa dell'applicazione, non è stata fornita loro alcun tipo di guida di modo da poter verificare, oltre che la corretta esecuzione del programma, anche l'intuitività dell'interfaccia grafica. Per quanto riguarda la parte funzionale, non sono stati riscontrati problemi rilevanti, è però stato necessario rendere la view del progetto più chiara ed esaustiva, poichè alcune etichette poste sui pulsanti traevano in inganno l'utente inducendolo a pensare ad un'errata funzione che il pulsante avrebbe dovuto eseguire. Grazie a questo tipo di test abbiamo inoltre compreso come rendere il sistema più "tollerante" agli inserimenti errati degli utenti permettendo di digitare gli spazi in alcune TextField che mandavano il programma in errore se l'input non era inserito correttamente. Dopo queste correzioni è stata riproposta la possibilità all'utente generico di riutilizzare e quindi rivalutare l'applicazione, nella seconda fase di test il tempo di utilizzo da parte di quest'ultimo si è ridotto notevolmente testimoniando il fatto di un miglioramento della struttura grafica.
+Il software è stato presentato ad utenti esterni non a conoscenza della struttura implementativa dell'applicazione, non è stata fornita loro alcun tipo di guida di modo da poter verificare, oltre che la corretta esecuzione del programma, anche l'intuitività dell'interfaccia grafica. Per quanto riguarda la parte funzionale, non sono stati riscontrati problemi rilevanti, è però stato necessario rendere la view del progetto più chiara ed esaustiva, poichè alcune etichette poste sui pulsanti traevano in inganno l'utente inducendolo a pensare ad un'errata funzione che il pulsante avrebbe dovuto eseguire. 
+
+Grazie a questo tipo di test abbiamo inoltre compreso come rendere il sistema più "tollerante" agli inserimenti errati degli utenti permettendo di digitare gli spazi in alcune TextField che mandavano il programma in errore se l'input non era inserito correttamente. Dopo queste correzioni è stata riproposta la possibilità all'utente generico di riutilizzare e quindi rivalutare l'applicazione, nella seconda fase di test il tempo di utilizzo da parte di quest'ultimo si è ridotto notevolmente testimoniando il fatto di un miglioramento della struttura grafica.
 
 \end {document}
