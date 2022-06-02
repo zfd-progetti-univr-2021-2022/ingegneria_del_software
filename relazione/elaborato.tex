@@ -4,7 +4,7 @@
 \usepackage[english,italian]{babel}
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
-
+\usepackage{listings}
 
 \title{Progetto Lavoratori Stagionali}
 \author{Christian Farina,  Stefano Zenaro}
@@ -88,7 +88,44 @@ L'organizzazione delle classi potrebbe anche essere vista come un Data Access Ob
 La differenza fondamentale che distingue la struttura di questo progetto da un vero e proprio pattern DAO è che gli oggetti interessati non interagiscono con un database e non abbiamo quindi un oggetto DAO per ogni tabella (come invece dovrebbe essere); è comunque mantenuta la separazione tra classi che possono accedere ai dati e classi che usufruiscono solo di quest'ultimi. 
 
 \chapter{Test}
-Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello.
+In questo capitolo verranno spiegate le principali attività di test che sono state effettuate, sarà fornito anche un esempio pratico di una parte di codice utilizzata per testare l'applicazione. In conclusione si descriverà brevemente anche la prova con utente generico e come è risultata utile al miglioramento del software. 
+\section{Test del software}
+Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello. Le varie prove sono state effettuate in concomitanza con lo sviluppo del progetto, in particolare è stato testato ogni metodo del ManagementSystem con il framework JUnit5 che permette di creare metodi che si dedicano esclusivamente alle operazioni di testing delle applicazioni.  Per la generazione di dati casuali è stata usata la libreria Faker, di seguito un esempio dell'utilizzo della libreria per la creazione di un'esperienza lavorativa casuale:
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
+private EsperienzaLavorativa generateEsperienzaLavorativa(boolean validData){
+       HashSet<String> mansioniSvolte = new HashSet<>();
+       for (int i = 0; i < faker.number().numberBetween(1, 10); i++)
+           mansioniSvolte.add(faker.job().title());
+
+        EsperienzaLavorativa esperienzaLavorativa;
+        if (validData){
+            esperienzaLavorativa = EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1),
+		   new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1),
+		   new Date(2001, Calendar.DECEMBER, 31))),
+                faker.company().name(),
+                mansioniSvolte,
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            );
+        }
+        else{
+            esperienzaLavorativa = EsperienzaLavorativa.of(
+                dateToLocalDate(faker.date().between(new Date(2000, Calendar.JANUARY, 1),
+		   new Date(2000, Calendar.DECEMBER, 31))),
+                dateToLocalDate(faker.date().between(new Date(2001, Calendar.JANUARY, 1),
+		   new Date(2001, Calendar.DECEMBER, 31))),
+                "",
+                mansioniSvolte,
+                faker.address().streetAddress(),
+                faker.number().numberBetween(50, 200)
+            );
+        }
+	return esperienzaLavorativa;
+}
+\end{lstlisting}
+Per tutta la parte relativa al test dell'interfaccia grafica sono state eseguite numerose prove manuali che hanno portato ad un miglioramento dell'interfaccia grafica e specialemnte ad una maggiore attenzione nei controlli dei dati inseriti tramite TextField. Tali controlli sono stati gestiti a livello della vista poichè non correlati alla validazione dell'input.
 \section{Test con utente generico}
 Il software è stato presentato ad utenti esterni non a conoscenza della struttura implementativa dell'applicazione, non è stata fornita loro alcun tipo di guida di modo da poter verificare, oltre che la corretta esecuzione del programma, anche l'intuitività dell'interfaccia grafica. Per quanto riguarda la parte funzionale, non sono stati riscontrati problemi rilevanti, è però stato necessario rendere la view del progetto più chiara ed esaustiva, poichè alcune etichette poste sui pulsanti traevano in inganno l'utente inducendolo a pensare ad un'errata funzione che il pulsante avrebbe dovuto eseguire. Grazie a questo tipo di test abbiamo inoltre compreso come rendere il sistema più "tollerante" agli inserimenti errati degli utenti permettendo di digitare gli spazi in alcune TextField che mandavano il programma in errore se l'input non era inserito correttamente. Dopo queste correzioni è stata riproposta la possibilità all'utente generico di riutilizzare e quindi rivalutare l'applicazione, nella seconda fase di test il tempo di utilizzo da parte di quest'ultimo si è ridotto notevolmente testimoniando il fatto di un miglioramento della struttura grafica.
 
