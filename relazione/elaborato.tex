@@ -59,7 +59,38 @@ Qui di sotto sono raffigurati i diagrammi di sequenza dei casi d'uso spiegati in
 
 \chapter{Implementazione}
 In questo capitolo verrà trattato tutto ciò che è strettamente legato ai metodi implementativi usati per la realizzazione di questa applicazione. Verranno inoltre descritti i pattern architetturali e di design utilizzati.
-
+\section{Classi implementate}
+Di seguito è riportato un elenco delle classi suddivise per tipologia, seguirà poi un diagramma delle classi UML dove saranno rappresentate solo le classi utili per far comprendere la struttura generale del progetto, saranno omesse le variabili utilizzate e i metodi, per garantire una migliore leggibilità.\\\\
+\textbf{Classi per la gestione dei dati}
+\begin{itemize}
+\item ManagementSystem
+\item ManagementSystemResponse
+\item ManagementSystemStatus (enumerazione)
+\end{itemize}
+\textbf{Classi che rappresentano i dati da memorizzare}
+\begin{itemize}
+\item Admin
+\item Dipendente
+\item EsperienzaLavorativa
+\item Lavoratore
+\item Lingua (enumerazione)
+\item Patente (enumerazione)
+\item PeriodoDisponibilita
+\item Persona
+\item PersonaInterface
+\item RecapitoUrgenze
+\end{itemize}
+\textbf{Classi per la grafica}
+\begin{itemize}
+\item FinestraContatto
+\item FinestraDipendente
+\item FinestraEsperienzaLavorativa
+\item FinestraLavoratore
+\item FinestraLogin 
+\item FinestraModificaEsperienze
+\item FinestraRicerca
+\item FinestraVisualizzaContatti
+\end{itemize}
 \section{Diagramma delle classi}
 \includegraphics[width=185mm]{classi.png}
 Nota: le parti di rappresentazione delle classi riguardanti l'interfaccia grafica e il Management system sono state omesse poichè non fondamentali per capire l'organizzazione dell'applicazione.
