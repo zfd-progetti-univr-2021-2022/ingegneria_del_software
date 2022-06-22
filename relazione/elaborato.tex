@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
+\usepackage{xcolor}
 
 \title{Progetto Lavoratori Stagionali}
 \author{Christian Farina,  Stefano Zenaro}
@@ -30,7 +31,7 @@ Per ogni lavoro svolto vanno registrati: periodo, nome dell’azienda, mansioni 
 
 Una volta registrate le informazioni sui lavoratori, il personale dell’agenzia può effettuare ricerche rispetto a possibili profili richiesti.
 In particolare, il sistema deve permettere ai dipendenti di effettuare ricerche per lavoratore, per lingue parlate, periodo di disponibilità, mansioni indicate, luogo di residenza, disponibilità di auto/patente di guida. Il sistema deve permettere di effettuare ricerche complesse, attraverso la specifica di differenti condizioni di ricerca (sia in AND che in OR).
- \section{Metodologia di lavoro adottata}
+\section{Metodologia di lavoro adottata}
 La metodologia di lavoro da noi adottata si avvicina molto al modello plan driven, infatti tutte le attività del processo sono state pianificate in anticipo secondo un modello a cascata che prevedeva l'analisi iniziale dei requisiti, la progettazione del software da un punto di vista ad alto livello, la realizzazione dello stesso tramite il linguaggio di programmazione Java e una fase finale di test per verificare la corretta funzionalità del prodotto finale.
 Questa metodologia di sviluppo è stata usata maggiormente nella parte di sviluppo dell'interfaccia grafica e di tutta la parte relativa ai controlli gestiti da quest'ultima, la parte del progetto riguardante la gestione dei dati (memorizzazione lettura ecc.) è stata ideata seguendo una strategia più vicina al metodo agile con pianificazione incrementale; man mano che venivano aggiunte nuove funzionalità, si procedeva con una fase di test e validazione. La parte grafica del progetto è stata invece testata a parte, solo alla conclusione del processo sono stati eseguiti test che coinvolgevano entrambe le parti dell'applicazione. Il lavoro è stato gestito con la metodologia scrum, i compiti da eseguire erano principalmente suddivisi in compiti riguardanti il front end e compiti riguardanti il back end. Il lavoro e la condivisione del progetto sono stati gestiti grazie al controllo di versione di sistema GitHub che permette di lavorare in gruppo in maniera efficiente anche modificando il progetto in maniera asincrona per poi combinare le diverse modifiche fatte in un secondo momento, per questo non è stato necessario incontrarsi spesso per decidere come procedere col lavoro.  Di seguito è riportato un breve schema che riassume la divisione dei lavori, a sinistra il nome e a destra la lista dei compiti svolti.\\ \\
 \begin{tabular}{|c|c|c|c|c|}
@@ -41,25 +42,60 @@ Questa metodologia di sviluppo è stata usata maggiormente nella parte di svilup
 \hline
 \end{tabular}
 
-
 \chapter{Struttura del progetto}
 In questo capitolo sarà descritta la struttura generale del progetto e come esso si presenta all'utente finale. Verranno poi mostrati alcuni esempi di casi d'uso principali con relativi diagrammi di sequenza, per concludere sarà mostrato un diagramma riassuntivo delle attività generali.
 
 \section{Casi d'uso principali}
-Il diagramma dei casi d'uso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, ogni caso d'uso può essere considerato anche in maniera singola, per semplicità però sarà elencato un singolo caso d'uso che comprende tutto.\\\\
+Il diagramma dei casi d'uso raffigurato qui sotto mostra i modi principali per utilizzare questa applicazione, di seguito sono riportati i singoli casi d'uso descritti più nel dettaglio.\\
+\advance\leftskip-0.5cm
+\includegraphics[width=180mm]{casi.jpg}
+
+\subsection{Registrazione di un lavoratore con rispettiva esperienza lavorativa}
 \textbf{Precondizioni}: l'utente deve essere autenticato\\
-\textbf{Attore}: Amministratore (funge anche da dipendente)\\
+\textbf{Attore}: Dipendente (può essere anche l'amministratore)\\
 \textbf{Passi}:
 \begin{enumerate}
 \item Il dipendente registra un nuovo lavoratore
-\item Il dipendente cerca il lavoratore appena creato, apre la sua pagina di modifica e cambia un parametro 
-\item Aggiunge una nuova esperienza lavorativa tramite la pagina di modifica del lavoratore
-\item Sempre tramite la pagina di modifica del lavoratore apre la lista delle sue esperienze e modifica l'esperienza appena aggiunta e la salva
-\item Apre la pagina per registrare un nuovo dipendente e ne crea uno
+\item Il dipendente cerca il lavoratore appena creato, apre la sua pagina di modifica 
+\item Il dipendente aggiunge una nuova esperienza lavorativa tramite la pagina di modifica del lavoratore
 \end{enumerate}
-\textbf{Postcondizioni}: un nuovo lavoratore e un nuovo dipendente sono inseriti\\
-\advance\leftskip-0.5cm
-\includegraphics[width=180mm]{casi.jpg}
+\textbf{Postcondizioni}: un nuovo lavoratore con un'esperienza lavorativa è stato inserito\\
+
+\subsection{Modifica di un lavoratore}
+\textbf{Precondizioni}: l'utente deve essere autenticato\\
+\textbf{Attore}: Dipendente (può essere anche l'amministratore)\\
+\textbf{Passi}:
+\begin{enumerate}
+\item Il dipendente cerca il lavoratore tramite la pagina di ricerca
+\item Il dipendente Il dipendente apre la scheda del lavoratore cliccando sulla tabella 
+\item Il dipendente modifica il lavoratore
+\item Il dipendente salva le modifiche
+\end{enumerate}
+\textbf{Postcondizioni}: un lavoratore è stato modificato\\
+
+\subsection{Modifica di un'esperienza lavorativa}
+\textbf{Precondizioni}: l'utente deve essere autenticato\\
+\textbf{Attore}: Dipendente (può essere anche l'amministratore)\\
+\textbf{Passi}:
+\begin{enumerate}
+\item Il dipendente cerca il lavoratore
+\item Il dipendente apre la scheda del lavoratore cliccando sulla tabella
+\item Il dipendente apre la scheda con l'elenco delle esperienze lavorative
+\item Il dipendente selezione l'esperienza interessata e la modifica
+\item Il dipendente salva le modifiche
+\end{enumerate}
+\textbf{Postcondizioni}: un'esperienza lavorativa è stata modificata\\
+
+\subsection{Registrazione di un nuovo dipendente}
+\textbf{Precondizioni}: l'utente deve essere autenticato come amministratore\\
+\textbf{Attore}: Amministratore\\
+\textbf{Passi}:
+\begin{enumerate}
+\item L'amministratore apre la finestra per aggiungere i dipendenti 
+\item registra un nuovo dipendente
+\end{enumerate}
+\textbf{Postcondizioni}: un nuovo dipendente è stato inserito\\
+
 \section{Diagrammi di sequenza dei casi d'uso}
 Qui di sotto sono raffigurati i diagrammi di sequenza dei casi d'uso spiegati in precedenza, è stato scelto di dividere il diagramma in due parti a seconda dell'attore interessato al fine di garantire una maggiore leggibilità. La prima immagine raffigura i passaggi per la creazione e modifica di un lavoratore, la seconda i passi per creare un nuovo dipendente.
 \subsection{Creazione e modifica di un lavoratore}
@@ -142,7 +178,68 @@ La differenza fondamentale che distingue la struttura di questo progetto da un v
 \chapter{Test}
 In questo capitolo verranno spiegate le principali attività di test che sono state effettuate, sarà fornito anche un esempio pratico di una parte di codice utilizzata per testare l'applicazione. In conclusione si descriverà brevemente anche la prova con utente generico e come è risultata utile al miglioramento del software. 
 \section{Test del software}
-Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello. Le varie prove sono state effettuate in concomitanza con lo sviluppo del progetto, in particolare è stato testato ogni metodo del ManagementSystem con il framework JUnit5 che permette di creare metodi che si dedicano esclusivamente alle operazioni di testing delle applicazioni.  Per la generazione di dati casuali è stata usata la libreria Faker, di seguito un esempio dell'utilizzo della libreria per la creazione di un'esperienza lavorativa casuale:
+Per testare il sistema sono stati implementati degli unit test per verificare il buon funzionamento di ogni metodo implementato nel modello. Le varie prove sono state effettuate in concomitanza con lo sviluppo del progetto, in particolare è stato testato ogni metodo del ManagementSystem con il framework JUnit5 che permette di creare metodi che si dedicano esclusivamente alle operazioni di testing delle applicazioni.  Per la generazione di dati casuali è stata usata la libreria Faker, di seguito alcuni esempi:\\\\
+\textbf{Generazione casuale di un lavoratore}
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
+private Lavoratore generateLavoratore(boolean validData){
+	// crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Lavoratore lavoratore;
+
+        if (validData) {
+            lavoratore = Lavoratore.of(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.address().streetAddress(),
+                faker.date().past(365 * 10, TimeUnit.DAYS, twentyYearsAgo).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                faker.internet().emailAddress(),
+                generateTelephoneNumber(),
+                faker.address().streetAddress(),
+                List.of(),
+                List.of(),
+                List.of(),
+                false,
+                List.of(),
+                List.of(
+                    RecapitoUrgenza.of(
+                        faker.name().firstName(),
+                        faker.name().lastName(),
+                        generateTelephoneNumber(),
+                        faker.internet().emailAddress()
+                    )
+                ),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            lavoratore = Lavoratore.of(
+                faker.name().firstName(),
+                faker.name().lastName(),
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                faker.internet().emailAddress(),
+                generateTelephoneNumber(),
+                faker.address().streetAddress(),
+                List.of(),
+                List.of(),
+                List.of(),
+                false,
+                List.of(),
+                List.of(),
+                generateCodiceFiscale()
+            );
+        }
+
+        return lavoratore;
+}
+\end{lstlisting}
+\textbf{Generazione casuale di un'esperienza lavorativa}
 \begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
 private EsperienzaLavorativa generateEsperienzaLavorativa(boolean validData){
        HashSet<String> mansioniSvolte = new HashSet<>();
@@ -175,6 +272,145 @@ private EsperienzaLavorativa generateEsperienzaLavorativa(boolean validData){
             );
         }
 	return esperienzaLavorativa;
+}
+\end{lstlisting}
+\textbf{Generazione casuale di un dipendente}
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm,]
+private Dipendente generateDipendente(boolean validData){
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Dipendente dipendente;
+        String nome = faker.name().firstName();
+        String cognome = faker.name().lastName();
+        String username = nome.charAt(0) + cognome;
+        String email = username + "@" + faker.internet().domainName() + ".com";
+
+        if (validData) {
+            dipendente = Dipendente.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().past(365 * 10, TimeUnit.DAYS, twentyYearsAgo).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                generateStrongPassword(),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            dipendente = Dipendente.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                "pwdinsicura",
+                generateCodiceFiscale()
+            );
+        }
+	return dipendente;
+}
+\end{lstlisting}
+\textbf{Generazione casuale di un amministratore}
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
+private Admin generateAdmin(boolean validData){
+        // crea data attuale e sottraici 20 anni
+        Date twentyYearsAgo = new Date();
+        twentyYearsAgo.setYear(twentyYearsAgo.getYear()-20);
+
+        Admin admin;
+        String nome = faker.name().firstName();
+        String cognome = faker.name().lastName();
+        String username = nome.charAt(0) + cognome;
+        String email = username + "@" + faker.internet().domainName() + ".com";
+
+        if (validData){
+            admin = Admin.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().past(365*10, TimeUnit.DAYS, twentyYearsAgo).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                generateStrongPassword(),
+                generateCodiceFiscale()
+            );
+        }
+        else{
+            admin = Admin.of(
+                nome,
+                cognome,
+                faker.address().streetAddress(),
+                faker.date().future(10, TimeUnit.DAYS).toInstant().
+		   atZone(ZoneId.systemDefault()).toLocalDate(),
+                faker.address().country(),
+                email,
+                generateTelephoneNumber(),
+                username,
+                "pwdinsicura",
+                generateCodiceFiscale()
+            );
+        }
+        return admin;
+}
+\end{lstlisting}
+\textbf{Test del login e logout}
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
+void testLoginAndLogout() throws IOException, URISyntaxException {
+        ManagementSystem ms = ManagementSystem.getInstance(resourcePath);
+
+        assertNull(ms.getLoggedInUser());
+
+        assertFalse(ms.logout());
+
+        assertThrows(IllegalArgumentException.class, () -> ms.login(null, null));
+
+        assertFalse(ms.login("", ""));
+        assertNull(ms.getLoggedInUser());
+
+        assertFalse(ms.login(defaultAdminUsername, ""));
+        assertNull(ms.getLoggedInUser());
+
+        assertTrue(ms.login(defaultAdminUsername, defaultAdminPassword));
+        assertNotNull(ms.getLoggedInUser());
+
+        assertTrue(ms.logout());
+        assertNull(ms.getLoggedInUser());
+}
+\end{lstlisting}
+\textbf{Test per le ricerca dei lavoratori}
+\begin{lstlisting}[basicstyle=\small,xleftmargin=-0.5cm]
+    void searchLavoratoreAnd() throws IOException, URISyntaxException {
+        ManagementSystem ms = ManagementSystem.getInstance(resourcePath + "/search_tests");
+
+        ms.login(defaultAdminUsername, defaultAdminPassword);
+
+        // non specificare nessun filtro: mi aspetto di restituire tutti i lavoratori
+        assertEquals(
+        new TreeSet<>(ms.getLavoratori()),
+        new TreeSet<>(ms.selectLavoratoriAnd(null,null,null,null,null,null,null,null))
+        );
+
+        // specifica il nome: dovrebbero esserci solo i lavoratori con questo nome
+        List<Lavoratore> lavoratoriVincent = new ArrayList<>(
+        ms.selectLavoratoriAnd("Vincent",null,null,null,null,null,null,null)
+        );
+
+        for (Lavoratore lavoratore: lavoratoriVincent){
+            assertEquals("Vincent", lavoratore.getNome());
+        }
 }
 \end{lstlisting}
 Per tutta la parte relativa al test dell'interfaccia grafica sono state eseguite numerose prove manuali che hanno portato ad un miglioramento dell'interfaccia grafica e specialmente ad una maggiore attenzione nei controlli dei dati inseriti tramite TextField. Tali controlli sono stati gestiti a livello della vista poichè non correlati alla validazione dell'input.
