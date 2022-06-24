@@ -304,7 +304,7 @@ public class EsperienzaLavorativa {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EsperienzaLavorativa that = (EsperienzaLavorativa) o;
-        return retribuzioneLordaGiornaliera == that.retribuzioneLordaGiornaliera && inizioPeriodoLavorativo.equals(that.inizioPeriodoLavorativo) && finePeriodoLavorativo.equals(that.finePeriodoLavorativo) && nomeAzienda.equals(that.nomeAzienda) && mansioniSvolte.equals(that.mansioniSvolte) && luogoLavoro.equals(that.luogoLavoro);
+        return inizioPeriodoLavorativo.equals(that.inizioPeriodoLavorativo) && finePeriodoLavorativo.equals(that.finePeriodoLavorativo) && nomeAzienda.equals(that.nomeAzienda) && mansioniSvolte.equals(that.mansioniSvolte) && luogoLavoro.equals(that.luogoLavoro);
     }
 
     /**
@@ -313,7 +313,7 @@ public class EsperienzaLavorativa {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(inizioPeriodoLavorativo, finePeriodoLavorativo, nomeAzienda, mansioniSvolte, luogoLavoro, retribuzioneLordaGiornaliera);
+        return Objects.hash(inizioPeriodoLavorativo, finePeriodoLavorativo, nomeAzienda, mansioniSvolte, luogoLavoro);
     }
 
     /**

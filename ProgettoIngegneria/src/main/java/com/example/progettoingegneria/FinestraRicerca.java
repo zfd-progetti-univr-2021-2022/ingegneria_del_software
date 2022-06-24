@@ -7,10 +7,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.awt.event.*;
 import java.text.Normalizer;
+import javafx.stage.WindowEvent;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class FinestraRicerca extends Application {
     //checkbox per la ricerca
     CheckBox checkNome,checkCognome,checkLingue,checkResidenza,checkMansioni,checkDisponibilita,checkPatente,checkAutomunito,patente,automunito;
     HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti
-    TableView tabella;
+    TableView<Lavoratore> tabella;
     public void start(Stage stage) {
         Scene scene;
 
@@ -194,10 +195,23 @@ public class FinestraRicerca extends Application {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Lavoratore rowData = row.getItem();
-                    new FinestraLavoratore(rowData).start(new Stage());
+                    Stage finestraLavoratoreStage = new Stage();
+                    finestraLavoratoreStage.setOnHidden(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            //pulisco la tabella
+                            for ( int i = 0; i<tabella.getItems().size(); i++)
+                                tabella.getItems().clear();
+
+                            for (Lavoratore l : ms.getLavoratori())
+                                tabella.getItems().add(l);
+                        }
+                    });
+
+                    new FinestraLavoratore(rowData).start(finestraLavoratoreStage);
                 }
             });
-            return row ;
+            return row;
         });
     }
 
