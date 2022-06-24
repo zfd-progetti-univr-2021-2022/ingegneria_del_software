@@ -10,10 +10,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.awt.event.*;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 public class FinestraRicerca extends Application {
     Collection<Lavoratore> lavoratori=new HashSet<>();
@@ -199,6 +201,22 @@ public class FinestraRicerca extends Application {
         });
     }
 
+    private static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
+
+    private static String stripDiacritics(String str) {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
+        return str;
+    }
+
+    private Comune normalize(String s) {
+        String noLettereAccentate = stripDiacritics(s);
+        noLettereAccentate = noLettereAccentate.replace(" ", "_");
+        noLettereAccentate = noLettereAccentate.replace("-", "_");
+        noLettereAccentate = noLettereAccentate.toUpperCase();
+        return Comune.valueOf(noLettereAccentate);
+    }
+
     //metodo per la ricerca in and dei lavoratori
     private Collection<Lavoratore> addAnd(){
         String name=null;
@@ -240,7 +258,7 @@ public class FinestraRicerca extends Application {
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase()));
+                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine, normalize(disp[1])));
             }
             catch(Exception exception){System.out.println("Errore disponibilità");}
         }
@@ -319,7 +337,7 @@ public class FinestraRicerca extends Application {
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase())))
+                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine, normalize(disp[1]))))
                     supporto.add(a);
             }
             catch(Exception exception){System.out.println("Errore disponibilità");}

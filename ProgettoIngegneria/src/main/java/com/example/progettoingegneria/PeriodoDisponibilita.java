@@ -30,7 +30,7 @@ public class PeriodoDisponibilita {
     private LocalDate finePeriodoDisponibilita;
 
     /** Comune per cui il lavoratore e' disponibile */
-    private String comune;
+    private Comune comune;
 
     /** Oggetto per validare i dati di un periodo di disponibilita' */
     @JsonIgnore
@@ -43,10 +43,6 @@ public class PeriodoDisponibilita {
             c -> c.notNull()                                       // non puo': essere null
                 .afterOrEqual(this::getInizioPeriodoDisponibilita) // deve venire dopo della data di inizio
         )
-        .constraint(PeriodoDisponibilita::getComune, "comune",
-            c -> c.notBlank()                                      // non puo': essere null, contenere solo spazi, essere vuota
-                .lessThanOrEqual(255)                         // lunghezza massima 255 caratteri
-        )
         .build();
 
     /**
@@ -55,7 +51,7 @@ public class PeriodoDisponibilita {
      * @param finePeriodoDisponibilita Data fine periodo di disponibilita'
      * @param comune Comune per cui il lavoratore e' disponibile
      */
-    private PeriodoDisponibilita(LocalDate inizioPeriodoDisponibilita, LocalDate finePeriodoDisponibilita, String comune){
+    private PeriodoDisponibilita(LocalDate inizioPeriodoDisponibilita, LocalDate finePeriodoDisponibilita, Comune comune){
 
         if (inizioPeriodoDisponibilita == null || finePeriodoDisponibilita == null || comune == null){
             throw new IllegalArgumentException("I parametri non possono essere nulli");
@@ -78,7 +74,7 @@ public class PeriodoDisponibilita {
      * @param comune Comune per cui il lavoratore e' disponibile
      * @return Oggetto che rappresenta il periodo di disponibilita' del lavoratore
      */
-    public static PeriodoDisponibilita of(LocalDate inizioPeriodoDisponibilita, LocalDate finePeriodoDisponibilita, String comune){
+    public static PeriodoDisponibilita of(LocalDate inizioPeriodoDisponibilita, LocalDate finePeriodoDisponibilita, Comune comune){
         return new PeriodoDisponibilita(
             inizioPeriodoDisponibilita, finePeriodoDisponibilita, comune
         );
@@ -124,7 +120,7 @@ public class PeriodoDisponibilita {
      * Restituisce il comune per cui il lavoratore e' disponibile
      * @return Comune per cui il lavoratore e' disponibile
      */
-    public String getComune(){
+    public Comune getComune(){
         return this.comune;
     }
 
@@ -132,7 +128,7 @@ public class PeriodoDisponibilita {
      * Imposta comune per cui il lavoratore e' disponibile
      * @param comune Comune per cui il lavoratore e' disponibile
      */
-    protected void setComune(String comune){
+    protected void setComune(Comune comune){
         if (comune == null)
             throw new IllegalArgumentException("comune non puo' essere null");
         this.comune = comune;

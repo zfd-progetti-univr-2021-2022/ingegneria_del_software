@@ -67,7 +67,7 @@ public class Main {
             List.of(PeriodoDisponibilita.of(
                 LocalDate.of(2022, 5, 10),
                 LocalDate.of(2022, 5, 25),
-                "Via MoltoProbabilmenteNonEsistente 5 Verona"
+                Comune.VERONA
             )),
             List.of(RecapitoUrgenza.of(
                 "nome",
