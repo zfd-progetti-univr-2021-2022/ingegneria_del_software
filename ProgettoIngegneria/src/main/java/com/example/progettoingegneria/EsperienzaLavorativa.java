@@ -39,7 +39,7 @@ public class EsperienzaLavorativa {
     /** Luogo di lavoro */
     private String luogoLavoro;
     /** Retribuzione lorda giornaliera */
-    private int retribuzioneLordaGiornaliera;
+    private double retribuzioneLordaGiornaliera;
 
     /** ID dell'esperienza lavorativa */
     private int id = -1;
@@ -74,7 +74,7 @@ public class EsperienzaLavorativa {
                 .lessThanOrEqual(255)  // lunghezza massima 255
         )
         .constraint(EsperienzaLavorativa::getRetribuzioneLordaGiornaliera, "retribuzione",
-            c -> c.greaterThanOrEqual(0)  // deve essere almeno 0
+            c -> c.greaterThanOrEqual(0.0)  // deve essere almeno 0
         )
         .build();
 
@@ -90,7 +90,7 @@ public class EsperienzaLavorativa {
      */
     private EsperienzaLavorativa(LocalDate inizioPeriodoLavorativo, LocalDate finePeriodoLavorativo,
                                 String nomeAzienda, Collection<String> mansioniSvolte,
-                                String luogoLavoro, int retribuzioneLordaGiornaliera){
+                                String luogoLavoro, double retribuzioneLordaGiornaliera){
 
         if (inizioPeriodoLavorativo == null || finePeriodoLavorativo == null
             || nomeAzienda == null || mansioniSvolte == null || luogoLavoro == null) {
@@ -123,7 +123,7 @@ public class EsperienzaLavorativa {
      */
     public static EsperienzaLavorativa of(LocalDate inizioPeriodoLavorativo, LocalDate finePeriodoLavorativo,
                                    String nomeAzienda, Collection<String> mansioniSvolte,
-                                   String luogoLavoro, int retribuzioneLordaGiornaliera){
+                                   String luogoLavoro, double retribuzioneLordaGiornaliera){
         return new EsperienzaLavorativa(
             inizioPeriodoLavorativo,
             finePeriodoLavorativo,
@@ -255,7 +255,7 @@ public class EsperienzaLavorativa {
      * Restituisce retribuzione lorda giornaliera.
      * @return Retribuzione lorda giornaliera
      */
-    public int getRetribuzioneLordaGiornaliera(){
+    public double getRetribuzioneLordaGiornaliera(){
         return this.retribuzioneLordaGiornaliera;
     }
 
@@ -263,7 +263,7 @@ public class EsperienzaLavorativa {
      * Imposta retribuzione lorda giornaliera.
      * @param retribuzioneLordaGiornaliera retribuzione lorda giornaliera
      */
-    protected void setRetribuzioneLordaGiornaliera(int retribuzioneLordaGiornaliera){
+    protected void setRetribuzioneLordaGiornaliera(double retribuzioneLordaGiornaliera){
         this.retribuzioneLordaGiornaliera = retribuzioneLordaGiornaliera;
     }
 
