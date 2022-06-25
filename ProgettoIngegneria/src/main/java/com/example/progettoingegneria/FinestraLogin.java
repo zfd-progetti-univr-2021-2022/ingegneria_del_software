@@ -15,11 +15,16 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * Rappresenta la finestra dove l'utente puo' effettuare l'accesso al Management System.
+ * Questo e' l'entrypoint dell'applicazione.
+ */
 public class FinestraLogin extends Application{
     private ManagementSystem ms;
     public void start(Stage stage) {
         Scene scene;
 
+        // Recupera dal file FXML gli elementi della view e crea l'istanza del Management System
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLogin.fxml"));
         try {
             scene = new Scene(loader.load());
@@ -29,11 +34,21 @@ public class FinestraLogin extends Application{
             throw new RuntimeException("Errore lettura/scrittura file json/fxml: " + exception);
         }
 
-        //prendo le credenziali
         TextField nomeUtente=(TextField) loader.getNamespace().get("inputUtente");
         PasswordField password=(PasswordField) loader.getNamespace().get("inputPassword");
         Button accedi= (Button) loader.getNamespace().get("accedi");
+
+        // imposta azioni da eseguire in base agli eventi scatenati su field e pulsante
+
         accedi.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * Quando l'utente clicca il pulsante recupera le credenziali dalla view e
+             * tenta di effettuare l'accesso.
+             * Se viene effettuato l'accesso apri la finestra di ricerca dei lavoratori,
+             * altrimenti visualizza un messaggio di errore.
+             *
+             * @param event Evento
+             */
             @Override
             public void handle(ActionEvent event) {
                 if(!ms.login(nomeUtente.getText(), password.getText()))
@@ -46,6 +61,14 @@ public class FinestraLogin extends Application{
         });
 
         nomeUtente.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            /**
+             * Quando l'utente preme il tasto enter sulla tastiera recupera le credenziali dalla view e
+             * tenta di effettuare l'accesso.
+             * Se viene effettuato l'accesso apri la finestra di ricerca dei lavoratori,
+             * altrimenti visualizza un messaggio di errore.
+             *
+             * @param ke Evento
+             */
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -60,6 +83,14 @@ public class FinestraLogin extends Application{
         });
 
         password.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            /**
+             * Quando l'utente preme il tasto enter sulla tastiera recupera le credenziali dalla view e
+             * tenta di effettuare l'accesso.
+             * Se viene effettuato l'accesso apri la finestra di ricerca dei lavoratori,
+             * altrimenti visualizza un messaggio di errore.
+             *
+             * @param ke Evento
+             */
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -73,6 +104,7 @@ public class FinestraLogin extends Application{
             }
         });
 
+        // impostazioni della finestra
         stage.setTitle("Login");
         stage.setScene(scene);
         stage.setResizable(false);
