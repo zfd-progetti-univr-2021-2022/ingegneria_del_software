@@ -7,13 +7,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.awt.event.*;
+import java.text.Normalizer;
+import javafx.stage.WindowEvent;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 public class FinestraRicerca extends Application {
     Collection<Lavoratore> lavoratori=new HashSet<>();
@@ -22,7 +25,7 @@ public class FinestraRicerca extends Application {
     //checkbox per la ricerca
     CheckBox checkNome,checkCognome,checkLingue,checkResidenza,checkMansioni,checkDisponibilita,checkPatente,checkAutomunito,patente,automunito;
     HashSet<Lavoratore> supporto=new HashSet<>();//contiene tutti i lavoratori scelti
-    TableView tabella;
+    TableView<Lavoratore> tabella;
     public void start(Stage stage) {
         Scene scene;
 
@@ -192,11 +195,40 @@ public class FinestraRicerca extends Application {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Lavoratore rowData = row.getItem();
-                    new FinestraLavoratore(rowData).start(new Stage());
+                    Stage finestraLavoratoreStage = new Stage();
+                    finestraLavoratoreStage.setOnHidden(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            //pulisco la tabella
+                            for ( int i = 0; i<tabella.getItems().size(); i++)
+                                tabella.getItems().clear();
+
+                            for (Lavoratore l : ms.getLavoratori())
+                                tabella.getItems().add(l);
+                        }
+                    });
+
+                    new FinestraLavoratore(rowData).start(finestraLavoratoreStage);
                 }
             });
-            return row ;
+            return row;
         });
+    }
+
+    private static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
+
+    private static String stripDiacritics(String str) {
+        str = Normalizer.normalize(str, Normalizer.Form.NFD);
+        str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
+        return str;
+    }
+
+    private Comune normalize(String s) {
+        String noLettereAccentate = stripDiacritics(s);
+        noLettereAccentate = noLettereAccentate.replace(" ", "_");
+        noLettereAccentate = noLettereAccentate.replace("-", "_");
+        noLettereAccentate = noLettereAccentate.toUpperCase();
+        return Comune.valueOf(noLettereAccentate);
     }
 
     //metodo per la ricerca in and dei lavoratori
@@ -240,7 +272,7 @@ public class FinestraRicerca extends Application {
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase()));
+                periodiDisponibilita.add(PeriodoDisponibilita.of(dataInizio,dataFine, normalize(disp[1])));
             }
             catch(Exception exception){System.out.println("Errore disponibilità");}
         }
@@ -319,7 +351,7 @@ public class FinestraRicerca extends Application {
                 fine=singoloPeriodo[1].split("/");
                 dataInizio=LocalDate.of(Integer.parseInt(inizio[2]),Integer.parseInt(inizio[1]),Integer.parseInt(inizio[0]));
                 dataFine=LocalDate.of(Integer.parseInt(fine[2]),Integer.parseInt(fine[1]),Integer.parseInt(fine[0]));
-                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine,disp[1].toUpperCase())))
+                if(a.getPeriodiDisponibilita().contains(PeriodoDisponibilita.of(dataInizio,dataFine, normalize(disp[1]))))
                     supporto.add(a);
             }
             catch(Exception exception){System.out.println("Errore disponibilità");}

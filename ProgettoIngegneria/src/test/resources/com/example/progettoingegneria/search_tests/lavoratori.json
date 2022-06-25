@@ -40,7 +40,7 @@
     "periodiDisponibilita" : [ {
       "inizioPeriodoDisponibilita" : "2022-05-10",
       "finePeriodoDisponibilita" : "2022-05-25",
-      "comune" : "Via MoltoProbabilmenteNonEsistente 5 Verona"
+      "comune" : "VERONA"
     } ],
     "recapitiUrgenze" : [ {
       "nome" : "nome",
@@ -93,7 +93,7 @@
         "periodiDisponibilita" : [ {
             "inizioPeriodoDisponibilita" : "2022-05-10",
             "finePeriodoDisponibilita" : "2022-05-25",
-            "comune" : "Via MoltoProbabilmenteNonEsistente 5 Verona"
+            "comune" : "VERONA"
         } ],
         "recapitiUrgenze" : [ {
             "nome" : "nome",
@@ -146,7 +146,7 @@
         "periodiDisponibilita" : [ {
             "inizioPeriodoDisponibilita" : "2022-05-10",
             "finePeriodoDisponibilita" : "2022-05-25",
-            "comune" : "Via MoltoProbabilmenteNonEsistente 5 Verona"
+            "comune" : "VERONA"
         } ],
         "recapitiUrgenze" : [ {
             "nome" : "nome",
