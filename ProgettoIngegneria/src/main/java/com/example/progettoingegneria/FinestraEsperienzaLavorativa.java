@@ -58,17 +58,25 @@ public class FinestraEsperienzaLavorativa extends Application{
         aggiungi.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                LocalDate inizioPeriodoLavorativo=LocalDate.of(Integer.parseInt(annoInizio.getText()),Integer.parseInt(meseInizio.getText()),Integer.parseInt(giornoInizio.getText()));
-                LocalDate finePeriodoLavorativo=LocalDate.of(Integer.parseInt(annoFine.getText()),Integer.parseInt(meseFine.getText()),Integer.parseInt(giornoFine.getText()));
-                EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Double.parseDouble(retribuzione.getText().replaceAll(" ","")));
-
-                if(modifica==false)
-                    esperienze.add(esp);
+                if(validazioneDate()==false || validazioneRetribuzione()==false)
+                    if(validazioneDate()==false)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO DATE", "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    if(validazioneRetribuzione()==false)
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO RETRIBUZIONE", "ERRORE", JOptionPane.ERROR_MESSAGE);
                 else{
-                    try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
-                    catch(Exception e){System.out.println("Inserimento fallito");}
+                    LocalDate inizioPeriodoLavorativo=LocalDate.of(Integer.parseInt(annoInizio.getText()),Integer.parseInt(meseInizio.getText()),Integer.parseInt(giornoInizio.getText()));
+                    LocalDate finePeriodoLavorativo=LocalDate.of(Integer.parseInt(annoFine.getText()),Integer.parseInt(meseFine.getText()),Integer.parseInt(giornoFine.getText()));
+
+                    EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Double.parseDouble(retribuzione.getText().replaceAll(" ","")));
+
+                    if(modifica==false)
+                        esperienze.add(esp);
+                     else{
+                        try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
+                        catch(Exception e){System.out.println("Inserimento fallito");}
+                    }
+                    stage.close();
                 }
-                stage.close();
             }
         });
 
@@ -97,5 +105,30 @@ public class FinestraEsperienzaLavorativa extends Application{
         annoFine.setText(""+esperienza.getFinePeriodoLavorativo().getYear());
 
         retribuzione.setText(""+esperienza.getRetribuzioneLordaGiornaliera());
+    }
+
+    private boolean validazioneDate() {
+        try{
+            Integer.parseInt(annoInizio.getText());
+            Integer.parseInt(meseInizio.getText());
+            Integer.parseInt(giornoInizio.getText());
+            Integer.parseInt(annoFine.getText());
+            Integer.parseInt(meseFine.getText());
+            Integer.parseInt(giornoFine.getText());
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+
+    private boolean validazioneRetribuzione() {
+        try{
+            Double.parseDouble(retribuzione.getText().replaceAll(" ",""));
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 }
