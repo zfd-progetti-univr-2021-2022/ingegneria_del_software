@@ -155,7 +155,6 @@ public class FinestraLavoratore extends Application{
         stage.show();
     }
 
-    //restituisce l'arraylist contenente i contatti, è utilizzato nella finestra del contatto
     private void inizializzaLingue(String lingue) {
         lingueParlate.clear();
         String [] arrLingue=lingue.split(",");

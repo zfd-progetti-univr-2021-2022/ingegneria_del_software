@@ -15,12 +15,13 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class FinestraModificaEsperienze extends Application {
     Lavoratore lavoratore;
     Collection<EsperienzaLavorativa> esperienze=new ArrayList<EsperienzaLavorativa>();
-    TableView tabella;
+    TableView<EsperienzaLavorativa> tabella;
     ManagementSystem ms;
 
     FinestraModificaEsperienze(Lavoratore l){
@@ -37,8 +38,7 @@ public class FinestraModificaEsperienze extends Application {
         catch (IOException exception) {throw new RuntimeException(exception);}
 
         try {ms = ManagementSystem.getInstance();}
-        catch (IOException e){System.out.println(e);}
-        catch (URISyntaxException e){System.out.println(e);}
+        catch (IOException | URISyntaxException e){throw new RuntimeException(e);}
 
         tabella =(TableView) loader.getNamespace().get("tabella");
         instanziaTabella();
@@ -66,26 +66,25 @@ public class FinestraModificaEsperienze extends Application {
 
     private void instanziaTabella() {
 
-        TableColumn inizio = new TableColumn("Inizio");
+        TableColumn<EsperienzaLavorativa,String> inizio = new TableColumn<>("Inizio");
         inizio.setCellValueFactory(new PropertyValueFactory<>("inizioPeriodoLavorativo"));
 
-        TableColumn fine = new TableColumn("Fine");
+        TableColumn<EsperienzaLavorativa,String> fine = new TableColumn<>("Fine");
         fine.setCellValueFactory(new PropertyValueFactory<>("finePeriodoLavorativo"));
 
-        TableColumn nome = new TableColumn("Azienda");
+        TableColumn<EsperienzaLavorativa,String> nome = new TableColumn<>("Azienda");
         nome.setCellValueFactory(new PropertyValueFactory<>("nomeAzienda"));
 
-        TableColumn mansioni = new TableColumn("Mansioni");
+        TableColumn<EsperienzaLavorativa,String> mansioni = new TableColumn<>("Mansioni");
         mansioni.setCellValueFactory(new PropertyValueFactory<>("mansioniSvolte"));
 
-        TableColumn luogo = new TableColumn("Luogo");
+        TableColumn<EsperienzaLavorativa,String> luogo = new TableColumn<>("Luogo");
         luogo.setCellValueFactory(new PropertyValueFactory<>("luogoLavoro"));
 
-        TableColumn retribuzione = new TableColumn("Retribuzione");
+        TableColumn<EsperienzaLavorativa,String> retribuzione = new TableColumn<>("Retribuzione");
         retribuzione.setCellValueFactory(new PropertyValueFactory<>("retribuzioneLordaGiornaliera"));
 
-
-        tabella.getColumns().addAll(nome,inizio,fine,mansioni,luogo,retribuzione);
+        tabella.getColumns().addAll(Arrays.asList(nome,inizio,fine,mansioni,luogo,retribuzione));
 
         tabella.setRowFactory( tv -> {
             TableRow<EsperienzaLavorativa> row = new TableRow<>();
@@ -102,7 +101,7 @@ public class FinestraModificaEsperienze extends Application {
                         JOptionPane.showMessageDialog(null, "ESPERIENZA NON PIU' MODIFICABILE", "ERRORE", JOptionPane.ERROR_MESSAGE);
                 }
             });
-            return row ;
+            return row;
         });
 
     }
