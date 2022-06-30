@@ -48,8 +48,7 @@ public class FinestraEsperienzaLavorativa extends Application{
         retribuzione= (TextField) loader.getNamespace().get("inputRetribuzione");
 
         try {ms = ManagementSystem.getInstance();}
-        catch (IOException e){System.out.println(e);}
-        catch (URISyntaxException e){System.out.println(e);}
+        catch (IOException | URISyntaxException e){throw new RuntimeException(e);}
 
         if(modifica)
             inizializzaEsperienza();
@@ -69,13 +68,32 @@ public class FinestraEsperienzaLavorativa extends Application{
 
                     EsperienzaLavorativa esp=EsperienzaLavorativa.of(inizioPeriodoLavorativo,finePeriodoLavorativo,nome.getText(), Arrays.asList(mansioni.getText().split(",")),ubicazione.getText(), Double.parseDouble(retribuzione.getText().replaceAll(" ","")));
 
-                    if(modifica==false)
-                        esperienze.add(esp);
-                     else{
-                        try{ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);}
-                        catch(Exception e){System.out.println("Inserimento fallito");}
+                    if(modifica==false) {
+                        System.out.println("Sto creando una nuova esperienza lavorativa");
+                        if (esp.validate().size() == 0) {
+                            esperienze.add(esp);
+                            stage.close();
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, esp.validate(), "ERRORE INSERIMENTO ESPERIENZA LAVORATIVA", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-                    stage.close();
+                    else{
+                        System.out.println("Sto modificando una esperienza lavorativa");
+                        try{
+                            ManagementSystemResponse response = ms.modifyEsperienzaLavorativa(lavoratore.getCodiceFiscale(), esperienza.getId(), esp);
+                            System.out.println("response: " + response);
+                            if (response.getStatus() != ManagementSystemStatus.OK){
+                                JOptionPane.showMessageDialog(null, esp.validate(), "ERRORE MODIFICA ESPERIENZA LAVORATIVA", JOptionPane.ERROR_MESSAGE);
+                            }
+                            else{
+                                stage.close();
+                            }
+                        }
+                        catch(Exception e){
+                            System.out.println("Inserimento fallito");
+                        }
+                    }
                 }
             }
         });
