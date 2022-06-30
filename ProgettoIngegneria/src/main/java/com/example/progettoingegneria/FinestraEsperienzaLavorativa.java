@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Finestra per inserire o modificare una esperienza lavorativa.
+ */
 public class FinestraEsperienzaLavorativa extends Application{
     Collection<EsperienzaLavorativa> esperienze=new ArrayList<>();
     Lavoratore lavoratore=null;
@@ -49,7 +52,7 @@ public class FinestraEsperienzaLavorativa extends Application{
     }
 
     /**
-     * Permetti l'interazione dell'utente impostanzo azioni sugli elementi della view.
+     * Permetti l'interazione dell'utente impostando azioni sugli elementi della view.
      *
      * @param stage Finestra
      */
