@@ -19,6 +19,9 @@ import javax.swing.JOptionPane;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
+/**
+ * Finestra per aggiungere/modificare un lavoratore.
+ */
 public class FinestraLavoratore extends Application{
     Lavoratore lavoratore=null;//in caso volessi modificare un lavoratore, questo parametro non sarà null
     boolean modifica=false;//mi dice se sono in modalità modifica o meno
@@ -30,16 +33,29 @@ public class FinestraLavoratore extends Application{
     TextField nome,cognome,codice,luogoNascita,giornoNascita,meseNascita,annoNascita,nazionalita,residenza,recapito,mail,comuniDisp,lingue,periodiDisp,patente;
     CheckBox automunito;
 
+    /**
+     * L'utente vuole inserire un nuovo lavoratore.
+     */
     public FinestraLavoratore(){
         super();
     }
 
+    /**
+     * L'utente vuole modificare un lavoratore esistente.
+     *
+     * @param l Lavoratore da modificare
+     */
     public FinestraLavoratore(Lavoratore l){
         super();
         lavoratore = l;
         modifica = true;
     }
 
+    /**
+     * Imposta la finestra per permettere l'interazione da parte dell'utente.
+     *
+     * @param stage Finestra
+     */
     public void start(Stage stage) {
         Scene scene;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraLavoratore.fxml"));
@@ -69,12 +85,16 @@ public class FinestraLavoratore extends Application{
         patente=(TextField) loader.getNamespace().get("inputPatente");
         automunito=(CheckBox) loader.getNamespace().get("inputAutomunito");
 
-        //controllo se ho aperto la finestra in modalità modifica
+        //controllo se ho aperto la finestra in modalità modifica ed eventualmente prepara i campi compilati
         if(modifica)
             inizializzaLavoratore();
 
         Button aggiungiContatto = (Button) loader.getNamespace().get("aggiungiContattoLavoratore");
         aggiungiContatto.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * L'utente vuole aggiungere un contatto nuovo: apri la finestra relativa.
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 new FinestraContatto(recapitiUrgenze).start(new Stage());
@@ -83,6 +103,10 @@ public class FinestraLavoratore extends Application{
 
         Button aggiungiEsperienza = (Button) loader.getNamespace().get("aggiungiEsperienza");
         aggiungiEsperienza.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * L'utente vuole aggiungere una nuova esperienza lavorativa: apri la finestra relativa.
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 new FinestraEsperienzaLavorativa(esperienzeLavorative).start(new Stage());
@@ -91,16 +115,23 @@ public class FinestraLavoratore extends Application{
 
         Button registraLavoratore= (Button) loader.getNamespace().get("registraLavoratore");
         registraLavoratore.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * L'utente vuole creare/modificare un lavoratore.
+             *
+             * @todo Verificare se modifyLavoratore ha successo
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 inizializzaLingue(lingue.getText());
                 inizializzaPatenti(patente.getText());
                 boolean inizializzaPeriodiSuccess = inizializzaPeriodi();
                 if(recapitiUrgenze.size()>0 && periodiDisponibilita.size()>0 && lingueParlate.size()>0){
-                    LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
-                    Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
-                            recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
                     try {
+                        LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
+                        Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
+                                recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
+
                         ManagementSystem ms = ManagementSystem.getInstance();
                         if(p.validate().size()==0){
                             if(modifica==false)//sto aggiungendo un nuovo lavoratore, non lo sto modificando
@@ -113,6 +144,9 @@ public class FinestraLavoratore extends Application{
                         }
                         else
                             JOptionPane.showMessageDialog(null, p.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (NumberFormatException e){
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO DATA DI NASCITA", "ERRORE", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException e){
                         System.out.println("Errore IOException:" + e);
@@ -135,6 +169,13 @@ public class FinestraLavoratore extends Application{
         Button visualizzaEsperienze = (Button) loader.getNamespace().get("visualizzaEsperienze");
         visualizzaEsperienze.setVisible(modifica);
         visualizzaEsperienze.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * Se il lavoratore e' aperto in modalita' modifica,
+             * permetti la modifica delle esperienze lavorative.
+             * Apri la finestra relativa.
+             *
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 new FinestraModificaEsperienze(lavoratore).start(new Stage());
@@ -143,6 +184,12 @@ public class FinestraLavoratore extends Application{
 
         Button visualizzaContatti = (Button) loader.getNamespace().get("visualizzaContatti");
         visualizzaContatti.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * L'utente vuole visualizzare i contatti del lavoratore.
+             * Apri la finestra relativa.
+             *
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 new FinestraVisualizzaContatti(recapitiUrgenze).start(new Stage());
@@ -155,6 +202,12 @@ public class FinestraLavoratore extends Application{
         stage.show();
     }
 
+    /**
+     * L'utente vuole creare/modificare il lavoratore: recupera le lingue
+     * dal campo relativo e aggiungile alla collezione lingueParlate.
+     *
+     * @param lingue Stringa recuperata dal campo delle lingue parlate
+     */
     private void inizializzaLingue(String lingue) {
         lingueParlate.clear();
         String [] arrLingue=lingue.split(",");
@@ -164,6 +217,13 @@ public class FinestraLavoratore extends Application{
             }
             catch(Exception exception){System.out.println("Errore Lingua");}
     }
+
+    /**
+     * L'utente vuole creare/modificare il lavoratore: recupera le patenti
+     * dal campo relativo e aggiungile alla collezione patenti.
+     *
+     * @param patente Stringa recuperata dal campo delle patenti
+     */
     private void  inizializzaPatenti(String patente) {
         patenti.clear();
         String [] arrPatenti=patente.split(",");
@@ -175,6 +235,13 @@ public class FinestraLavoratore extends Application{
             catch(Exception exception){System.out.println("Patente non valida");}
         }
     }
+
+    /**
+     * L'utente vuole creare/modificare il lavoratore: recupera i periodi di disponibilita'
+     * dai campi relativi e aggiungile alla collezione periodiDisponibilita.
+     *
+     * @return true se i dati sono stati inseriti e interpretati correttamente, false altrimenti
+     */
     private boolean inizializzaPeriodi() {
         periodiDisponibilita.clear();
         String [] comuni=comuniDisp.getText().split(",");
@@ -201,14 +268,27 @@ public class FinestraLavoratore extends Application{
         return true;
     }
 
+    /** Permette di rimpiazzare le lettere accentate con "l'equivalente" ASCII */
     private static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
 
+    /**
+     * Rimuovi tutte le lettere accentate da str e sostituiscile con "l'equivalente" ASCII.
+     * @param str Stringa con lettere accentate
+     * @return Stringa senza lettere accentate
+     */
     private static String stripDiacritics(String str) {
         str = Normalizer.normalize(str, Normalizer.Form.NFD);
         str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
         return str;
     }
 
+    /**
+     * Sostituisce le lettere accentate nel nome di un comune s con "l'equivalente" ASCII
+     * e sostituisce gli spazi e i tratti con un tratto basso.
+     *
+     * @param s Stringa da normalizzare che rappresenta un comune
+     * @return Comune
+     */
     private Comune normalize(String s) {
         String noLettereAccentate = stripDiacritics(s);
         noLettereAccentate = noLettereAccentate.replace(" ", "_");
@@ -217,6 +297,10 @@ public class FinestraLavoratore extends Application{
         return Comune.valueOf(noLettereAccentate);
     }
 
+    /**
+     * Se l'utente vuole modificare un lavoratore esistente
+     * riempi i campi della finestra con i dati del lavoratore.
+     */
     private void inizializzaLavoratore() {
         nome.setText(lavoratore.getNome());
         cognome.setText(lavoratore.getCognome());
@@ -233,19 +317,27 @@ public class FinestraLavoratore extends Application{
 
         lingueParlate=lavoratore.getLingueParlate();
         String ling="";
-        for (Lingua l:lingueParlate)
+        if (lingueParlate.size() > 0) {
+            for (Lingua l:lingueParlate)
                 ling=ling+l.toString()+",";
-        lingue.setText(ling.substring(0,ling.length()-1));//elimino l'ultima virgola
+            ling = ling.substring(0,ling.length()-1); //elimino l'ultima virgola
+        }
+        lingue.setText(ling);
 
         periodiDisponibilita=lavoratore.getPeriodiDisponibilita();
         String com="";
-        for (PeriodoDisponibilita p:periodiDisponibilita)
-            com=com+p.getComune()+",";
-        comuniDisp.setText(com.substring(0,com.length()-1));
         String per="";
-        for (PeriodoDisponibilita p:periodiDisponibilita)
-            per=per+p.toString()+",";
-        periodiDisp.setText(per.substring(0,per.length()-1));
+        if (periodiDisponibilita.size() > 0) {
+            for (PeriodoDisponibilita p:periodiDisponibilita){
+                com = com + p.getComune() + ",";
+                per=per+p.toString()+",";
+            }
+            com = com.substring(0, com.length() - 1);
+            com = com.replace("_", " ");
+            per = per.substring(0,per.length()-1);
+        }
+        comuniDisp.setText(com);
+        periodiDisp.setText(per);
 
         patenti=lavoratore.getPatenti();
         String pat="";
@@ -258,7 +350,7 @@ public class FinestraLavoratore extends Application{
 
         automunito.setSelected(lavoratore.getAutomunito());
 
-        //inizializzo i contatti e le esperienzew lavorative
+        //inizializzo i contatti e le esperienze lavorative
         esperienzeLavorative=lavoratore.getEsperienzeLavorative();
         recapitiUrgenze=lavoratore.getRecapitiUrgenze();
     }
