@@ -119,7 +119,6 @@ public class FinestraLavoratore extends Application{
              * L'utente vuole creare/modificare un lavoratore.
              *
              * @todo Verificare se modifyLavoratore ha successo
-             * @todo Assicurarsi che il codice funzioni se viene inserito un valore non intero nei campi della data
              * @param event Evento click
              */
             @Override
@@ -128,10 +127,11 @@ public class FinestraLavoratore extends Application{
                 inizializzaPatenti(patente.getText());
                 boolean inizializzaPeriodiSuccess = inizializzaPeriodi();
                 if(recapitiUrgenze.size()>0 && periodiDisponibilita.size()>0 && lingueParlate.size()>0){
-                    LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
-                    Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
-                            recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
                     try {
+                        LocalDate dataNascita=LocalDate.of(Integer.parseInt(annoNascita.getText()),Integer.parseInt(meseNascita.getText()),Integer.parseInt(giornoNascita.getText()));
+                        Lavoratore p = Lavoratore.of(nome.getText(), cognome.getText(),luogoNascita.getText(), dataNascita, nazionalita.getText(), mail.getText(),
+                                recapito.getText(), residenza.getText(), esperienzeLavorative, lingueParlate, patenti, automunito.isSelected(), periodiDisponibilita, recapitiUrgenze,codice.getText());
+
                         ManagementSystem ms = ManagementSystem.getInstance();
                         if(p.validate().size()==0){
                             if(modifica==false)//sto aggiungendo un nuovo lavoratore, non lo sto modificando
@@ -144,6 +144,9 @@ public class FinestraLavoratore extends Application{
                         }
                         else
                             JOptionPane.showMessageDialog(null, p.validate().toString(), "ERRORE", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (NumberFormatException e){
+                        JOptionPane.showMessageDialog(null, "ERRORE INSERIMENTO DATA DI NASCITA", "ERRORE", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException e){
                         System.out.println("Errore IOException:" + e);
