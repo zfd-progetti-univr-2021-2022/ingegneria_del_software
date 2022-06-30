@@ -18,36 +18,60 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Finestra che visualizza tutte le esperienze lavorative
+ * per permettere all'utente di vederle e di modificarle.
+ */
 public class FinestraModificaEsperienze extends Application {
     Lavoratore lavoratore;
     Collection<EsperienzaLavorativa> esperienze=new ArrayList<EsperienzaLavorativa>();
     TableView<EsperienzaLavorativa> tabella;
     ManagementSystem ms;
 
+    /**
+     * L'utente desidera vedere/modificare le esperienze lavorative di un lavoratore
+     *
+     * @param l Lavoratore
+     */
     FinestraModificaEsperienze(Lavoratore l){
         super();
         lavoratore=l;
         esperienze=l.getEsperienzeLavorative();
     }
 
+    /**
+     * Prepara la finestra per accettare input dall'utente
+     *
+     * @param stage Finestra
+     */
     public void start(Stage stage) {
         Scene scene;
-        stage.setTitle("Visualizza Esperienze");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FinestraModificaEsperienze.fxml"));
-        try { scene = new Scene(loader.load()); }
-        catch (IOException exception) {throw new RuntimeException(exception);}
 
-        try {ms = ManagementSystem.getInstance();}
-        catch (IOException | URISyntaxException e){throw new RuntimeException(e);}
+        try {
+            scene = new Scene(loader.load());
+            ms = ManagementSystem.getInstance();
+        }
+        catch (IOException | URISyntaxException e){
+            throw new RuntimeException(e);
+        }
 
         tabella =(TableView) loader.getNamespace().get("tabella");
+
+        // crea header della tabella
         instanziaTabella();
 
         for(EsperienzaLavorativa e : esperienze)
-                tabella.getItems().add(e);
+            tabella.getItems().add(e);
 
         Button aggiorna= (Button) loader.getNamespace().get("aggiorna");
         aggiorna.setOnAction(new EventHandler<ActionEvent>() {
+            /**
+             * Resetta la tabella: cancella il contenuto
+             * e riempi la tabella con tutte le esperienze lavorative.
+             *
+             * @param event Evento click
+             */
             @Override
             public void handle(ActionEvent event) {
                 //pulisco la tabella
@@ -55,15 +79,21 @@ public class FinestraModificaEsperienze extends Application {
                     tabella.getItems().clear();
 
                 for(EsperienzaLavorativa e : esperienze)
-                        tabella.getItems().add(e);
+                    tabella.getItems().add(e);
             }
         });
 
+        stage.setTitle("Visualizza Esperienze");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
     }
 
+    /**
+     * Prepara l'header della tabella e permetti la modifica delle esperienze lavorative
+     * facendo doppio click sulla riga corrispondente.
+     * > NOTA: l'utente non puo' modificare esperienze lavorative fatte piu' di 5 anni fa
+     */
     private void instanziaTabella() {
 
         TableColumn<EsperienzaLavorativa,String> inizio = new TableColumn<>("Inizio");
@@ -86,6 +116,8 @@ public class FinestraModificaEsperienze extends Application {
 
         tabella.getColumns().addAll(Arrays.asList(nome,inizio,fine,mansioni,luogo,retribuzione));
 
+        // permetti all'utente di modificare le esperienze lavorative facendo doppio click sulla riga corrispondente
+        // > NOTA: l'utente non puo' modificare esperienze lavorative fatte piu' di 5 anni fa
         tabella.setRowFactory( tv -> {
             TableRow<EsperienzaLavorativa> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
